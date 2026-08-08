@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const SwadhyayApp());
@@ -10,7 +11,7 @@ class SwadhyayApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'স্বাধ্যায়',
+      title: 'Swadhyay',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -24,14 +25,45 @@ class SwadhyayApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _streak = 0;
+  int _totalXP = 0;
+  String _lastDate = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _streak = prefs.getInt('streak') ?? 0;
+      _totalXP = prefs.getInt('totalXP') ?? 0;
+      _lastDate = prefs.getString('lastDate') ?? '';
+    });
+  }
+
+  Future<void> _saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('streak', _streak);
+    await prefs.setInt('totalXP', _totalXP);
+    await prefs.setString('lastDate', _lastDate);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('☀️ স্বাধ্যায়'),
+        title: const Text('☀️ Swadhyay'),
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
@@ -40,36 +72,74 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.wb_sunny, size: 100, color: Color(0xFFFF6B00)),
+            const Icon(Icons.wb_sunny, size: 80, color: Color(0xFFFF6B00)),
             const SizedBox(height: 20),
             Text(
-              'স্বাগতম, স্বাধ্যায়ী!',
+              'Welcome, Swadhyayi!',
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: const Color(0xFFFF6B00),
                   ),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'আজকের কুইজ শুরু হোক!',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildStatCard('🔥 Streak', '$_streak days', Colors.orange),
+                const SizedBox(width: 20),
+                _buildStatCard('⭐ XP', '$_totalXP', Colors.amber),
+              ],
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                final result = await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const QuizScreen()),
                 );
+                if (result != null && result is int) {
+                  final today = DateTime.now().toIso8601String().split('T')[0];
+                  setState(() {
+                    _totalXP += result;
+                    if (_lastDate != today) {
+                      final yesterday = DateTime.now().subtract(const Duration(days: 1)).toIso8601String().split('T')[0];
+                      if (_lastDate == yesterday) {
+                        _streak++;
+                      } else {
+                        _streak = 1;
+                      }
+                      _lastDate = today;
+                    }
+                  });
+                  _saveData();
+                }
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
               ),
-              child: const Text('কুইজ শুরু করুন', style: TextStyle(fontSize: 18)),
+              child: const Text('Start Quiz', style: TextStyle(fontSize: 18)),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildStatCard(String title, String value, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color, width: 2),
+      ),
+      child: Column(
+        children: [
+          Text(title, style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+          const SizedBox(height: 8),
+          Text(value, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color)),
+        ],
       ),
     );
   }
@@ -89,34 +159,34 @@ class _QuizScreenState extends State<QuizScreen> {
 
   final List<Map<String, dynamic>> _questions = [
     {
-      'question': 'রাষ্ট্রীয় স্বয়ংসেবক সংঘ কত সালে প্রতিষ্ঠিত হয়?',
-      'options': ['১৯১৫', '১৯২০', '১৯২৫', '১৯৩০'],
+      'question': 'In which year was RSS founded?',
+      'options': ['1915', '1920', '1925', '1930'],
       'correct': 2,
-      'explanation': '১৯২৫ সালের বিজয়া দশমীতে ড. হেডগেওয়ার RSS প্রতিষ্ঠা করেন।',
+      'explanation': 'RSS was founded by Dr. Hedgewar on Vijayadashami in 1925.',
     },
     {
-      'question': 'ভারতের জাতীয় পতাকার নকশা কে তৈরি করেন?',
-      'options': ['রবীন্দ্রনাথ', 'পিঙ্গালি ভেঙ্কাইয়া', 'গান্ধীজী', 'সুভাষচন্দ্র'],
+      'question': 'Who designed the Indian national flag?',
+      'options': ['Rabindranath', 'Pingali Venkayya', 'Gandhiji', 'Subhas Chandra'],
       'correct': 1,
-      'explanation': 'অন্ধ্রপ্রদেশের পিঙ্গালি ভেঙ্কাইয়া ১৯২১ সালে পতাকার নকশা করেন।',
+      'explanation': 'Pingali Venkayya from Andhra Pradesh designed the flag in 1921.',
     },
     {
-      'question': 'বন্দে মাতরম গানটি কোন গ্রন্থ থেকে নেওয়া?',
-      'options': ['গীতাঞ্জলি', 'আনন্দমঠ', 'দেবদাস', 'গোরা'],
+      'question': 'Which book contains the song Vande Mataram?',
+      'options': ['Gitanjali', 'Anandamath', 'Devdas', 'Gora'],
       'correct': 1,
-      'explanation': 'বঙ্কিমচন্দ্র চট্টোপাধ্যায়ের "আনন্দমঠ" উপন্যাস থেকে।',
+      'explanation': 'It is from Bankim Chandra Chatterjee\'s novel "Anandamath".',
     },
     {
-      'question': 'ভারতের প্রথম উপগ্রহের নাম কী?',
-      'options': ['চন্দ্রযান', 'আর্যভট্ট', 'মঙ্গলযান', 'ভাস্কর'],
+      'question': 'What was India\'s first satellite?',
+      'options': ['Chandrayaan', 'Aryabhata', 'Mangalyaan', 'Bhaskara'],
       'correct': 1,
-      'explanation': '১৯৭৫ সালে ভারতের প্রথম উপগ্রহ আর্যভট্ট উৎক্ষেপণ করা হয়।',
+      'explanation': 'Aryabhata was launched in 1975.',
     },
     {
-      'question': 'যোগের জনক কাকে বলা হয়?',
-      'options': ['বুদ্ধ', 'পতঞ্জলি', 'বিবেকানন্দ', 'কৃষ্ণ'],
+      'question': 'Who is called the father of Yoga?',
+      'options': ['Buddha', 'Patanjali', 'Vivekananda', 'Krishna'],
       'correct': 1,
-      'explanation': 'পতঞ্জলি যোগসূত্র রচনা করেন এবং যোগের জনক হিসেবে পরিচিত।',
+      'explanation': 'Patanjali wrote the Yoga Sutras.',
     },
   ];
 
@@ -124,7 +194,7 @@ class _QuizScreenState extends State<QuizScreen> {
     setState(() {
       _selectedOption = selected;
       if (selected == _questions[_currentQuestion]['correct']) {
-        _score++;
+        _score += 10;
       }
     });
 
@@ -135,28 +205,9 @@ class _QuizScreenState extends State<QuizScreen> {
           _selectedOption = null;
         });
       } else {
-        _showResult();
+        Navigator.pop(context, _score);
       }
     });
-  }
-
-  void _showResult() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('কুইজ শেষ!'),
-        content: Text('আপনার স্কোর: $_score/${_questions.length}'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              Navigator.pop(context);
-            },
-            child: const Text('হোমে ফিরুন'),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -164,7 +215,7 @@ class _QuizScreenState extends State<QuizScreen> {
     final q = _questions[_currentQuestion];
     return Scaffold(
       appBar: AppBar(
-        title: Text('প্রশ্ন ${_currentQuestion + 1}/${_questions.length}'),
+        title: Text('Q${_currentQuestion + 1}/${_questions.length}'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
       ),
@@ -179,10 +230,7 @@ class _QuizScreenState extends State<QuizScreen> {
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(height: 30),
-            Text(
-              q['question'],
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
+            Text(q['question'], style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             const SizedBox(height: 30),
             ...List.generate(4, (i) {
               Color btnColor = Colors.grey[200]!;
@@ -203,14 +251,9 @@ class _QuizScreenState extends State<QuizScreen> {
                       backgroundColor: btnColor,
                       foregroundColor: Colors.black,
                       padding: const EdgeInsets.all(16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: Text(
-                      q['options'][i],
-                      style: const TextStyle(fontSize: 16),
-                    ),
+                    child: Text(q['options'][i], style: const TextStyle(fontSize: 16)),
                   ),
                 ),
               );
@@ -223,10 +266,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   color: Colors.orange[50],
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text(
-                  q['explanation'],
-                  style: const TextStyle(fontSize: 16, color: Colors.black87),
-                ),
+                child: Text(q['explanation'], style: const TextStyle(fontSize: 16)),
               ),
             ],
           ],
