@@ -1,5 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import '../services/daily_content_service.dart';
+import '../generated/l10n/app_localizations.dart';
+import '../services/share_service.dart';
 
 class PillarDetailScreen extends StatelessWidget {
   final Pillar pillar;
@@ -8,11 +10,26 @@ class PillarDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(pillar.title),
         backgroundColor: pillar.color,
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () {
+              ShareService.sharePillar(
+                title: pillar.title,
+                subtitle: pillar.subtitle,
+                content: pillar.content,
+                id: pillar.id,
+              );
+            },
+            tooltip: local.share,
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -54,21 +71,33 @@ class PillarDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            // একটি ছোট অ্যাকশন বাটন (শেয়ার বা মার্ক ডান)
-            Center(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('"${pillar.title}" শেয়ার করার ব্যবস্থা শীঘ্রই আসছে!')),
-                  );
-                },
-                icon: const Icon(Icons.share),
-                label: const Text('শেয়ার করুন'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: pillar.color,
-                  foregroundColor: Colors.white,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // শেয়ার বাটন
+                ElevatedButton.icon(
+                  onPressed: () {
+                    ShareService.sharePillar(
+                      title: pillar.title,
+                      subtitle: pillar.subtitle,
+                      content: pillar.content,
+                      id: pillar.id,
+                    );
+                  },
+                  icon: const Icon(Icons.share, size: 18),
+                  label: Text(local.share),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF6B00),
+                    foregroundColor: Colors.white,
+                  ),
                 ),
-              ),
+                // হোম বাটন
+                TextButton.icon(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.arrow_back),
+                  label: Text(local.backHome),
+                ),
+              ],
             ),
           ],
         ),

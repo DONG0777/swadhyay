@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import '../services/circle_service.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class CircleCreateScreen extends StatefulWidget {
   const CircleCreateScreen({super.key});
@@ -23,11 +24,8 @@ class _CircleCreateScreenState extends State<CircleCreateScreen> {
 
   Future<void> _createCircle() async {
     if (!_formKey.currentState!.validate()) return;
-
     setState(() => _isLoading = true);
-
     try {
-      // TODO: বাস্তব ইউজার আইডি ব্যবহার করুন (এখনো অথেনটিকেশন নেই)
       final userId = 'user_123';
       final service = CircleService();
       final circle = await service.createCircle(
@@ -35,11 +33,11 @@ class _CircleCreateScreenState extends State<CircleCreateScreen> {
         _descController.text.trim(),
         userId,
       );
-
       if (mounted) {
+        final local = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('✅ "${circle.name}" সার্কেল তৈরি হয়েছে!'),
+            content: Text('✅ "${circle.name}" ${local.circle} ${local.score}!'),
             backgroundColor: Colors.green,
           ),
         );
@@ -49,7 +47,7 @@ class _CircleCreateScreenState extends State<CircleCreateScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ সার্কেল তৈরি করতে সমস্যা: $e'),
+            content: Text('❌ ${AppLocalizations.of(context).welcome}: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -61,9 +59,10 @@ class _CircleCreateScreenState extends State<CircleCreateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('✨ নতুন সার্কেল'),
+        title: Text('✨ ${local.circle}'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
       ),
@@ -76,26 +75,22 @@ class _CircleCreateScreenState extends State<CircleCreateScreen> {
             children: [
               const Icon(Icons.group, size: 60, color: Color(0xFFFF6B00)),
               const SizedBox(height: 16),
-              const Text(
-                'একটি নতুন সার্কেল তৈরি করুন',
+              Text(
+                local.circle,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'সার্কেলের নাম',
-                  hintText: 'যেমন: মুক্তিযোদ্ধারা',
+                  labelText: 'Circle Name',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.group),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'দয়া করে সার্কেলের নাম দিন';
-                  }
-                  if (value.trim().length < 3) {
-                    return 'নাম কমপক্ষে ৩ অক্ষরের হতে হবে';
+                    return 'Please enter a name';
                   }
                   return null;
                 },
@@ -104,8 +99,7 @@ class _CircleCreateScreenState extends State<CircleCreateScreen> {
               TextFormField(
                 controller: _descController,
                 decoration: const InputDecoration(
-                  labelText: 'বিবরণ (ঐচ্ছিক)',
-                  hintText: 'এই সার্কেলের উদ্দেশ্য কী?',
+                  labelText: 'Description (optional)',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.description),
                 ),
@@ -125,9 +119,9 @@ class _CircleCreateScreenState extends State<CircleCreateScreen> {
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text(
-                        'সার্কেল তৈরি করুন',
-                        style: TextStyle(fontSize: 18),
+                    : Text(
+                        local.circle,
+                        style: const TextStyle(fontSize: 18),
                       ),
               ),
             ],

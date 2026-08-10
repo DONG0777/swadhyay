@@ -1,22 +1,24 @@
 ﻿import 'package:flutter/material.dart';
 import '../services/daily_content_service.dart';
 import '../screens/pillar_detail_screen.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class DailyPillarsWidget extends StatelessWidget {
   const DailyPillarsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final pillars = DailyContentService.getPillars();
+    final local = AppLocalizations.of(context);
+    final pillars = DailyContentService.getPillars(context); // 🔥 context পাস করা হয়েছে
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
-            '🌸 দৈনিক ৬ স্তম্ভ',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00)),
+            '🌸 ${local.challenge}', // দীপ্ত যাত্রা এখানে ব্যবহার করছি
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00)),
           ),
         ),
         GridView.builder(
@@ -42,7 +44,6 @@ class DailyPillarsWidget extends StatelessWidget {
 
 class _PillarCard extends StatelessWidget {
   final Pillar pillar;
-
   const _PillarCard({required this.pillar});
 
   @override

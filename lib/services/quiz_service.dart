@@ -6,49 +6,71 @@ class QuizService {
   final supabase = Supabase.instance.client;
   final OfflineService _offlineService = OfflineService();
 
-  // প্রথমে Supabase থেকে চেষ্টা করবে, না হলে ক্যাশ থেকে লোড করবে
-  Future<List<Question>> fetchQuestions({int limit = 5}) async {
+  Future<List<Question>> fetchQuestions({int limit = 5, String? languageCode}) async {
+    final lang = languageCode ?? 'bn'; // ডিফল্ট বাংলা
+    print('🔍 সার্ভিসে ব্যবহৃত ভাষা: $lang');
+
     try {
       final response = await supabase
           .from('questions')
           .select('*')
           .eq('is_active', true)
+          .eq('language_code', lang)
           .limit(limit);
 
+      print('📦 Supabase রেসপন্স: ${response.length} টি প্রশ্ন');
+
       if (response.isNotEmpty) {
+        print('✅ $lang ভাষায় ${response.length} টি প্রশ্ন পাওয়া গেছে।');
         final questions = List<Question>.from(
           response.map((e) => Question.fromJson(e)),
         );
-        // ব্যাকগ্রাউন্ডে ক্যাশ আপডেট করুন
-        _offlineService.cacheQuestions(questions);
+        await _offlineService.cacheQuestions(questions);
         return questions;
       } else {
-        // Supabase থেকে কিছু আসেনি – ক্যাশ চেষ্টা করুন
-        return await _getCachedQuestions();
+        print('⚠️ $lang ভাষায় প্রশ্ন নেই, বাংলা ফ্যালব্যাক ব্যবহার করছি।');
+        return await _fetchFallbackQuestions(limit);
       }
     } catch (e) {
-      // Supabase error – ক্যাশ চেষ্টা করুন
-      print('Supabase error: $e, loading from cache');
+      print('❌ Supabase error: $e, ক্যাশ থেকে লোড করছি।');
       return await _getCachedQuestions();
     }
   }
 
-  // শুধু ক্যাশ থেকে লোড (অফলাইন মোড)
+  Future<List<Question>> _fetchFallbackQuestions(int limit) async {
+    try {
+      final response = await supabase
+          .from('questions')
+          .select('*')
+          .eq('is_active', true)
+          .eq('language_code', 'bn')
+          .limit(limit);
+
+      if (response.isNotEmpty) {
+        print('✅ বাংলা ফ্যালব্যাক প্রশ্ন পাওয়া গেছে।');
+        return List<Question>.from(response.map((e) => Question.fromJson(e)));
+      }
+    } catch (e) {
+      print('❌ ফ্যালব্যাক error: $e');
+    }
+    print('⚠️ কোনো প্রশ্ন পাওয়া যায়নি, লোকাল প্রশ্ন ব্যবহার করছি।');
+    return _getLocalQuestions();
+  }
+
   Future<List<Question>> _getCachedQuestions() async {
     final cached = await _offlineService.getCachedQuestions();
     if (cached.isNotEmpty) {
+      print('✅ ক্যাশ থেকে প্রশ্ন লোড করা হয়েছে।');
       return cached;
-    } else {
-      // শেষ উপায়: লোকাল হার্ডকোডেড প্রশ্ন
-      return _getLocalQuestions();
     }
+    return _getLocalQuestions();
   }
 
-  // লোকাল ফ্যালব্যাক (শেষ ভরসা)
   List<Question> _getLocalQuestions() {
+    print('📝 লোকাল প্রশ্ন ব্যবহার করা হচ্ছে (ইংরেজি)');
     return [
       Question(
-        questionText: 'LOCAL: RSS founded?',
+        questionText: 'RSS founded in which year? (EN)',
         optionA: '1915',
         optionB: '1920',
         optionC: '1925',
@@ -58,7 +80,7 @@ class QuizService {
         category: 'History',
       ),
       Question(
-        questionText: 'LOCAL: Flag designer?',
+        questionText: 'Who designed the Indian flag? (EN)',
         optionA: 'Tagore',
         optionB: 'Venkayya',
         optionC: 'Gandhi',
@@ -68,7 +90,7 @@ class QuizService {
         category: 'History',
       ),
       Question(
-        questionText: 'LOCAL: Vande Mataram?',
+        questionText: 'Vande Mataram is from which novel? (EN)',
         optionA: 'Gitanjali',
         optionB: 'Anandamath',
         optionC: 'Devdas',
@@ -78,7 +100,7 @@ class QuizService {
         category: 'Literature',
       ),
       Question(
-        questionText: 'LOCAL: First satellite?',
+        questionText: 'First Indian satellite? (EN)',
         optionA: 'Chandrayaan',
         optionB: 'Aryabhata',
         optionC: 'Mangalyaan',
@@ -88,7 +110,7 @@ class QuizService {
         category: 'Science',
       ),
       Question(
-        questionText: 'LOCAL: Father of Yoga?',
+        questionText: 'Father of Yoga? (EN)',
         optionA: 'Buddha',
         optionB: 'Patanjali',
         optionC: 'Vivekananda',

@@ -3,10 +3,10 @@ import '../services/circle_service.dart';
 import '../models/circle_model.dart';
 import 'circle_create_screen.dart';
 import 'circle_detail_screen.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class CircleListScreen extends StatefulWidget {
   final String userId;
-
   const CircleListScreen({super.key, required this.userId});
 
   @override
@@ -34,7 +34,7 @@ class _CircleListScreenState extends State<CircleListScreen> {
       });
     } catch (e) {
       setState(() {
-        _error = 'সার্কেল লোড করতে সমস্যা: $e';
+        _error = '${AppLocalizations.of(context).welcome}: $e';
         _isLoading = false;
       });
     }
@@ -48,8 +48,9 @@ class _CircleListScreenState extends State<CircleListScreen> {
         setState(() {
           _circles.add(circle);
         });
+        final local = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('✅ সার্কেলে জয়েন করেছেন!')),
+          SnackBar(content: Text('✅ ${local.circle} ${local.score}!')),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -61,14 +62,15 @@ class _CircleListScreenState extends State<CircleListScreen> {
 
   Future<String?> _showJoinDialog() {
     final controller = TextEditingController();
+    final local = AppLocalizations.of(context);
     return showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('সার্কেলে জয়েন করুন'),
+        title: Text(local.circle),
         content: TextField(
           controller: controller,
           decoration: const InputDecoration(
-            labelText: 'ইনভাইট কোড',
+            labelText: 'Invite Code',
             hintText: 'XXXXXX',
             border: OutlineInputBorder(),
           ),
@@ -77,11 +79,11 @@ class _CircleListScreenState extends State<CircleListScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('বাতিল'),
+            child: Text(local.backHome),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, controller.text.trim().toUpperCase()),
-            child: const Text('জয়েন করুন'),
+            child: Text(local.circle),
           ),
         ],
       ),
@@ -90,9 +92,10 @@ class _CircleListScreenState extends State<CircleListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('🔄 আমার সার্কেল'),
+        title: Text('🔄 ${local.circle}'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         actions: [
@@ -127,19 +130,7 @@ class _CircleListScreenState extends State<CircleListScreen> {
                         children: [
                           const Icon(Icons.group_off, size: 80, color: Colors.grey),
                           const SizedBox(height: 16),
-                          const Text(
-                            'আপনি এখনো কোনো সার্কেলে জয়েন করেননি',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '🔝 ডান পাশের + বাটন দিয়ে সার্কেল তৈরি করুন',
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
-                          Text(
-                            'অথবা 📥 বাটন দিয়ে ইনভাইট কোড দিয়ে জয়েন করুন',
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
+                          Text(local.circle),
                         ],
                       ),
                     )
@@ -170,7 +161,7 @@ class _CircleListScreenState extends State<CircleListScreen> {
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: Text(
-                              '👥 ${circle.members.length} সদস্য • 📝 ${circle.leaderboard.length} জন সক্রিয়',
+                              '👥 ${circle.members.length} members • 📝 ${circle.leaderboard.length} active',
                             ),
                             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                             onTap: () {

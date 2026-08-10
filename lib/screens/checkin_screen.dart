@@ -2,6 +2,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/location_service.dart';
 import '../services/auth_service.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class CheckinScreen extends StatefulWidget {
   const CheckinScreen({super.key});
@@ -15,7 +16,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
   final AuthService _auth = AuthService();
   bool _isLoading = false;
   bool _isCheckedInToday = false;
-  String _statusMessage = 'চেক-ইন করতে নিচের বাটনে ক্লিক করুন।';
+  String _statusMessage = 'Click below to check-in.';
   double? _latitude;
   double? _longitude;
 
@@ -33,53 +34,46 @@ class _CheckinScreenState extends State<CheckinScreen> {
     if (lastDate == today) {
       setState(() {
         _isCheckedInToday = true;
-        _statusMessage = '✅ আজকে আপনি ইতিমধ্যে চেক-ইন করেছেন!';
+        _statusMessage = '✅ You have already checked in today!';
       });
     }
   }
 
   Future<void> _performCheckin() async {
     setState(() => _isLoading = true);
-
     try {
-      // লোকেশন পাওয়া
       final position = await _locationService.getCurrentLocation();
       _latitude = position.latitude;
       _longitude = position.longitude;
 
-      // চেক-ইন সেভ করা
       final prefs = await SharedPreferences.getInstance();
       final userId = _auth.userId;
       final today = DateTime.now().toIso8601String().split('T')[0];
 
-      // আজকে ইতিমধ্যে চেক-ইন করেছেন কিনা চেক
       final lastDate = prefs.getString('${userId}_checkin_date');
       if (lastDate == today) {
         setState(() {
           _isCheckedInToday = true;
-          _statusMessage = '✅ আপনি আজকে ইতিমধ্যে চেক-ইন করেছেন!';
+          _statusMessage = '✅ You have already checked in today!';
           _isLoading = false;
         });
         return;
       }
 
-      // চেক-ইন সেভ
       await prefs.setString('${userId}_checkin_date', today);
       await prefs.setDouble('${userId}_checkin_lat', position.latitude);
       await prefs.setDouble('${userId}_checkin_lon', position.longitude);
 
       setState(() {
         _isCheckedInToday = true;
-        _statusMessage = '🎉 চেক-ইন সফল! +৫ এক্সপি পেয়েছেন!';
+        _statusMessage = '🎉 Check-in successful! +5 XP earned!';
         _isLoading = false;
       });
 
-      // হোম স্ক্রিনে এক্সপি পাঠানো (Navigator.pop-এর মাধ্যমে)
       Navigator.pop(context, {'xp': 5});
-
     } catch (e) {
       setState(() {
-        _statusMessage = '❌ লোকেশন পেতে সমস্যা: $e';
+        _statusMessage = '❌ Error getting location: $e';
         _isLoading = false;
       });
     }
@@ -87,9 +81,10 @@ class _CheckinScreenState extends State<CheckinScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('📍 চেক-ইন'),
+        title: Text('📍 ${local.checkin}'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
       ),
@@ -100,13 +95,13 @@ class _CheckinScreenState extends State<CheckinScreen> {
           children: [
             const Icon(Icons.location_on, size: 80, color: Color(0xFFFF6B00)),
             const SizedBox(height: 20),
-            const Text(
-              'দৈনিক চেক-ইন',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Text(
+              local.checkin,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             Text(
-              'আপনার বর্তমান অবস্থান থেকে চেক-ইন করুন\nএবং +৫ এক্সপি অর্জন করুন।',
+              'Check in from your current location\nEarn +5 XP.',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
@@ -172,7 +167,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
                         ),
                       )
                     : Text(
-                        _isCheckedInToday ? '✅ ইতিমধ্যে চেক-ইন করেছেন' : '📍 চেক-ইন করুন',
+                        _isCheckedInToday ? '✅ Already checked in' : '📍 ${local.checkin}',
                         style: const TextStyle(fontSize: 18),
                       ),
               ),
@@ -180,7 +175,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
             const SizedBox(height: 20),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('হোমে ফিরে যান'),
+              child: Text(local.backHome),
             ),
           ],
         ),

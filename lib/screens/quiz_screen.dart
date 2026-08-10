@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import '../services/quiz_service.dart';
 import '../models/question_model.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
@@ -15,115 +16,85 @@ class _QuizScreenState extends State<QuizScreen> {
   String? _selectedLetter;
   List<Question> _questions = [];
   bool _isLoading = true;
+  bool _isAnswering = false;
+  String _languageCode = 'bn';
 
   final QuizService _quizService = QuizService();
 
   @override
   void initState() {
     super.initState();
-    _loadQuestions();
+    // লোকালাইজেশন প্রস্তুত হওয়ার পর প্রশ্ন লোড করুন
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadQuestions();
+    });
   }
 
   Future<void> _loadQuestions() async {
-    final data = await _quizService.fetchQuestions(limit: 5);
-    if (data.isNotEmpty) {
-      setState(() {
-        _questions = data;
-        _isLoading = false;
-      });
-    } else {
-      _useLocalQuestions();
-    }
-  }
-
-  void _useLocalQuestions() {
+    final locale = Localizations.localeOf(context);
+    final lang = locale.languageCode;
     setState(() {
-      _questions = [
-        Question(
-          questionText: 'LOCAL: RSS founded?',
-          optionA: '1915',
-          optionB: '1920',
-          optionC: '1925',
-          optionD: '1930',
-          correctOption: 'C',
-          explanation: '1925.',
-          category: 'History',
-        ),
-        Question(
-          questionText: 'LOCAL: Flag designer?',
-          optionA: 'Tagore',
-          optionB: 'Venkayya',
-          optionC: 'Gandhi',
-          optionD: 'Bose',
-          correctOption: 'B',
-          explanation: 'Venkayya.',
-          category: 'History',
-        ),
-        Question(
-          questionText: 'LOCAL: Vande Mataram?',
-          optionA: 'Gitanjali',
-          optionB: 'Anandamath',
-          optionC: 'Devdas',
-          optionD: 'Gora',
-          correctOption: 'B',
-          explanation: 'Anandamath.',
-          category: 'Literature',
-        ),
-        Question(
-          questionText: 'LOCAL: First satellite?',
-          optionA: 'Chandrayaan',
-          optionB: 'Aryabhata',
-          optionC: 'Mangalyaan',
-          optionD: 'Bhaskara',
-          correctOption: 'B',
-          explanation: 'Aryabhata.',
-          category: 'Science',
-        ),
-        Question(
-          questionText: 'LOCAL: Father of Yoga?',
-          optionA: 'Buddha',
-          optionB: 'Patanjali',
-          optionC: 'Vivekananda',
-          optionD: 'Krishna',
-          correctOption: 'B',
-          explanation: 'Patanjali.',
-          category: 'Yoga',
-        ),
-      ];
+      _languageCode = lang;
+    });
+    print('🔍 কুইজে ব্যবহৃত ভাষা: $lang');
+    final data = await _quizService.fetchQuestions(limit: 5, languageCode: lang);
+    setState(() {
+      _questions = data;
       _isLoading = false;
     });
+    print('✅ প্রশ্ন লোড হয়েছে: ${_questions.length} টি');
   }
 
   void _answerQuestion(String letter) {
+    if (_isAnswering || _selectedLetter != null) return;
+
     final correct = _questions[_currentQuestion].correctOption;
     setState(() {
       _selectedLetter = letter;
+      _isAnswering = true;
       if (letter == correct) _score += 10;
     });
+
     Future.delayed(const Duration(seconds: 2), () {
-      if (_currentQuestion < _questions.length - 1) {
-        setState(() {
-          _currentQuestion++;
-          _selectedLetter = null;
-        });
-      } else {
+      if (!mounted) return;
+      if (_currentQuestion >= _questions.length - 1) {
         Navigator.pop(context, {'score': _score, 'total': _questions.length});
+        return;
       }
+      setState(() {
+        _currentQuestion++;
+        _selectedLetter = null;
+        _isAnswering = false;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context);
+
     if (_isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+
+    if (_questions.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(local.startQuiz),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Colors.white,
+        ),
+        body: const Center(child: Text('কোনো প্রশ্ন পাওয়া যায়নি।')),
+      );
+    }
+
     final q = _questions[_currentQuestion];
     final options = [q.optionA, q.optionB, q.optionC, q.optionD];
     final letters = ['A', 'B', 'C', 'D'];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Q${_currentQuestion + 1}/${_questions.length}'),
+        title: Text('${local.startQuiz} ${_currentQuestion + 1}/${_questions.length}'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
       ),
@@ -138,8 +109,10 @@ class _QuizScreenState extends State<QuizScreen> {
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(height: 30),
-            Text(q.questionText,
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            Text(
+              q.questionText,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 30),
             ...List.generate(4, (i) {
               Color btnColor = Colors.grey[200]!;
@@ -155,7 +128,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _selectedLetter == null
+                    onPressed: (_selectedLetter == null && !_isAnswering)
                         ? () => _answerQuestion(letters[i])
                         : null,
                     style: ElevatedButton.styleFrom(
@@ -163,9 +136,13 @@ class _QuizScreenState extends State<QuizScreen> {
                       foregroundColor: Colors.black,
                       padding: const EdgeInsets.all(16),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    child: Text(options[i], style: const TextStyle(fontSize: 16)),
+                    child: Text(
+                      options[i],
+                      style: const TextStyle(fontSize: 16),
+                    ),
                   ),
                 ),
               );
@@ -175,10 +152,13 @@ class _QuizScreenState extends State<QuizScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                    color: Colors.orange[50],
-                    borderRadius: BorderRadius.circular(12)),
-                child: Text(q.explanation ?? '',
-                    style: const TextStyle(fontSize: 16)),
+                  color: Colors.orange[50],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  q.explanation ?? '',
+                  style: const TextStyle(fontSize: 16),
+                ),
               ),
             ],
           ],

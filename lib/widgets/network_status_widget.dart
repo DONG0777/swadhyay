@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'dart:html' as html;
+import '../generated/l10n/app_localizations.dart';
 
 class NetworkStatusWidget extends StatefulWidget {
   const NetworkStatusWidget({super.key});
@@ -15,7 +16,6 @@ class _NetworkStatusWidgetState extends State<NetworkStatusWidget> {
   void initState() {
     super.initState();
     _checkStatus();
-    // ব্রাউজারের অনলাইন/অফলাইন ইভেন্ট শোনা
     html.window.onOnline.listen((e) => setState(() => _isOnline = true));
     html.window.onOffline.listen((e) => setState(() => _isOnline = false));
   }
@@ -28,6 +28,7 @@ class _NetworkStatusWidgetState extends State<NetworkStatusWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
@@ -43,8 +44,8 @@ class _NetworkStatusWidgetState extends State<NetworkStatusWidget> {
           const SizedBox(width: 8),
           Text(
             _isOnline
-                ? '🟢 অনলাইন - প্রশ্ন Supabase থেকে লোড হচ্ছে'
-                : '🔴 অফলাইন - ক্যাশে থাকা প্রশ্ন দেখানো হচ্ছে',
+                ? '🟢 ${local.online} - ${local.startQuiz}'
+                : '🔴 ${local.offline} - ${local.startQuiz}',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 14,

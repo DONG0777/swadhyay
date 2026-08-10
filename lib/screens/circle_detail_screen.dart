@@ -1,10 +1,10 @@
 ﻿import 'package:flutter/material.dart';
 import '../models/circle_model.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class CircleDetailScreen extends StatefulWidget {
   final Circle circle;
   final String userId;
-
   const CircleDetailScreen({
     super.key,
     required this.circle,
@@ -26,7 +26,7 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // লিডারবোর্ড সাজানো (XP অনুযায়ী Descending)
+    final local = AppLocalizations.of(context);
     final sortedLeaderboard = _circle.leaderboard.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
@@ -41,7 +41,6 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // সার্কেল ইনফো
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -59,7 +58,7 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                       Text(
                         _circle.description.isNotEmpty
                             ? _circle.description
-                            : 'কোনো বিবরণ নেই',
+                            : 'No description',
                         style: const TextStyle(fontSize: 16),
                       ),
                     ],
@@ -70,7 +69,7 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                       const Icon(Icons.code, color: Colors.grey),
                       const SizedBox(width: 8),
                       Text(
-                        'ইনভাইট কোড: ${_circle.inviteCode}',
+                        'Invite Code: ${_circle.inviteCode}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.orange,
@@ -83,24 +82,20 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                     children: [
                       const Icon(Icons.people, color: Colors.grey),
                       const SizedBox(width: 8),
-                      Text('${_circle.members.length} জন সদস্য'),
+                      Text('${_circle.members.length} members'),
                     ],
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 20),
-
-            // লিডারবোর্ড
-            const Text(
-              '🏆 লিডারবোর্ড',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              '🏆 ${local.score}',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             if (sortedLeaderboard.isEmpty)
-              const Center(
-                child: Text('কোনো সদস্য নেই'),
-              )
+              const Center(child: Text('No members'))
             else
               ListView.builder(
                 shrinkWrap: true,
@@ -110,7 +105,6 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                   final entry = sortedLeaderboard[index];
                   final isCurrentUser = entry.key == widget.userId;
                   final rank = index + 1;
-
                   return Container(
                     margin: const EdgeInsets.only(bottom: 8),
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -123,7 +117,6 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                     ),
                     child: Row(
                       children: [
-                        // র‍্যাঙ্ক
                         Container(
                           width: 30,
                           height: 30,
@@ -144,7 +137,7 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            'সদস্য ${entry.key.substring(0, 6)}...',
+                            'User ${entry.key.substring(0, 6)}...',
                             style: TextStyle(
                               fontWeight: isCurrentUser ? FontWeight.bold : FontWeight.normal,
                               color: isCurrentUser ? Colors.orange : Colors.black87,
@@ -157,7 +150,7 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                             const Icon(Icons.star, color: Colors.amber, size: 18),
                             const SizedBox(width: 4),
                             Text(
-                              '${entry.value} XP',
+                              '${entry.value} ${local.xp}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,

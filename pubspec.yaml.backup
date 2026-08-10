@@ -1,4 +1,4 @@
-﻿name: swadhyay_app
+name: swadhyay_app
 description: A Flutter quiz and social-learning platform
 publish_to: 'none'
 version: 1.0.0+1
@@ -32,6 +32,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
-
 
 

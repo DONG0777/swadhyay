@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../services/admin_service.dart';
 import '../models/question_model.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -31,13 +32,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       });
     } catch (e) {
       setState(() {
-        _error = 'প্রশ্ন লোড করতে সমস্যা: $e';
+        _error = '${AppLocalizations.of(context).welcome}: $e';
         _isLoading = false;
       });
     }
   }
 
-  // নতুন প্রশ্ন যোগ করার ডায়ালগ
   Future<void> _showAddEditDialog({Question? question}) async {
     final isEdit = question != null;
     final formKey = GlobalKey<FormState>();
@@ -56,7 +56,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       builder: (context) => StatefulBuilder(
         builder: (context, setStateDialog) {
           return AlertDialog(
-            title: Text(isEdit ? 'প্রশ্ন সম্পাদনা করুন' : 'নতুন প্রশ্ন যোগ করুন'),
+            title: Text(isEdit ? 'Edit Question' : 'Add Question'),
             content: SingleChildScrollView(
               child: Form(
                 key: formKey,
@@ -65,53 +65,53 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   children: [
                     TextFormField(
                       controller: textController,
-                      decoration: const InputDecoration(labelText: 'প্রশ্ন', border: OutlineInputBorder()),
-                      validator: (v) => v?.isEmpty ?? true ? 'প্রশ্ন দিন' : null,
+                      decoration: const InputDecoration(labelText: 'Question', border: OutlineInputBorder()),
+                      validator: (v) => v?.isEmpty ?? true ? 'Please enter question' : null,
                       maxLines: 3,
                     ),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: aController,
-                      decoration: const InputDecoration(labelText: 'A বিকল্প', border: OutlineInputBorder()),
-                      validator: (v) => v?.isEmpty ?? true ? 'A বিকল্প দিন' : null,
+                      decoration: const InputDecoration(labelText: 'Option A', border: OutlineInputBorder()),
+                      validator: (v) => v?.isEmpty ?? true ? 'Enter option A' : null,
                     ),
                     TextFormField(
                       controller: bController,
-                      decoration: const InputDecoration(labelText: 'B বিকল্প', border: OutlineInputBorder()),
-                      validator: (v) => v?.isEmpty ?? true ? 'B বিকল্প দিন' : null,
+                      decoration: const InputDecoration(labelText: 'Option B', border: OutlineInputBorder()),
+                      validator: (v) => v?.isEmpty ?? true ? 'Enter option B' : null,
                     ),
                     TextFormField(
                       controller: cController,
-                      decoration: const InputDecoration(labelText: 'C বিকল্প', border: OutlineInputBorder()),
-                      validator: (v) => v?.isEmpty ?? true ? 'C বিকল্প দিন' : null,
+                      decoration: const InputDecoration(labelText: 'Option C', border: OutlineInputBorder()),
+                      validator: (v) => v?.isEmpty ?? true ? 'Enter option C' : null,
                     ),
                     TextFormField(
                       controller: dController,
-                      decoration: const InputDecoration(labelText: 'D বিকল্প', border: OutlineInputBorder()),
-                      validator: (v) => v?.isEmpty ?? true ? 'D বিকল্প দিন' : null,
+                      decoration: const InputDecoration(labelText: 'Option D', border: OutlineInputBorder()),
+                      validator: (v) => v?.isEmpty ?? true ? 'Enter option D' : null,
                     ),
                     TextFormField(
                       controller: correctController,
-                      decoration: const InputDecoration(labelText: 'সঠিক উত্তর (A/B/C/D)', border: OutlineInputBorder()),
+                      decoration: const InputDecoration(labelText: 'Correct (A/B/C/D)', border: OutlineInputBorder()),
                       validator: (v) {
-                        if (v?.isEmpty ?? true) return 'সঠিক উত্তর দিন';
+                        if (v?.isEmpty ?? true) return 'Enter correct option';
                         if (!['A', 'B', 'C', 'D'].contains(v?.toUpperCase())) {
-                          return 'শুধু A, B, C, D লিখুন';
+                          return 'Only A, B, C, D allowed';
                         }
                         return null;
                       },
                     ),
                     TextFormField(
                       controller: explainController,
-                      decoration: const InputDecoration(labelText: 'ব্যাখ্যা (ঐচ্ছিক)', border: OutlineInputBorder()),
+                      decoration: const InputDecoration(labelText: 'Explanation (optional)', border: OutlineInputBorder()),
                       maxLines: 3,
                     ),
                     TextFormField(
                       controller: categoryController,
-                      decoration: const InputDecoration(labelText: 'ক্যাটাগরি (ঐচ্ছিক)', border: OutlineInputBorder()),
+                      decoration: const InputDecoration(labelText: 'Category (optional)', border: OutlineInputBorder()),
                     ),
                     SwitchListTile(
-                      title: const Text('সক্রিয়'),
+                      title: const Text('Active'),
                       value: isActive,
                       onChanged: (val) => setStateDialog(() => isActive = val),
                     ),
@@ -122,7 +122,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('বাতিল'),
+                child: const Text('Cancel'),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -155,7 +155,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     }
                   }
                 },
-                child: Text(isEdit ? 'আপডেট করুন' : 'যোগ করুন'),
+                child: Text(isEdit ? 'Update' : 'Add'),
               ),
             ],
           );
@@ -164,33 +164,32 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
-  // JSON আপলোড ডায়ালগ
   Future<void> _showBulkUploadDialog() async {
     final controller = TextEditingController();
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('JSON থেকে প্রশ্ন আপলোড করুন'),
+        title: const Text('Upload Questions from JSON'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('একটি JSON অ্যারে পেস্ট করুন:'),
+            const Text('Paste a JSON array:'),
             const SizedBox(height: 8),
             TextField(
               controller: controller,
               maxLines: 10,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
                 hintText: '''[
   {
-    "question_text": "প্রশ্ন",
+    "question_text": "Question",
     "option_a": "A",
     "option_b": "B",
     "option_c": "C",
     "option_d": "D",
     "correct_option": "A",
-    "explanation": "ব্যাখ্যা",
-    "category": "ক্যাটাগরি"
+    "explanation": "Explanation",
+    "category": "Category"
   }
 ]''',
               ),
@@ -200,7 +199,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('বাতিল'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -213,17 +212,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 _loadQuestions();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('✅ $count টি প্রশ্ন আপলোড হয়েছে!'),
+                    content: Text('✅ $count questions uploaded!'),
                     backgroundColor: Colors.green,
                   ),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('❌ JSON পার্স করতে সমস্যা: $e'), backgroundColor: Colors.red),
+                  SnackBar(content: Text('❌ JSON parse error: $e'), backgroundColor: Colors.red),
                 );
               }
             },
-            child: const Text('আপলোড করুন'),
+            child: const Text('Upload'),
           ),
         ],
       ),
@@ -232,9 +231,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('⚙️ অ্যাডমিন প্যানেল'),
+        title: Text('⚙️ ${local.admin}'),
         backgroundColor: const Color(0xFFFF6B00),
         foregroundColor: Colors.white,
         actions: [
@@ -250,7 +250,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               ? Center(child: Text(_error!, style: const TextStyle(color: Colors.red)))
               : Column(
                   children: [
-                    // অ্যাকশন বাটন
                     Padding(
                       padding: const EdgeInsets.all(8),
                       child: Row(
@@ -259,7 +258,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                             child: ElevatedButton.icon(
                               onPressed: () => _showAddEditDialog(),
                               icon: const Icon(Icons.add),
-                              label: const Text('নতুন প্রশ্ন'),
+                              label: Text(local.startQuiz),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green,
                                 foregroundColor: Colors.white,
@@ -271,7 +270,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                             child: ElevatedButton.icon(
                               onPressed: _showBulkUploadDialog,
                               icon: const Icon(Icons.upload_file),
-                              label: const Text('JSON আপলোড'),
+                              label: const Text('JSON Upload'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
                                 foregroundColor: Colors.white,
@@ -281,10 +280,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         ],
                       ),
                     ),
-                    // প্রশ্ন তালিকা
                     Expanded(
                       child: _questions.isEmpty
-                          ? const Center(child: Text('কোনো প্রশ্ন নেই'))
+                          ? const Center(child: Text('No questions'))
                           : ListView.builder(
                               padding: const EdgeInsets.all(8),
                               itemCount: _questions.length,
@@ -306,7 +304,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     subtitle: Text(
-                                      '${q.category ?? 'ক্যাটাগরি নেই'} • ${q.correctOption}',
+                                      '${q.category ?? 'No category'} • ${q.correctOption}',
                                       style: const TextStyle(fontSize: 12),
                                     ),
                                     trailing: Row(
@@ -322,16 +320,16 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                             final confirm = await showDialog<bool>(
                                               context: context,
                                               builder: (context) => AlertDialog(
-                                                title: const Text('ডিলিট করুন?'),
-                                                content: Text('"${q.questionText}" ডিলিট করবেন?'),
+                                                title: const Text('Delete?'),
+                                                content: Text('Delete "${q.questionText}"?'),
                                                 actions: [
                                                   TextButton(
                                                     onPressed: () => Navigator.pop(context, false),
-                                                    child: const Text('না'),
+                                                    child: const Text('No'),
                                                   ),
                                                   TextButton(
                                                     onPressed: () => Navigator.pop(context, true),
-                                                    child: const Text('হ্যাঁ', style: TextStyle(color: Colors.red)),
+                                                    child: const Text('Yes', style: TextStyle(color: Colors.red)),
                                                   ),
                                                 ],
                                               ),

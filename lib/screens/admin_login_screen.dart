@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'admin_dashboard_screen.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class AdminLoginScreen extends StatefulWidget {
   const AdminLoginScreen({super.key});
@@ -13,7 +14,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   bool _obscurePassword = true;
   String? _error;
 
-  final String _correctPassword = 'admin123'; // আপনি নিজের পাসওয়ার্ড দিন
+  final String _correctPassword = 'admin123';
 
   void _login() {
     if (_passwordController.text == _correctPassword) {
@@ -23,13 +24,14 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       );
     } else {
       setState(() {
-        _error = 'ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।';
+        _error = 'Wrong password! Try again.';
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: Center(
@@ -45,13 +47,13 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                 children: [
                   const Icon(Icons.admin_panel_settings, size: 80, color: Color(0xFFFF6B00)),
                   const SizedBox(height: 16),
-                  const Text(
-                    'অ্যাডমিন লগইন',
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  Text(
+                    local.admin,
+                    style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'দয়া করে অ্যাডমিন পাসওয়ার্ড দিন',
+                    'Please enter admin password',
                     style: TextStyle(color: Colors.grey),
                   ),
                   const SizedBox(height: 32),
@@ -59,7 +61,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     controller: _passwordController,
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
-                      labelText: 'পাসওয়ার্ড',
+                      labelText: 'Password',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -91,16 +93,13 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text(
-                        'লগইন',
-                        style: TextStyle(fontSize: 18),
-                      ),
+                      child: Text(local.admin),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('হোমে ফিরে যান'),
+                    child: Text(local.backHome),
                   ),
                 ],
               ),

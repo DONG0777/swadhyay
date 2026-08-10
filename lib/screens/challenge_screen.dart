@@ -1,6 +1,8 @@
 ﻿import 'package:flutter/material.dart';
+import '../services/share_service.dart';
 import '../services/challenge_service.dart';
 import '../models/challenge_model.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class ChallengeScreen extends StatefulWidget {
   const ChallengeScreen({super.key});
@@ -22,8 +24,8 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   }
 
   Future<void> _loadData() async {
-    final days = await _service.loadChallenge();
-    final progress = await _service.getProgress();
+    final days = await _service.loadChallenge(context);
+    final progress = await _service.getProgress(context);
     setState(() {
       _days = days;
       _progress = progress;
@@ -32,11 +34,12 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
   }
 
   Future<void> _completeDay(int index) async {
-    await _service.completeDay(index);
-    await _loadData(); // রিলোড
+    await _service.completeDay(context, index);
+    await _loadData();
+    final local = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('🎉 দিন ${index + 1} সম্পন্ন!'),
+        content: Text('🎉 ${local.challenge} ${index + 1} ${local.score}!'),
         backgroundColor: Colors.green,
       ),
     );
@@ -44,20 +47,33 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context);
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final completedCount = _days.where((d) => d.isCompleted).length;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('🌱 দীপ্ত যাত্রা'),
+        title: Text('🌱 ${local.challenge}'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () async {
+              final completed = _days.where((d) => d.isCompleted).length;
+              ShareService.shareChallengeProgress(
+                completed: completed,
+                total: _days.length,
+                streak: completed,
+                xp: completed * 5,
+                language: AppLocalizations.of(context).appTitle,
+              );
+            },
+            tooltip: AppLocalizations.of(context).share,
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadData,
@@ -66,7 +82,6 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
       ),
       body: Column(
         children: [
-          // প্রগ্রেস বার ও প্ল্যান্ট ইমোজি
           Container(
             padding: const EdgeInsets.all(16),
             margin: const EdgeInsets.all(16),
@@ -84,7 +99,7 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '🌿 $completedCount/${_days.length} দিন',
+                      '🌿 $completedCount/${_days.length} ${local.streak}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -107,13 +122,12 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${(_progress * 100).toInt()}% সম্পন্ন',
+                  '${(_progress * 100).toInt()}% ${local.score}',
                   style: const TextStyle(color: Colors.white70),
                 ),
               ],
             ),
           ),
-          // দিনের গ্রিড
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -142,7 +156,6 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     );
   }
 
-  // প্রগ্রেস অনুযায়ী প্ল্যান্ট ইমোজি
   String _getPlantEmoji(double progress) {
     if (progress < 0.1) return '🌱';
     if (progress < 0.25) return '🌿';
@@ -176,7 +189,7 @@ class _DayCard extends StatelessWidget {
     } else {
       bgColor = Colors.grey[300]!;
       icon = Icons.lock;
-      iconColor = Colors.grey[600]!;  // 🔥 ফিক্স: ! যোগ করা হয়েছে
+      iconColor = Colors.grey[600]!;
     }
 
     return GestureDetector(
@@ -192,7 +205,7 @@ class _DayCard extends StatelessWidget {
               Icon(icon, size: 28, color: iconColor),
               const SizedBox(height: 4),
               Text(
-                'দিন ${day.day}',
+                '${day.day}',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -211,3 +224,4 @@ class _DayCard extends StatelessWidget {
     );
   }
 }
+

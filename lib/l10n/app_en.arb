@@ -1,0 +1,18 @@
+﻿{
+  "@@locale": "en",
+  "appTitle": "Swadhyay",
+  "welcome": "Welcome",
+  "startQuiz": "Start Quiz",
+  "streak": "Streak",
+  "xp": "XP",
+  "challenge": "Dipto Jatra",
+  "circle": "Circle",
+  "checkin": "Check-in",
+  "admin": "Admin Panel",
+  "profile": "Profile",
+  "logout": "Logout",
+  "guest": "Guest",
+  "score": "Score",
+  "share": "Share",
+  "backHome": "Back to Home"
+}

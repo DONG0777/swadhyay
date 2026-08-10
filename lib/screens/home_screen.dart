@@ -9,9 +9,11 @@ import 'checkin_screen.dart';
 import '../widgets/daily_pillars_widget.dart';
 import '../widgets/network_status_widget.dart';
 import '../services/auth_service.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final Function(Locale) onLanguageChanged;
+  const HomeScreen({super.key, required this.onLanguageChanged});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -72,74 +74,91 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('☀️ Swadhyay'),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.wb_sunny, color: Colors.white, size: 24),
+            const SizedBox(width: 8),
+            Text(local.appTitle, style: const TextStyle(color: Colors.white)),
+          ],
+        ),
         actions: [
+          PopupMenuButton<Locale>(
+            icon: const Icon(Icons.language),
+            tooltip: local.changeLanguage,
+            onSelected: (Locale locale) {
+              widget.onLanguageChanged(locale);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(onLanguageChanged: widget.onLanguageChanged),
+                ),
+              );
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(value: Locale('bn'), child: Text('বাংলা')),
+              const PopupMenuItem(value: Locale('hi'), child: Text('हिन्दी')),
+              const PopupMenuItem(value: Locale('en'), child: Text('English')),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.account_circle),
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('আমার প্রোফাইল'),
+                  title: Text(local.profile),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('👤 নাম: ${_auth.userName ?? 'অতিথি'}'),
-                      Text('📧 ইমেইল: ${_auth.userEmail ?? 'নেই'}'),
-                      Text('🆔 আইডি: ${_auth.userId}'),
+                      Text('👤 ${local.welcome}: ${_auth.userName ?? local.guest}'),
+                      Text('📧 ${_auth.userEmail ?? 'N/A'}'),
+                      Text('🆔 ${_auth.userId}'),
                       const Divider(),
-                      Text('🔥 স্ট্রিক: $_streak দিন'),
-                      Text('⭐ এক্সপি: $_totalXP'),
+                      Text('🔥 ${local.streak}: $_streak days'),
+                      Text('⭐ ${local.xp}: $_totalXP'),
                     ],
                   ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('বন্ধ করুন'),
+                      child: Text(local.backHome),
                     ),
                     if (_auth.isSignedIn)
                       TextButton(
                         onPressed: () async {
                           await _auth.signOut();
-                          if (context.mounted) {
-                            Navigator.pushReplacementNamed(context, '/');
-                          }
+                          if (context.mounted) Navigator.pushReplacementNamed(context, '/');
                         },
-                        child: const Text('লগআউট', style: TextStyle(color: Colors.red)),
+                        child: Text(local.logout, style: const TextStyle(color: Colors.red)),
                       ),
                   ],
                 ),
               );
             },
-            tooltip: 'প্রোফাইল',
+            tooltip: local.profile,
           ),
           IconButton(
             icon: const Icon(Icons.people),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CircleListScreen(userId: _auth.userId),
-                ),
-              );
-            },
-            tooltip: 'সার্কেল',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CircleListScreen(userId: _auth.userId)),
+            ),
+            tooltip: local.circle,
           ),
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AdminLoginScreen()),
-              );
-            },
-            tooltip: 'অ্যাডমিন প্যানেল',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AdminLoginScreen()),
+            ),
+            tooltip: local.admin,
           ),
         ],
       ),
@@ -148,27 +167,53 @@ class _HomeScreenState extends State<HomeScreen> {
           const NetworkStatusWidget(),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: 30),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  const SizedBox(height: 20),
-                  const Icon(Icons.wb_sunny, size: 80, color: Color(0xFFFF6B00)),
-                  const SizedBox(height: 10),
-                  Text(
-                    'স্বাগতম, ${_auth.userName ?? 'অতিথি'}!',
-                    style: Theme.of(context).textTheme.headlineLarge
-                        ?.copyWith(fontWeight: FontWeight.bold, color: const Color(0xFFFF6B00)),
+                  // ===== সূর্যের লোগো =====
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 16,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.wb_sunny,
+                      size: 60,
+                      color: Color(0xFFFF6B00),
+                    ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 16),
+                  
+                  // ===== স্বাগতম =====
+                  Text(
+                    '${local.welcome}, ${_auth.userName ?? local.guest}!',
+                    style: theme.textTheme.headlineLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFFFF6B00),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  // ===== স্ট্রিক ও XP কার্ড =====
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildStatCard('🔥 Streak', '$_streak days', Colors.orange),
-                      const SizedBox(width: 20),
-                      _buildStatCard('⭐ XP', '$_totalXP', Colors.amber),
+                      _buildStatCard('🔥 ${local.streak}', '$_streak days', Colors.orange),
+                      const SizedBox(width: 16),
+                      _buildStatCard('⭐ ${local.xp}', '$_totalXP', Colors.amber),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
+                  
+                  // ===== বাটনসমূহ =====
                   Wrap(
                     spacing: 10,
                     runSpacing: 10,
@@ -177,10 +222,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ElevatedButton(
                         onPressed: () async {
                           final result = await Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => const QuizScreen()));
+                            context,
+                            MaterialPageRoute(builder: (context) => const QuizScreen()),
+                          );
                           if (result != null && result is Map) {
                             _updateStreakAndXP(result['score'] as int);
-                            // ignore: use_build_context_synchronously
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -194,45 +240,32 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           }
                         },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                        ),
-                        child: const Text('Start Quiz', style: TextStyle(fontSize: 14)),
+                        child: Text(local.startQuiz, style: const TextStyle(fontSize: 13)),
                       ),
                       ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const ChallengeScreen()),
-                          );
-                        },
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ChallengeScreen()),
+                        ),
                         icon: const Icon(Icons.eco, size: 18),
-                        label: const Text('🌱 দীপ্ত যাত্রা', style: TextStyle(fontSize: 12)),
+                        label: Text(local.challenge, style: const TextStyle(fontSize: 12)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF2E7D32),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                         ),
                       ),
                       ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CircleListScreen(userId: _auth.userId),
-                            ),
-                          );
-                        },
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CircleListScreen(userId: _auth.userId),
+                          ),
+                        ),
                         icon: const Icon(Icons.people, size: 18),
-                        label: const Text('🔄 সার্কেল', style: TextStyle(fontSize: 12)),
+                        label: Text(local.circle, style: const TextStyle(fontSize: 12)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF1565C0),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                         ),
                       ),
-                      // 🔥 নতুন GPS চেক-ইন বাটন
                       ElevatedButton.icon(
                         onPressed: () async {
                           final result = await Navigator.push(
@@ -241,28 +274,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                           if (result != null && result is Map) {
                             _updateStreakAndXP(result['xp'] as int);
-                            // ignore: use_build_context_synchronously
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('🎉 +৫ এক্সপি পেয়েছেন!'),
+                              SnackBar(
+                                content: Text('🎉 +5 ${local.xp}!'),
                                 backgroundColor: Colors.green,
                               ),
                             );
                           }
                         },
                         icon: const Icon(Icons.location_on, size: 18),
-                        label: const Text('📍 চেক-ইন', style: TextStyle(fontSize: 12)),
+                        label: Text(local.checkin, style: const TextStyle(fontSize: 12)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF4CAF50),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30),
-                  const Divider(),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 24),
+                  const Divider(color: Colors.grey),
+                  const SizedBox(height: 8),
                   const DailyPillarsWidget(),
                 ],
               ),
@@ -275,17 +305,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildStatCard(String title, String value, Color color) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      width: 120,
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color, width: 2),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.3), width: 1),
       ),
       child: Column(
         children: [
-          Text(title, style: TextStyle(fontSize: 14, color: Colors.grey[700])),
-          const SizedBox(height: 8),
-          Text(value, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color)),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.grey[700],
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
         ],
       ),
     );
