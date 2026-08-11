@@ -1,6 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import '../services/quiz_service.dart';
-import '../models/question_model.dart';
+import '../models/content_model.dart';
 import '../generated/l10n/app_localizations.dart';
 
 class QuizScreen extends StatefulWidget {
@@ -14,17 +14,15 @@ class _QuizScreenState extends State<QuizScreen> {
   int _currentQuestion = 0;
   int _score = 0;
   String? _selectedLetter;
-  List<Question> _questions = [];
+  List<ContentModel> _questions = [];
   bool _isLoading = true;
   bool _isAnswering = false;
-  String _languageCode = 'bn';
 
   final QuizService _quizService = QuizService();
 
   @override
   void initState() {
     super.initState();
-    // লোকালাইজেশন প্রস্তুত হওয়ার পর প্রশ্ন লোড করুন
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadQuestions();
     });
@@ -33,9 +31,6 @@ class _QuizScreenState extends State<QuizScreen> {
   Future<void> _loadQuestions() async {
     final locale = Localizations.localeOf(context);
     final lang = locale.languageCode;
-    setState(() {
-      _languageCode = lang;
-    });
     print('🔍 কুইজে ব্যবহৃত ভাষা: $lang');
     final data = await _quizService.fetchQuestions(limit: 5, languageCode: lang);
     setState(() {
@@ -48,7 +43,7 @@ class _QuizScreenState extends State<QuizScreen> {
   void _answerQuestion(String letter) {
     if (_isAnswering || _selectedLetter != null) return;
 
-    final correct = _questions[_currentQuestion].correctOption;
+    final correct = _questions[_currentQuestion].correctOption!;
     setState(() {
       _selectedLetter = letter;
       _isAnswering = true;
@@ -89,7 +84,12 @@ class _QuizScreenState extends State<QuizScreen> {
     }
 
     final q = _questions[_currentQuestion];
-    final options = [q.optionA, q.optionB, q.optionC, q.optionD];
+    final options = [
+      q.optionA ?? '',
+      q.optionB ?? '',
+      q.optionC ?? '',
+      q.optionD ?? '',
+    ];
     final letters = ['A', 'B', 'C', 'D'];
 
     return Scaffold(
@@ -110,7 +110,7 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
             const SizedBox(height: 30),
             Text(
-              q.questionText,
+              q.title ?? q.content ?? 'প্রশ্ন নেই',
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 30),

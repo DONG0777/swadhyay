@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/admin_service.dart';
 import '../models/question_model.dart';
 import '../generated/l10n/app_localizations.dart';
+import 'admin_content_manager_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -273,6 +274,24 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                               label: const Text('JSON Upload'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          // 🔥 নতুন কন্টেন্ট ম্যানেজার বাটন
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const AdminContentManagerScreen()),
+                                );
+                              },
+                              icon: const Icon(Icons.library_books),
+                              label: const Text('কন্টেন্ট ম্যানেজার'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.purple,
                                 foregroundColor: Colors.white,
                               ),
                             ),

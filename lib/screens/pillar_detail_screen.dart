@@ -1,30 +1,47 @@
 ﻿import 'package:flutter/material.dart';
-import '../services/daily_content_service.dart';
+import '../models/content_model.dart';
 import '../generated/l10n/app_localizations.dart';
 import '../services/share_service.dart';
+import 'surya_namaskar_screen.dart';
 
 class PillarDetailScreen extends StatelessWidget {
-  final Pillar pillar;
+  final ContentModel pillar;
+  final Color color;
+  final IconData icon;
 
-  const PillarDetailScreen({super.key, required this.pillar});
+  const PillarDetailScreen({
+    super.key,
+    required this.pillar,
+    required this.color,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context);
+
+    if (pillar.contentType == 'surya') {
+      return SuryaNamaskarScreen(
+        pillar: pillar,
+        color: color,
+        icon: icon,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(pillar.title),
-        backgroundColor: pillar.color,
+        title: Text(pillar.title ?? pillar.contentType),
+        backgroundColor: color,
         foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
             onPressed: () {
               ShareService.sharePillar(
-                title: pillar.title,
-                subtitle: pillar.subtitle,
-                content: pillar.content,
-                id: pillar.id,
+                title: pillar.title ?? pillar.contentType,
+                subtitle: pillar.contentType,
+                content: pillar.content ?? '',
+                id: pillar.id ?? 'pillar',
               );
             },
             tooltip: local.share,
@@ -38,18 +55,18 @@ class PillarDetailScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(pillar.icon, size: 40, color: pillar.color),
+                Icon(icon, size: 40, color: color),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        pillar.title,
+                        pillar.title ?? pillar.contentType,
                         style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        pillar.subtitle,
+                        pillar.contentType,
                         style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                       ),
                     ],
@@ -61,27 +78,45 @@ class PillarDetailScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: pillar.color.withOpacity(0.08),
+                color: color.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: pillar.color.withOpacity(0.3)),
+                border: Border.all(color: color.withOpacity(0.3)),
               ),
               child: Text(
-                pillar.content,
+                pillar.content ?? 'কন্টেন্ট নেই',
                 style: const TextStyle(fontSize: 18, height: 1.8),
               ),
             ),
             const SizedBox(height: 30),
+            if (pillar.explanation != null && pillar.explanation!.isNotEmpty) ...[
+              const Text(
+                '📖 ব্যাখ্যা / অর্থ',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  pillar.explanation!,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+              const SizedBox(height: 30),
+            ],
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // শেয়ার বাটন
                 ElevatedButton.icon(
                   onPressed: () {
                     ShareService.sharePillar(
-                      title: pillar.title,
-                      subtitle: pillar.subtitle,
-                      content: pillar.content,
-                      id: pillar.id,
+                      title: pillar.title ?? pillar.contentType,
+                      subtitle: pillar.contentType,
+                      content: pillar.content ?? '',
+                      id: pillar.id ?? 'pillar',
                     );
                   },
                   icon: const Icon(Icons.share, size: 18),
@@ -91,7 +126,6 @@ class PillarDetailScreen extends StatelessWidget {
                     foregroundColor: Colors.white,
                   ),
                 ),
-                // হোম বাটন
                 TextButton.icon(
                   onPressed: () => Navigator.pop(context),
                   icon: const Icon(Icons.arrow_back),

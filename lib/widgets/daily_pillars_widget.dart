@@ -1,15 +1,64 @@
 ﻿import 'package:flutter/material.dart';
-import '../services/daily_content_service.dart';
+import '../services/content_service.dart';
+import '../models/content_model.dart';
 import '../screens/pillar_detail_screen.dart';
 import '../generated/l10n/app_localizations.dart';
 
-class DailyPillarsWidget extends StatelessWidget {
+class DailyPillarsWidget extends StatefulWidget {
   const DailyPillarsWidget({super.key});
+
+  @override
+  State<DailyPillarsWidget> createState() => _DailyPillarsWidgetState();
+}
+
+class _DailyPillarsWidgetState extends State<DailyPillarsWidget> {
+  final ContentService _service = ContentService();
+  List<ContentModel> _pillars = [];
+  bool _isLoading = true;
+  bool _isFirstLoad = true;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isFirstLoad) {
+      _loadPillars();
+      _isFirstLoad = false;
+    }
+  }
+
+  Future<void> _loadPillars() async {
+    final locale = Localizations.localeOf(context);
+    final lang = locale.languageCode;
+    try {
+      // 🔥 সব পিলার লোড করুন (শ্লোক, উক্তি, বই, সূর্য নমস্কার, নাগরিক কর্তব্য)
+      final data = await _service.getPillars(languageCode: lang);
+      setState(() {
+        _pillars = data;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() => _isLoading = false);
+      print('❌ Pillars load error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context);
-    final pillars = DailyContentService.getPillars(context); // 🔥 context পাস করা হয়েছে
+
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_pillars.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          '📭 কোনো পিলার পাওয়া যায়নি। অ্যাডমিন প্যানেলে যোগ করুন।',
+          style: TextStyle(color: Colors.grey[600]),
+        ),
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -17,7 +66,7 @@ class DailyPillarsWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
-            '🌸 ${local.challenge}', // দীপ্ত যাত্রা এখানে ব্যবহার করছি
+            '🌸 ${local.challenge}',
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFFF6B00)),
           ),
         ),
@@ -31,9 +80,9 @@ class DailyPillarsWidget extends StatelessWidget {
             mainAxisSpacing: 12,
             childAspectRatio: 0.9,
           ),
-          itemCount: pillars.length,
+          itemCount: _pillars.length,
           itemBuilder: (context, index) {
-            final pillar = pillars[index];
+            final pillar = _pillars[index];
             return _PillarCard(pillar: pillar);
           },
         ),
@@ -43,11 +92,41 @@ class DailyPillarsWidget extends StatelessWidget {
 }
 
 class _PillarCard extends StatelessWidget {
-  final Pillar pillar;
+  final ContentModel pillar;
+
   const _PillarCard({required this.pillar});
 
   @override
   Widget build(BuildContext context) {
+    // content_type অনুযায়ী আইকন ও রং নির্ধারণ
+    IconData iconData;
+    Color color;
+    switch (pillar.contentType) {
+      case 'shloka':
+        iconData = Icons.auto_awesome;
+        color = Colors.orange;
+        break;
+      case 'quote':
+        iconData = Icons.format_quote;
+        color = Colors.teal;
+        break;
+      case 'book':
+        iconData = Icons.book;
+        color = Colors.brown;
+        break;
+      case 'surya':
+        iconData = Icons.self_improvement;
+        color = Colors.redAccent;
+        break;
+      case 'duty':
+        iconData = Icons.gavel;
+        color = Colors.blue;
+        break;
+      default:
+        iconData = Icons.star;
+        color = Colors.deepPurple;
+    }
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -57,7 +136,11 @@ class _PillarCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PillarDetailScreen(pillar: pillar),
+              builder: (context) => PillarDetailScreen(
+                pillar: pillar,
+                color: color,
+                icon: iconData,
+              ),
             ),
           );
         },
@@ -67,8 +150,8 @@ class _PillarCard extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                pillar.color,
-                pillar.color.withOpacity(0.7),
+                color,
+                color.withOpacity(0.7),
               ],
             ),
           ),
@@ -78,13 +161,13 @@ class _PillarCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(
-                pillar.icon,
+                iconData,
                 size: 32,
                 color: Colors.white.withOpacity(0.9),
               ),
               const SizedBox(height: 12),
               Text(
-                pillar.title,
+                pillar.title ?? pillar.contentType,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -96,7 +179,7 @@ class _PillarCard extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                pillar.subtitle,
+                pillar.content?.substring(0, 30) ?? '',
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.white.withOpacity(0.8),
