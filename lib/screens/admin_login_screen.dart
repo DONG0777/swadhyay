@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'admin_dashboard_screen.dart';
+import 'admin_dashboard_screen.dart'; // ইম্পোর্ট যোগ করা হয়েছে
 import '../generated/l10n/app_localizations.dart';
 
 class AdminLoginScreen extends StatefulWidget {
@@ -24,7 +24,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       );
     } else {
       setState(() {
-        _error = 'Wrong password! Try again.';
+        _error = 'ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।';
       });
     }
   }
@@ -53,7 +53,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Please enter admin password',
+                    'অ্যাডমিন পাসওয়ার্ড দিন',
                     style: TextStyle(color: Colors.grey),
                   ),
                   const SizedBox(height: 32),
@@ -61,7 +61,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     controller: _passwordController,
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
-                      labelText: 'Password',
+                      labelText: 'পাসওয়ার্ড',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -93,7 +93,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: Text(local.admin),
+                      child: const Text(
+                        'লগইন',
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),

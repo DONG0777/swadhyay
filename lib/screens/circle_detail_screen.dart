@@ -1,6 +1,9 @@
 ﻿import 'package:flutter/material.dart';
 import '../models/circle_model.dart';
 import '../generated/l10n/app_localizations.dart';
+import '../services/user_profile_service.dart';
+import '../services/auth_service.dart';
+import 'circle_members_screen.dart';
 
 class CircleDetailScreen extends StatefulWidget {
   final Circle circle;
@@ -16,31 +19,76 @@ class CircleDetailScreen extends StatefulWidget {
 }
 
 class _CircleDetailScreenState extends State<CircleDetailScreen> {
-  late Circle _circle;
+  final UserProfileService _profileService = UserProfileService();
+  final AuthService _auth = AuthService();
+  List<Map<String, dynamic>> _members = [];
+  bool _isLoading = true;
+  bool _isAdmin = false;
 
   @override
   void initState() {
     super.initState();
-    _circle = widget.circle;
+    _checkAdmin();
+    _loadMembers();
+  }
+
+  void _checkAdmin() {
+    setState(() {
+      _isAdmin = widget.circle.createdBy == widget.userId;
+    });
+  }
+
+  Future<void> _loadMembers() async {
+    setState(() => _isLoading = true);
+    try {
+      final members = await _profileService.getCircleMembersProfiles(widget.circle.members);
+      setState(() {
+        _members = members;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() => _isLoading = false);
+      print('❌ Error loading members: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context);
-    final sortedLeaderboard = _circle.leaderboard.entries.toList()
+    final sortedLeaderboard = widget.circle.leaderboard.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_circle.name),
+        title: Text(widget.circle.name),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
+        actions: [
+          // 🔥 অ্যাডমিন হলে সদস্য তালিকা আইকন দেখাবে
+          if (_isAdmin)
+            IconButton(
+              icon: const Icon(Icons.people),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CircleMembersScreen(
+                      circleId: widget.circle.id,
+                      adminId: widget.userId,
+                    ),
+                  ),
+                );
+              },
+              tooltip: 'সদস্য তালিকা',
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // সার্কেল ইনফো
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -56,8 +104,8 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                       const Icon(Icons.info, color: Colors.orange),
                       const SizedBox(width: 8),
                       Text(
-                        _circle.description.isNotEmpty
-                            ? _circle.description
+                        widget.circle.description.isNotEmpty
+                            ? widget.circle.description
                             : 'No description',
                         style: const TextStyle(fontSize: 16),
                       ),
@@ -69,7 +117,7 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                       const Icon(Icons.code, color: Colors.grey),
                       const SizedBox(width: 8),
                       Text(
-                        'Invite Code: ${_circle.inviteCode}',
+                        'Invite Code: ${widget.circle.inviteCode}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.orange,
@@ -82,13 +130,46 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                     children: [
                       const Icon(Icons.people, color: Colors.grey),
                       const SizedBox(width: 8),
-                      Text('${_circle.members.length} members'),
+                      Text('${widget.circle.members.length} members'),
                     ],
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 20),
+
+            // ===== 🔥 অ্যাডমিনের জন্য সদস্য ব্যবস্থাপনা বাটন =====
+            if (_isAdmin) ...[
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CircleMembersScreen(
+                          circleId: widget.circle.id,
+                          adminId: widget.userId,
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.people),
+                  label: const Text('👥 সদস্য তালিকা (বিস্তারিত)'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+
+            // ===== লিডারবোর্ড =====
             Text(
               '🏆 ${local.score}',
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
