@@ -12,11 +12,10 @@ class CheckinScreen extends StatefulWidget {
 }
 
 class _CheckinScreenState extends State<CheckinScreen> {
-  final LocationService _locationService = LocationService();
   final AuthService _auth = AuthService();
   bool _isLoading = false;
   bool _isCheckedInToday = false;
-  String _statusMessage = 'Click below to check-in.';
+  String _statusMessage = 'চেক-ইন করতে নিচের বাটনে ক্লিক করুন।';
   double? _latitude;
   double? _longitude;
 
@@ -34,15 +33,17 @@ class _CheckinScreenState extends State<CheckinScreen> {
     if (lastDate == today) {
       setState(() {
         _isCheckedInToday = true;
-        _statusMessage = '✅ You have already checked in today!';
+        _statusMessage = '✅ আজকে আপনি ইতিমধ্যে চেক-ইন করেছেন!';
       });
     }
   }
 
   Future<void> _performCheckin() async {
     setState(() => _isLoading = true);
+
     try {
-      final position = await _locationService.getCurrentLocation();
+      // 🔥 স্ট্যাটিক মেথড ব্যবহার করুন
+      final position = await LocationService.getCurrentLocation();
       _latitude = position.latitude;
       _longitude = position.longitude;
 
@@ -54,7 +55,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
       if (lastDate == today) {
         setState(() {
           _isCheckedInToday = true;
-          _statusMessage = '✅ You have already checked in today!';
+          _statusMessage = '✅ আপনি আজকে ইতিমধ্যে চেক-ইন করেছেন!';
           _isLoading = false;
         });
         return;
@@ -66,14 +67,14 @@ class _CheckinScreenState extends State<CheckinScreen> {
 
       setState(() {
         _isCheckedInToday = true;
-        _statusMessage = '🎉 Check-in successful! +5 XP earned!';
+        _statusMessage = '🎉 চেক-ইন সফল! +৫ এক্সপি পেয়েছেন!';
         _isLoading = false;
       });
 
       Navigator.pop(context, {'xp': 5});
     } catch (e) {
       setState(() {
-        _statusMessage = '❌ Error getting location: $e';
+        _statusMessage = '❌ লোকেশন পেতে সমস্যা: $e';
         _isLoading = false;
       });
     }
@@ -95,13 +96,13 @@ class _CheckinScreenState extends State<CheckinScreen> {
           children: [
             const Icon(Icons.location_on, size: 80, color: Color(0xFFFF6B00)),
             const SizedBox(height: 20),
-            Text(
-              local.checkin,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            const Text(
+              'দৈনিক চেক-ইন',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             Text(
-              'Check in from your current location\nEarn +5 XP.',
+              'আপনার বর্তমান অবস্থান থেকে চেক-ইন করুন\nএবং +৫ এক্সপি অর্জন করুন।',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
@@ -167,7 +168,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
                         ),
                       )
                     : Text(
-                        _isCheckedInToday ? '✅ Already checked in' : '📍 ${local.checkin}',
+                        _isCheckedInToday ? '✅ ইতিমধ্যে চেক-ইন করেছেন' : '📍 চেক-ইন করুন',
                         style: const TextStyle(fontSize: 18),
                       ),
               ),

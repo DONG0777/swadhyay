@@ -10,6 +10,7 @@ import 'admin_notification_screen.dart';
 import 'admin_users_list_screen.dart';
 import 'admin_location_screen.dart';
 import 'admin_analytics_dashboard_screen.dart';
+import 'circle_proposals_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -246,6 +247,18 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           _buildActionButton(icon: Icons.upload_file, label: 'JSON আপলোড', color: Colors.blue, onPressed: _showBulkUploadDialog),
                           _buildActionButton(icon: Icons.library_books, label: 'কন্টেন্ট', color: Colors.purple, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminContentManagerScreen()))),
                           _buildActionButton(icon: Icons.notifications_active, label: 'নোটিফিকেশন', color: Colors.deepOrange, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AdminNotificationScreen(adminId: _auth.userId, circleId: 'YOUR_CIRCLE_ID')))),
+                          // 🔥 প্রস্তাব বাটন
+                          _buildActionButton(
+                            icon: Icons.pending_actions,
+                            label: 'প্রস্তাব',
+                            color: Colors.purpleAccent,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => const CircleProposalsScreen()),
+                              );
+                            },
+                          ),
                           _buildActionButton(icon: Icons.people, label: 'ইউজার লিস্ট', color: Colors.indigo, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminUsersListScreen()))),
                           _buildActionButton(icon: Icons.location_on, label: 'লোকেশন', color: Colors.teal, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminLocationScreen()))),
                           _buildActionButton(icon: Icons.analytics, label: 'অ্যানালিটিক্স', color: Colors.deepPurple, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAnalyticsDashboardScreen()))),
@@ -380,7 +393,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
-  // ডামি মেথড (পূর্বের মতো)
   Future<void> _showAddEditDialog({Question? question}) async {}
   Future<void> _showBulkUploadDialog() async {}
 }
