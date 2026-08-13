@@ -13,31 +13,53 @@ class _CreateCircleScreenState extends State<CreateCircleScreen> {
   final AuthService _auth = AuthService();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
-  String _selectedType = 'family';
   bool _isLoading = false;
-  bool _isGuest = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkUser();
-  }
-
-  void _checkUser() {
-    setState(() {
-      _isGuest = _auth.userId == 'guest_123';
-      if (_isGuest) _selectedType = 'family';
-    });
-  }
 
   Future<void> _createCircle() async {
-    if (_isGuest) {
+    if (_nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('⚠️ গেস্ট মোডে সার্কেল তৈরি করা যায় না! লগইন করুন।'), backgroundColor: Colors.orange),
+        const SnackBar(content: Text('❌ নাম দিন'), backgroundColor: Colors.orange),
       );
       return;
     }
-    // ... (বাকি কোড)
+
+    setState(() => _isLoading = true);
+    try {
+      final supabase = Supabase.instance.client;
+      final userId = _auth.userId;
+
+      await supabase.from('community_centers').insert({
+        'name': _nameController.text.trim(),
+        'description': _descController.text.trim(),
+        'center_type': 'family',
+        'created_by': userId,
+        'members': [userId],
+        'leaderboard': {userId: 0},
+        'invite_code': _generateInviteCode(),
+        'status': 'active',
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('✅ সার্কেল তৈরি হয়েছে!'), backgroundColor: Colors.green),
+      );
+      Navigator.pop(context, true);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('❌ Error: $e'), backgroundColor: Colors.red),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  String _generateInviteCode() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    final random = DateTime.now().millisecondsSinceEpoch;
+    String code = '';
+    for (int i = 0; i < 6; i++) {
+      code += chars[random % chars.length];
+    }
+    return code;
   }
 
   @override
@@ -51,70 +73,56 @@ class _CreateCircleScreenState extends State<CreateCircleScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (_isGuest)
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.red[50],
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.red[200]!),
-                ),
-                child: const Row(
-                  children: [
-                    Icon(Icons.warning, color: Colors.red),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        '🔒 গেস্ট মোডে সার্কেল তৈরি করা যায় না। দয়া করে লগইন করুন।',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const Icon(Icons.group_add, size: 60, color: Color(0xFFFF6B00)),
             const SizedBox(height: 16),
+            const Text(
+              'নতুন সার্কেল তৈরি করুন',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 30),
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: '🏷️ সার্কেলের নাম *', border: OutlineInputBorder()),
-              enabled: !_isGuest,
+              decoration: const InputDecoration(
+                labelText: 'সার্কেলের নাম *',
+                border: OutlineInputBorder(),
+              ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _descController,
-              decoration: const InputDecoration(labelText: '📝 বিবরণ (ঐচ্ছিক)', border: OutlineInputBorder()),
+              decoration: const InputDecoration(
+                labelText: 'বিবরণ (ঐচ্ছিক)',
+                border: OutlineInputBorder(),
+              ),
               maxLines: 3,
-              enabled: !_isGuest,
             ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: _selectedType,
-              decoration: const InputDecoration(labelText: '📌 সার্কেলের ধরন *', border: OutlineInputBorder()),
-              items: [
-                const DropdownMenuItem(value: 'family', child: Text('🏠 পারিবারিক')),
-                if (!_isGuest) const DropdownMenuItem(value: 'social', child: Text('🤝 সামাজিক')),
-                if (!_isGuest) const DropdownMenuItem(value: 'universal', child: Text('🌍 সার্বিক')),
-              ],
-              onChanged: _isGuest ? null : (val) => setState(() => _selectedType = val!),
-            ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 30),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _isGuest ? null : _createCircle,
+                onPressed: _isLoading ? null : _createCircle,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: _isGuest ? Colors.grey : const Color(0xFFFF6B00),
+                  backgroundColor: const Color(0xFFFF6B00),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: Text(_isGuest ? '🔒 লগইন করুন' : '✅ সার্কেল তৈরি করুন'),
+                child: _isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text(
+                        'সার্কেল তৈরি করুন',
+                        style: TextStyle(fontSize: 16),
+                      ),
               ),
             ),
-            if (_isGuest)
-              TextButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
-                child: const Text('🔑 লগইন পেজে যান'),
-              ),
           ],
         ),
       ),

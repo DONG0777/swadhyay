@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/login_screen.dart';
+import 'screens/home_screen.dart';
 import 'generated/l10n/app_localizations.dart';
 
 void main() async {
@@ -60,30 +61,19 @@ class _SwadhyayAppState extends State<SwadhyayApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('bn'), Locale('hi'), Locale('en')],
+      routes: {
+        '/login': (context) => LoginScreen(onLanguageChanged: changeLanguage),
+        '/home': (context) => HomeScreen(onLanguageChanged: changeLanguage),
+      },
       theme: ThemeData(
-        // ===== প্রাইমারি কালার =====
         primaryColor: const Color(0xFFFF6B00),
-        colorScheme: const ColorScheme.light(
-          primary: Color(0xFFFF6B00),
-          secondary: Color(0xFFFFD700),
-          surface: Colors.white,
-          onPrimary: Colors.white,
-          onSecondary: Colors.black87,
-          onSurface: Color(0xFF333333),
-        ),
-        
-        // ===== স্ক্যাফোল্ড =====
         scaffoldBackgroundColor: Colors.white,
-        
-        // ===== অ্যাপবার =====
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFFFF6B00),
           foregroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
         ),
-        
-        // ===== বাটন =====
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: Color(0xFFFF6B00),
@@ -100,8 +90,6 @@ class _SwadhyayAppState extends State<SwadhyayApp> {
             ),
           ),
         ),
-        
-        // ===== টেক্সট =====
         textTheme: const TextTheme(
           headlineLarge: TextStyle(
             fontSize: 28,
@@ -122,8 +110,6 @@ class _SwadhyayAppState extends State<SwadhyayApp> {
             color: Color(0xFF555555),
           ),
         ),
-        
-        // ===== কার্ড =====
         cardTheme: CardTheme(
           elevation: 2,
           shadowColor: Colors.black12,
@@ -132,7 +118,14 @@ class _SwadhyayAppState extends State<SwadhyayApp> {
           ),
           color: Colors.white,
         ),
-        
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFFFF6B00),
+          secondary: Color(0xFFFFD700),
+          surface: Colors.white,
+          onPrimary: Colors.white,
+          onSecondary: Colors.black87,
+          onSurface: Color(0xFF333333),
+        ),
         useMaterial3: true,
       ),
       home: LoginScreen(onLanguageChanged: changeLanguage),

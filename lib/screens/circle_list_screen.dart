@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import '../services/circle_service.dart';
 import '../models/circle_model.dart';
-import 'circle_create_screen.dart';
+import 'circle_type_selection_screen.dart';
 import 'circle_detail_screen.dart';
 import '../generated/l10n/app_localizations.dart';
 
@@ -18,14 +18,17 @@ class _CircleListScreenState extends State<CircleListScreen> {
   List<Circle> _circles = [];
   bool _isLoading = true;
   String? _error;
+  bool _isGuest = false;
 
   @override
   void initState() {
     super.initState();
+    _isGuest = widget.userId == 'guest_123';
     _loadCircles();
   }
 
   Future<void> _loadCircles() async {
+    setState(() => _isLoading = true);
     try {
       final circles = await _service.getUserCircles(widget.userId);
       setState(() {
@@ -34,60 +37,10 @@ class _CircleListScreenState extends State<CircleListScreen> {
       });
     } catch (e) {
       setState(() {
-        _error = '${AppLocalizations.of(context).welcome}: $e';
+        _error = 'Error loading circles: $e';
         _isLoading = false;
       });
     }
-  }
-
-  Future<void> _joinCircle() async {
-    final code = await _showJoinDialog();
-    if (code != null && code.isNotEmpty) {
-      try {
-        final circle = await _service.joinCircle(code, widget.userId);
-        setState(() {
-          _circles.add(circle);
-        });
-        final local = AppLocalizations.of(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('✅ ${local.circle} ${local.score}!')),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('❌ $e')),
-        );
-      }
-    }
-  }
-
-  Future<String?> _showJoinDialog() {
-    final controller = TextEditingController();
-    final local = AppLocalizations.of(context);
-    return showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(local.circle),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(
-            labelText: 'Invite Code',
-            hintText: 'XXXXXX',
-            border: OutlineInputBorder(),
-          ),
-          textCapitalization: TextCapitalization.characters,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(local.backHome),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, controller.text.trim().toUpperCase()),
-            child: Text(local.circle),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -100,22 +53,20 @@ class _CircleListScreenState extends State<CircleListScreen> {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
-            icon: const Icon(Icons.group_add),
+            icon: const Icon(Icons.add),
             onPressed: () async {
               final result = await Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const CircleCreateScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => const CircleTypeSelectionScreen()),
               );
-              if (result != null) {
+              if (result == true) {
                 _loadCircles();
               }
             },
           ),
           IconButton(
-            icon: const Icon(Icons.login),
-            onPressed: _joinCircle,
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadCircles,
           ),
         ],
       ),
@@ -130,7 +81,15 @@ class _CircleListScreenState extends State<CircleListScreen> {
                         children: [
                           const Icon(Icons.group_off, size: 80, color: Colors.grey),
                           const SizedBox(height: 16),
-                          Text(local.circle),
+                          const Text(
+                            'কোনো সার্কেল নেই',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '🔝 ডান পাশের + বাটন দিয়ে সার্কেল তৈরি শুরু করুন',
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
                         ],
                       ),
                     )
@@ -161,7 +120,7 @@ class _CircleListScreenState extends State<CircleListScreen> {
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: Text(
-                              '👥 ${circle.members.length} members • 📝 ${circle.leaderboard.length} active',
+                              '👥 ${circle.members.length} সদস্য',
                             ),
                             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                             onTap: () {

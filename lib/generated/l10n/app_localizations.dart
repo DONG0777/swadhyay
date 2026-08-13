@@ -15,8 +15,8 @@ class AppLocalizations {
 
   static const Map<String, Map<String, String>> _localizedValues = {
     'bn': {
-      // ========== UI টেক্সট ==========
       'appTitle': 'স্বাধ্যায়',
+      'tagline': 'দৈনিক আত্মশিক্ষা ও সাংস্কৃতিক সচেতনতা',
       'welcome': 'স্বাগতম',
       'startQuiz': 'কুইজ শুরু করুন',
       'streak': 'স্ট্রিক',
@@ -36,8 +36,11 @@ class AppLocalizations {
       'changeLanguage': 'ভাষা পরিবর্তন করুন',
       'online': 'অনলাইন',
       'offline': 'অফলাইন',
+      'requirements': '📋 প্রয়োজনীয়তা',
+      'benefits': '🌟 সুবিধা',
+      'iUnderstand': '✅ বুঝেছি',
 
-      // ========== চ্যালেঞ্জের বর্ণনা ==========
+      // চ্যালেঞ্জের বর্ণনা
       'challenge_day_1': 'শুরু: সংকল্প ও লক্ষ্য নির্ধারণ',
       'challenge_day_2': 'শৃঙ্খলা: দৈনিক রুটিন তৈরি',
       'challenge_day_3': 'আত্মবিশ্বাস: নিজের উপর আস্থা',
@@ -60,35 +63,25 @@ class AppLocalizations {
       'challenge_day_20': 'ঐক্য: সকলকে সাথে নেওয়া',
       'challenge_day_21': 'পূর্ণতা: ২১ দিনের জয়',
 
-      // ========== দৈনিক স্তম্ভের কন্টেন্ট ==========
-      'pillar_stotra_title': 'একাত্মতা স্তোত্র',
-      'pillar_stotra_subtitle': 'শুনুন ও অনুভব করুন',
-      'pillar_stotra_content': 'ওঁ বিশ্বানি দেব সবিতার দুরিতানি পরাসুভ ।\nযৎ ভদ্রং তন্ন আ সুভ ।\n\n(ঋগ্বেদ ৫.৮২.৫)\n\nঅর্থ: হে সূর্য! আমাদের সকল পাপ দূর করো এবং যা মঙ্গলকর, তা আমাদের দান করো।',
+      // সার্কেল গাইড
+      'familyCircleTitle': '🏠 পারিবারিক সার্কেল',
+      'familyCircleDesc': 'পরিবার ও আত্মীয়দের জন্য একটি প্রাইভেট সার্কেল।',
+      'familyCircleReq': '✅ শুধু ইনভাইটের মাধ্যমে যোগ দিন।\n✅ সর্বনিম্ন ২ জন সদস্য।\n✅ জিপিএস ভেরিফিকেশন প্রয়োজন নেই।',
+      'familyCircleBen': '🌟 পরিবারের সাথে নিয়মিত চর্চা করুন।\n🌟 স্ট্রিক ও এক্সপি সংগ্রহ করুন।\n🌟 নিরাপদ ও ব্যক্তিগত পরিবেশ।',
 
-      'pillar_shloka_title': 'শ্লোক',
-      'pillar_shloka_subtitle': 'প্রাচীন জ্ঞান',
-      'pillar_shloka_content': 'অসতো মা সদ্ গময় ।\nতমসো মা জ্যোতির্গময় ।\nমৃত্যোর্মা অমৃতং গময় ।\n\n(বৃহদারণ্যক উপনিষদ ১.৩.২৮)\n\nঅর্থ: আমাকে অসত্য থেকে সত্যে নিয়ে চলো। অন্ধকার থেকে আলোতে নিয়ে চলো। মৃত্যু থেকে অমৃতত্বে নিয়ে চলো।',
+      'socialCircleTitle': '🤝 সামাজিক সার্কেল',
+      'socialCircleDesc': 'বন্ধু, প্রতিবেশী বা সহকর্মীদের জন্য একটি খোলা সার্কেল।',
+      'socialCircleReq': '✅ জিপিএস ভেরিফিকেশন প্রয়োজন।\n✅ সর্বনিম্ন ৩ জন সদস্য।\n✅ অ্যাডমিন অনুমোদন প্রয়োজন।',
+      'socialCircleBen': '🌟 নতুন মানুষদের সাথে পরিচিত হন।\n🌟 গ্রুপ অ্যাক্টিভিটি করুন।\n🌟 কমিউনিটি তৈরি করুন।',
 
-      'pillar_quote_title': 'প্রেরণাদায়ী উক্তি',
-      'pillar_quote_subtitle': 'স্বামী বিবেকানন্দ',
-      'pillar_quote_content': '"উঠো, জাগো এবং লক্ষ্য না পাওয়া পর্যন্ত থামো না।"\n\n- স্বামী বিবেকানন্দ\n\nআপনার মধ্যে অপরিমেয় শক্তি আছে। বিশ্বাস করুন, নিজের উপর আস্থা রাখুন।',
-
-      'pillar_book_title': 'বইয়ের স্পটলাইট',
-      'pillar_book_subtitle': 'আজকের পাঠ',
-      'pillar_book_content': '📖 **আরএসএস: কী ও কেন?**\n\nলেখক: ড. মানবেন্দ্র নাথ রায়\n\nসংক্ষিপ্ত বিবরণ: এই বইটি রাষ্ট্রীয় স্বয়ংsevক সংঘের (আরএসএস) আদর্শ, কর্মপদ্ধতি ও ভারতীয় সংস্কৃতিতে এর অবদান সম্পর্কে আলোচনা করে। স্বায়ংসেবকের জীবনদর্শন ও সংগঠনের লক্ষ্য বুঝতে এটি অপরিহার্য পাঠ্য।',
-
-      'pillar_surya_title': 'সূর্য নমস্কার',
-      'pillar_surya_subtitle': 'দৈনিক ১২টি সেট',
-      'pillar_surya_content': '🧘 **সূর্য নমস্কার**\n\nদৈনিক ১২টি সেট করুন।\nপ্রতিটি সেটে ১২টি আসন থাকে।\n\nসূর্য নমস্কার শারীরিক ও মানসিক স্বাস্থ্যের জন্য অত্যন্ত উপকারী। এটি সকালে খালি পেটে করার পরামর্শ দেওয়া হয়।',
-
-      'pillar_duty_title': 'নাগরিক কর্তব্য',
-      'pillar_duty_subtitle': 'আজকের দায়িত্ব',
-      'pillar_duty_content': '🇮🇳 **আজকের কর্তব্য:**\n\n১. পরিবেশের জন্য একটি গাছ লাগান।\n২. কোনো অভাবী ব্যক্তিকে খাদ্য দান করুন।\n৩. নিজের এলাকা পরিষ্কার রাখুন।\n\n"সেবা পরমো ধর্ম" - এই বাণী স্মরণ রাখুন।',
-    
-  'tagline': 'দৈনিক আত্মশিক্ষা ও সাংস্কৃতিক সচেতনতা',},
+      'universalCircleTitle': '🌍 সার্বিক সার্কেল',
+      'universalCircleDesc': 'সবার জন্য উন্মুক্ত একটি পাবলিক সার্কেল।',
+      'universalCircleReq': '✅ জিপিএস ভেরিফিকেশন আবশ্যক।\n✅ ২টি সামাজিক সার্কেলের অনুমোদন প্রয়োজন।\n✅ সর্বনিম্ন ৫ জন সদস্য।\n✅ ৬টি ভোট প্রয়োজন।',
+      'universalCircleBen': '🌟 বড় কমিউনিটির সাথে সংযুক্ত হন।\n🌟 ইভেন্ট ও মিটআপ আয়োজন করুন।\n🌟 লিডারশিপের সুযোগ।',
+    },
     'hi': {
-      // ========== UI टेक्स्ट ==========
       'appTitle': 'स्वाध्याय',
+      'tagline': 'दैनिक आत्म-शिक्षा और सांस्कृतिक जागरूकता',
       'welcome': 'स्वागत है',
       'startQuiz': 'क्विज़ शुरू करें',
       'streak': 'स्ट्रीक',
@@ -108,8 +101,11 @@ class AppLocalizations {
       'changeLanguage': 'भाषा बदलें',
       'online': 'ऑनलाइन',
       'offline': 'ऑफलाइन',
+      'requirements': '📋 आवश्यकताएँ',
+      'benefits': '🌟 लाभ',
+      'iUnderstand': '✅ समझ गया',
 
-      // ========== चैलेंज विवरण ==========
+      // चैलेंज विवरण
       'challenge_day_1': 'शुरुआत: संकल्प और लक्ष्य निर्धारण',
       'challenge_day_2': 'अनुशासन: दैनिक दिनचर्या बनाना',
       'challenge_day_3': 'आत्मविश्वास: स्वयं पर भरोसा',
@@ -132,35 +128,25 @@ class AppLocalizations {
       'challenge_day_20': 'एकता: सभी को साथ लेकर चलना',
       'challenge_day_21': 'पूर्णता: 21 दिन की जीत',
 
-      // ========== दैनिक स्तंभ सामग्री ==========
-      'pillar_stotra_title': 'एकात्मता स्तोत्र',
-      'pillar_stotra_subtitle': 'सुनें और अनुभव करें',
-      'pillar_stotra_content': 'ॐ विश्वानि देव सविता दुरितानि परासुव ।\nयत् भद्रं तन्न आ सुव ।\n\n(ऋग्वेद ५.८२.५)\n\nअर्थ: हे सूर्य! हमारे सभी पापों को दूर करो और जो कल्याणकारी है, वह हमें प्रदान करो।',
+      // सर्कल गाइड
+      'familyCircleTitle': '🏠 पारिवारिक सर्कल',
+      'familyCircleDesc': 'परिवार और रिश्तेदारों के लिए एक निजी सर्कल।',
+      'familyCircleReq': '✅ केवल आमंत्रण द्वारा शामिल हों।\n✅ न्यूनतम 2 सदस्य।\n✅ जीपीएस सत्यापन की आवश्यकता नहीं।',
+      'familyCircleBen': '🌟 परिवार के साथ नियमित अभ्यास करें।\n🌟 स्ट्रीक और एक्सपी इकट्ठा करें।\n🌟 सुरक्षित और निजी वातावरण।',
 
-      'pillar_shloka_title': 'श्लोक',
-      'pillar_shloka_subtitle': 'प्राचीन ज्ञान',
-      'pillar_shloka_content': 'असतो मा सद्गमय ।\nतमसो मा ज्योतिर्गमय ।\nमृत्योर्मा अमृतं गमय ।\n\n(बृहदारण्यक उपनिषद १.३.२८)\n\nअर्थ: मुझे असत्य से सत्य की ओर ले चलो। अंधकार से प्रकाश की ओर ले चलो। मृत्यु से अमरत्व की ओर ले चलो।',
+      'socialCircleTitle': '🤝 सामाजिक सर्कल',
+      'socialCircleDesc': 'मित्रों, पड़ोसियों या सहकर्मियों के लिए एक खुला सर्कल।',
+      'socialCircleReq': '✅ जीपीएस सत्यापन आवश्यक।\n✅ न्यूनतम 3 सदस्य।\n✅ एडमिन अनुमोदन आवश्यक।',
+      'socialCircleBen': '🌟 नए लोगों से मिलें।\n🌟 समूह गतिविधियाँ करें।\n🌟 समुदाय बनाएं।',
 
-      'pillar_quote_title': 'प्रेरक वचन',
-      'pillar_quote_subtitle': 'स्वामी विवेकानंद',
-      'pillar_quote_content': '"उठो, जागो और लक्ष्य प्राप्त न होने तक मत रुको।"\n\n- स्वामी विवेकानंद\n\nआप में अपार शक्ति है। विश्वास करें, अपने आप पर भरोसा रखें।',
-
-      'pillar_book_title': 'पुस्तक स्पॉटलाइट',
-      'pillar_book_subtitle': 'आज का पाठ',
-      'pillar_book_content': '📖 **RSS: क्या और क्यों?**\n\nलेखक: डॉ. मानवेंद्र नाथ रॉय\n\nसंक्षिप्त विवरण: यह पुस्तक राष्ट्रीय स्वयंसेवक संघ (RSS) के आदर्श, कार्यप्रणाली और भारतीय संस्कृति में इसके योगदान पर चर्चा करती है। स्वयंसेवक के जीवन दर्शन और संगठन के लक्ष्य को समझने के लिए यह आवश्यक पाठ है।',
-
-      'pillar_surya_title': 'सूर्य नमस्कार',
-      'pillar_surya_subtitle': 'दैनिक 12 सेट',
-      'pillar_surya_content': '🧘 **सूर्य नमस्कार**\n\nदैनिक 12 सेट करें।\nप्रत्येक सेट में 12 आसन होते हैं।\n\nसूर्य नमस्कार शारीरिक और मानसिक स्वास्थ्य के लिए अत्यंत लाभकारी है। इसे सुबह खाली पेट करने की सलाह दी जाती है।',
-
-      'pillar_duty_title': 'नागरिक कर्तव्य',
-      'pillar_duty_subtitle': 'आज की जिम्मेदारी',
-      'pillar_duty_content': '🇮🇳 **आज के कर्तव्य:**\n\n१. पर्यावरण के लिए एक पेड़ लगाएं।\n२. किसी जरूरतमंद को भोजन दान करें।\n३. अपने क्षेत्र को साफ रखें।\n\n"सेवा परमो धर्म" - इस वाक्य को याद रखें।',
-    
-  'tagline': 'दैनिक आत्म-शिक्षा और सांस्कृतिक जागरूकता',},
+      'universalCircleTitle': '🌍 सार्वभौमिक सर्कल',
+      'universalCircleDesc': 'सभी के लिए खुला एक सार्वजनिक सर्कल।',
+      'universalCircleReq': '✅ जीपीएस सत्यापन अनिवार्य।\n✅ 2 सामाजिक सर्कल की स्वीकृति आवश्यक।\n✅ न्यूनतम 5 सदस्य।\n✅ 6 वोट आवश्यक।',
+      'universalCircleBen': '🌟 बड़े समुदाय से जुड़ें।\n🌟 इवेंट और मीटअप आयोजित करें।\n🌟 नेतृत्व के अवसर।',
+    },
     'en': {
-      // ========== UI Text ==========
       'appTitle': 'Swadhyay',
+      'tagline': 'Daily self-study and cultural awareness',
       'welcome': 'Welcome',
       'startQuiz': 'Start Quiz',
       'streak': 'Streak',
@@ -180,8 +166,11 @@ class AppLocalizations {
       'changeLanguage': 'Change Language',
       'online': 'Online',
       'offline': 'Offline',
+      'requirements': '📋 Requirements',
+      'benefits': '🌟 Benefits',
+      'iUnderstand': '✅ I Understand',
 
-      // ========== Challenge Descriptions ==========
+      // Challenge descriptions
       'challenge_day_1': 'Start: Commitment and goal setting',
       'challenge_day_2': 'Discipline: Create daily routine',
       'challenge_day_3': 'Confidence: Trust yourself',
@@ -204,41 +193,31 @@ class AppLocalizations {
       'challenge_day_20': 'Unity: Take everyone together',
       'challenge_day_21': 'Completion: 21-day victory',
 
-      // ========== Daily Pillars Content ==========
-      'pillar_stotra_title': 'Ekatmata Stotra',
-      'pillar_stotra_subtitle': 'Listen and feel',
-      'pillar_stotra_content': 'Om Vishwani Deva Savita Duritani Parasuva ।\nYat Bhadram Tan Na A Suva ।\n\n(Rigveda 5.82.5)\n\nMeaning: O Sun! Remove all our sins and bestow upon us what is good and beneficial.',
+      // Circle Guide
+      'familyCircleTitle': '🏠 Family Circle',
+      'familyCircleDesc': 'A private circle for family and relatives.',
+      'familyCircleReq': '✅ Join only by invite.\n✅ Minimum 2 members.\n✅ No GPS verification required.',
+      'familyCircleBen': '🌟 Regular practice with family.\n🌟 Collect streaks and XP.\n🌟 Safe and private environment.',
 
-      'pillar_shloka_title': 'Shloka',
-      'pillar_shloka_subtitle': 'Ancient Wisdom',
-      'pillar_shloka_content': 'Asato Ma Sadgamaya ।\nTamaso Ma Jyotirgamaya ।\nMrityorma Amritam Gamaya ।\n\n(Brihadaranyaka Upanishad 1.3.28)\n\nMeaning: Lead me from untruth to truth. Lead me from darkness to light. Lead me from mortality to immortality.',
+      'socialCircleTitle': '🤝 Social Circle',
+      'socialCircleDesc': 'An open circle for friends, neighbors, or colleagues.',
+      'socialCircleReq': '✅ GPS verification required.\n✅ Minimum 3 members.\n✅ Admin approval required.',
+      'socialCircleBen': '🌟 Meet new people.\n🌟 Do group activities.\n🌟 Build a community.',
 
-      'pillar_quote_title': 'Inspirational Quote',
-      'pillar_quote_subtitle': 'Swami Vivekananda',
-      'pillar_quote_content': '"Arise, awake and stop not till the goal is reached."\n\n- Swami Vivekananda\n\nThere is immense power within you. Believe, have faith in yourself.',
-
-      'pillar_book_title': 'Book Spotlight',
-      'pillar_book_subtitle': 'Today\'s Reading',
-      'pillar_book_content': '📖 **RSS: What and Why?**\n\nAuthor: Dr. Manavendra Nath Roy\n\nBrief Description: This book discusses the ideals, methodology, and contribution of the Rashtriya Swayamsevak Sangh (RSS) to Indian culture. It is an essential read to understand the volunteer\'s philosophy and the organization\'s goals.',
-
-      'pillar_surya_title': 'Surya Namaskar',
-      'pillar_surya_subtitle': 'Daily 12 sets',
-      'pillar_surya_content': '🧘 **Surya Namaskar**\n\nDo 12 sets daily.\nEach set consists of 12 asanas.\n\nSurya Namaskar is highly beneficial for physical and mental health. It is recommended to do it in the morning on an empty stomach.',
-
-      'pillar_duty_title': 'Civic Duty',
-      'pillar_duty_subtitle': 'Today\'s Responsibility',
-      'pillar_duty_content': '🇮🇳 **Today\'s Duties:**\n\n1. Plant a tree for the environment.\n2. Donate food to a needy person.\n3. Keep your surroundings clean.\n\n"Seva Paramo Dharma" - Remember this saying.',
-    
-  'tagline': 'Daily self-study and cultural awareness',}
+      'universalCircleTitle': '🌍 Universal Circle',
+      'universalCircleDesc': 'A public circle open to everyone.',
+      'universalCircleReq': '✅ GPS verification mandatory.\n✅ Requires approval from 2 social circles.\n✅ Minimum 5 members.\n✅ 6 votes required.',
+      'universalCircleBen': '🌟 Connect with a larger community.\n🌟 Organize events and meetups.\n🌟 Leadership opportunities.',
+    }
   };
 
   String translate(String key) {
     return _localizedValues[locale.languageCode]?[key] ?? _localizedValues['en']![key]!;
   }
 
-  // ========== UI ==========
+  // UI Getters
   String get appTitle => translate('appTitle');
-    String get tagline => translate('tagline');
+  String get tagline => translate('tagline');
   String get welcome => translate('welcome');
   String get startQuiz => translate('startQuiz');
   String get streak => translate('streak');
@@ -258,34 +237,28 @@ class AppLocalizations {
   String get changeLanguage => translate('changeLanguage');
   String get online => translate('online');
   String get offline => translate('offline');
+  String get requirements => translate('requirements');
+  String get benefits => translate('benefits');
+  String get iUnderstand => translate('iUnderstand');
 
-  // ========== চ্যালেঞ্জ ==========
+  // চ্যালেঞ্জের দিন
   String challengeDay(int day) => translate('challenge_day_$day');
 
-  // ========== দৈনিক স্তম্ভ ==========
-  String get pillarStotraTitle => translate('pillar_stotra_title');
-  String get pillarStotraSubtitle => translate('pillar_stotra_subtitle');
-  String get pillarStotraContent => translate('pillar_stotra_content');
+  // Circle Guide Getters
+  String get familyCircleTitle => translate('familyCircleTitle');
+  String get familyCircleDesc => translate('familyCircleDesc');
+  String get familyCircleReq => translate('familyCircleReq');
+  String get familyCircleBen => translate('familyCircleBen');
 
-  String get pillarShlokaTitle => translate('pillar_shloka_title');
-  String get pillarShlokaSubtitle => translate('pillar_shloka_subtitle');
-  String get pillarShlokaContent => translate('pillar_shloka_content');
+  String get socialCircleTitle => translate('socialCircleTitle');
+  String get socialCircleDesc => translate('socialCircleDesc');
+  String get socialCircleReq => translate('socialCircleReq');
+  String get socialCircleBen => translate('socialCircleBen');
 
-  String get pillarQuoteTitle => translate('pillar_quote_title');
-  String get pillarQuoteSubtitle => translate('pillar_quote_subtitle');
-  String get pillarQuoteContent => translate('pillar_quote_content');
-
-  String get pillarBookTitle => translate('pillar_book_title');
-  String get pillarBookSubtitle => translate('pillar_book_subtitle');
-  String get pillarBookContent => translate('pillar_book_content');
-
-  String get pillarSuryaTitle => translate('pillar_surya_title');
-  String get pillarSuryaSubtitle => translate('pillar_surya_subtitle');
-  String get pillarSuryaContent => translate('pillar_surya_content');
-
-  String get pillarDutyTitle => translate('pillar_duty_title');
-  String get pillarDutySubtitle => translate('pillar_duty_subtitle');
-  String get pillarDutyContent => translate('pillar_duty_content');
+  String get universalCircleTitle => translate('universalCircleTitle');
+  String get universalCircleDesc => translate('universalCircleDesc');
+  String get universalCircleReq => translate('universalCircleReq');
+  String get universalCircleBen => translate('universalCircleBen');
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -304,4 +277,3 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
-

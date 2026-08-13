@@ -5,8 +5,9 @@
   final String inviteCode;
   final String createdBy;
   final List<String> members;
-  final Map<String, int> leaderboard; // userId -> xp
-  final DateTime createdAt;
+  final Map<String, int> leaderboard;
+  final String createdAt;
+  final String centerType; // family, social, universal
 
   Circle({
     required this.id,
@@ -17,6 +18,7 @@
     required this.members,
     required this.leaderboard,
     required this.createdAt,
+    this.centerType = 'family',
   });
 
   Map<String, dynamic> toJson() => {
@@ -27,7 +29,8 @@
         'created_by': createdBy,
         'members': members,
         'leaderboard': leaderboard,
-        'created_at': createdAt.toIso8601String(),
+        'created_at': createdAt,
+        'center_type': centerType,
       };
 
   factory Circle.fromJson(Map<String, dynamic> json) => Circle(
@@ -38,6 +41,7 @@
         createdBy: json['created_by'],
         members: List<String>.from(json['members'] ?? []),
         leaderboard: Map<String, int>.from(json['leaderboard'] ?? {}),
-        createdAt: DateTime.parse(json['created_at']),
+        createdAt: json['created_at'],
+        centerType: json['center_type'] ?? 'family',
       );
 }
