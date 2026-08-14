@@ -4,8 +4,25 @@ import '../models/circle_model.dart';
 class CircleService {
   final supabase = Supabase.instance.client;
 
-  // নতুন সার্কেল তৈরি (শুধু community_centers টেবিলে)
+  // ইউজারের পারিবারিক সার্কেল কাউন্ট চেক
+  Future<int> getFamilyCircleCount(String userId) async {
+    final response = await supabase
+        .from('community_centers')
+        .select('id')
+        .eq('created_by', userId)
+        .eq('center_type', 'family');
+    return response.length;
+  }
+
+  // নতুন সার্কেল তৈরি (পারিবারিক লিমিট সহ)
   Future<Circle> createCircle(String name, String description, String userId, {String centerType = 'family'}) async {
+    if (centerType == 'family') {
+      final count = await getFamilyCircleCount(userId);
+      if (count >= 1) {
+        throw Exception('আপনি ইতিমধ্যে একটি পারিবারিক সার্কেল তৈরি করেছেন!');
+      }
+    }
+
     final inviteCode = _generateInviteCode();
 
     final Map<String, dynamic> data = {
@@ -18,29 +35,13 @@ class CircleService {
       'center_type': centerType,
     };
 
-    print('📝 সার্কেল তৈরি করা হচ্ছে: $data');
-
     final response = await supabase
-        .from('community_centers') // 🔥 সঠিক টেবিল
+        .from('community_centers')
         .insert(data)
         .select()
         .single();
 
-    print('✅ সার্কেল তৈরি হয়েছে: ${response['id']}');
     return Circle.fromJson(response);
-  }
-
-  // ইউজারের সব সার্কেল লোড (community_centers থেকে)
-  Future<List<Circle>> getUserCircles(String userId) async {
-    print('🔍 ইউজারের সার্কেল খোঁজা হচ্ছে: $userId');
-    
-    final response = await supabase
-        .from('community_centers') // 🔥 সঠিক টেবিল
-        .select('*')
-        .contains('members', [userId]);
-
-    print('📦 পাওয়া সার্কেল: ${response.length} টি');
-    return List<Circle>.from(response.map((e) => Circle.fromJson(e)));
   }
 
   // ইনভাইট কোড দিয়ে জয়েন
@@ -72,6 +73,16 @@ class CircleService {
         .single();
 
     return Circle.fromJson(updateResponse);
+  }
+
+  // ইউজারের সব সার্কেল লোড
+  Future<List<Circle>> getUserCircles(String userId) async {
+    final response = await supabase
+        .from('community_centers')
+        .select('*')
+        .contains('members', [userId]);
+
+    return List<Circle>.from(response.map((e) => Circle.fromJson(e)));
   }
 
   String _generateInviteCode() {

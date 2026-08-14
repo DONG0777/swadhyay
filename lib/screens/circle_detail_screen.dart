@@ -1,9 +1,9 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/circle_model.dart';
 import '../generated/l10n/app_localizations.dart';
 import '../services/user_profile_service.dart';
 import '../services/auth_service.dart';
-import 'circle_members_screen.dart';
 
 class CircleDetailScreen extends StatefulWidget {
   final Circle circle;
@@ -24,12 +24,14 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
   List<Map<String, dynamic>> _members = [];
   bool _isLoading = true;
   bool _isAdmin = false;
+  String _inviteLink = '';
 
   @override
   void initState() {
     super.initState();
     _checkAdmin();
     _loadMembers();
+    _generateInviteLink();
   }
 
   void _checkAdmin() {
@@ -52,6 +54,27 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
     }
   }
 
+  void _generateInviteLink() {
+    _inviteLink = 'https://DONG0777.github.io/swadhyay/?invite=${widget.circle.inviteCode}';
+  }
+
+  void _shareInviteLink() async {
+    final text =
+        '🌟 স্বাধ্যায় সার্কেলে যোগ দিন!\n'
+        'সার্কেল: ${widget.circle.name}\n'
+        'ইনভাইট কোড: ${widget.circle.inviteCode}\n'
+        'লিংক: $_inviteLink';
+    final encoded = Uri.encodeComponent(text);
+    final url = Uri.parse('https://wa.me/?text=$encoded');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('❌ শেয়ার করতে সমস্যা!'), backgroundColor: Colors.red),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context);
@@ -64,22 +87,11 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         actions: [
-          // 🔥 অ্যাডমিন হলে সদস্য তালিকা আইকন দেখাবে
           if (_isAdmin)
             IconButton(
-              icon: const Icon(Icons.people),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CircleMembersScreen(
-                      circleId: widget.circle.id,
-                      adminId: widget.userId,
-                    ),
-                  ),
-                );
-              },
-              tooltip: 'সদস্য তালিকা',
+              icon: const Icon(Icons.share),
+              onPressed: _shareInviteLink,
+              tooltip: 'ইনভাইট লিংক শেয়ার করুন',
             ),
         ],
       ),
@@ -88,7 +100,6 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // সার্কেল ইনফো
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -103,11 +114,13 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                     children: [
                       const Icon(Icons.info, color: Colors.orange),
                       const SizedBox(width: 8),
-                      Text(
-                        widget.circle.description.isNotEmpty
-                            ? widget.circle.description
-                            : 'No description',
-                        style: const TextStyle(fontSize: 16),
+                      Expanded(
+                        child: Text(
+                          widget.circle.description.isNotEmpty
+                              ? widget.circle.description
+                              : 'No description',
+                          style: const TextStyle(fontSize: 16),
+                        ),
                       ),
                     ],
                   ),
@@ -117,7 +130,7 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                       const Icon(Icons.code, color: Colors.grey),
                       const SizedBox(width: 8),
                       Text(
-                        'Invite Code: ${widget.circle.inviteCode}',
+                        'ইনভাইট কোড: ${widget.circle.inviteCode}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.orange,
@@ -130,34 +143,23 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                     children: [
                       const Icon(Icons.people, color: Colors.grey),
                       const SizedBox(width: 8),
-                      Text('${widget.circle.members.length} members'),
+                      Text('${widget.circle.members.length} জন সদস্য'),
                     ],
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
-            // ===== 🔥 অ্যাডমিনের জন্য সদস্য ব্যবস্থাপনা বাটন =====
-            if (_isAdmin) ...[
+            if (_isAdmin)
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CircleMembersScreen(
-                          circleId: widget.circle.id,
-                          adminId: widget.userId,
-                        ),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.people),
-                  label: const Text('👥 সদস্য তালিকা (বিস্তারিত)'),
+                  onPressed: _shareInviteLink,
+                  icon: const Icon(Icons.share),
+                  label: const Text('📤 ইনভাইট লিংক শেয়ার করুন'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
@@ -166,10 +168,8 @@ class _CircleDetailScreenState extends State<CircleDetailScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-            ],
+            const SizedBox(height: 16),
 
-            // ===== লিডারবোর্ড =====
             Text(
               '🏆 ${local.score}',
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
