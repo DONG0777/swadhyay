@@ -1,26 +1,39 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-  <base href="/swadhyay/">
+  <base href="/">
   <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <title>Swadhyay</title>
+  
+  <!-- ðŸ”¥ Google Translate-à¦à¦° à¦‡à¦¨à¦œà§‡à¦•à§à¦Ÿ à¦•à¦°à¦¾ span/font-à¦à¦° à¦¬à§à¦¯à¦¾à¦•à¦—à§à¦°à¦¾à¦‰à¦¨à§à¦¡ à¦¸à§à¦¬à¦šà§à¦› à¦•à¦°à¦¾ -->
+  <style>
+    span, font {
+      background-color: transparent !important;
+    }
+    /* à¦¯à¦¦à¦¿ à¦•à§‹à¦¨à§‹ à¦¨à¦¿à¦°à§à¦¦à¦¿à¦·à§à¦Ÿ à¦à¦²à¦¿à¦®à§‡à¦¨à§à¦Ÿà§‡ à¦•à¦¾à¦²à§‹ à¦¬à§à¦¯à¦¾à¦•à¦—à§à¦°à¦¾à¦‰à¦¨à§à¦¡ à¦†à¦¸à§‡, à¦¸à§‡à¦Ÿà¦¾à¦“ à¦¸à¦°à¦¾à¦¨ */
+    * {
+      background-color: transparent !important;
+    }
+  </style>
+  
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
-  <link rel="icon" type="image/png" href="favicon.png">
+$style
+  </head>
+<body>
+  <script src="flutter_bootstrap.js" async></script>
   <script>
-    // Service Worker রেজিস্টার
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js');
+        navigator.serviceWorker.register('/sw.js');
       });
     }
   </script>
-</head>
-<body>
-  <script src="canvaskit/main.dart.js" type="application/javascript"></script>
-</body>
+  </body>
 </html>
+
+
+
+
