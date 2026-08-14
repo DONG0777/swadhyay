@@ -1,23 +1,38 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-  <base href="/swadhyay/">
+  <base href="/">
   <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>Swadhyay</title>
+  
+  <!-- 🔥 Google Translate-এর ইনজেক্ট করা span/font-এর ব্যাকগ্রাউন্ড স্বচ্ছ করা -->
+  <style>
+    span, font {
+      background-color: transparent !important;
+    }
+    /* যদি কোনো নির্দিষ্ট এলিমেন্টে কালো ব্যাকগ্রাউন্ড আসে, সেটাও সরান */
+    * {
+      background-color: transparent !important;
+    }
+  </style>
+  
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="favicon.png">
+$style
+  </head>
+<body>
+  <script src="flutter_bootstrap.js" async></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js');
+        navigator.serviceWorker.register('/sw.js');
       });
     }
   </script>
-</head>
-<body>
-  <!-- 🔥 main.dart.js সরাসরি রুট থেকে লোড করুন -->
-  <script src="main.dart.js" type="application/javascript"></script>
-</body>
+  </body>
 </html>
+
+
+
