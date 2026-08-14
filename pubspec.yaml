@@ -1,4 +1,4 @@
-name: swadhyay_app
+﻿name: swadhyay_app
 description: A Flutter quiz and social-learning platform
 publish_to: 'none'
 version: 1.0.0+1
@@ -27,7 +27,7 @@ dependencies:
   geolocator: ^13.0.1
   permission_handler: ^12.0.1
 
-  # 🎥 ভিডিও প্লেয়ার (সূর্য নমস্কারের জন্য)
+  # ðŸŽ¥ à¦­à¦¿à¦¡à¦¿à¦“ à¦ªà§à¦²à§‡à§Ÿà¦¾à¦° (à¦¸à§‚à¦°à§à¦¯ à¦¨à¦®à¦¸à§à¦•à¦¾à¦°à§‡à¦° à¦œà¦¨à§à¦¯)
   video_player: ^2.9.1
   chewie: ^1.8.3
   fl_chart: ^0.71.0
@@ -40,6 +40,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+
+
 
 
 

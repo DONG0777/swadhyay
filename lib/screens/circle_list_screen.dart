@@ -31,11 +31,13 @@ class _CircleListScreenState extends State<CircleListScreen> {
     setState(() => _isLoading = true);
     try {
       final circles = await _service.getUserCircles(widget.userId);
+      print('📦 সার্কেল পাওয়া গেছে: ${circles.length} টি');
       setState(() {
         _circles = circles;
         _isLoading = false;
       });
     } catch (e) {
+      print('❌ Error loading circles: $e');
       setState(() {
         _error = 'Error loading circles: $e';
         _isLoading = false;
@@ -60,6 +62,7 @@ class _CircleListScreenState extends State<CircleListScreen> {
                 MaterialPageRoute(builder: (context) => const CircleTypeSelectionScreen()),
               );
               if (result == true) {
+                print('🔄 নতুন সার্কেল তৈরি হয়েছে, লিস্ট রিফ্রেশ করছি...');
                 _loadCircles();
               }
             },
@@ -120,7 +123,7 @@ class _CircleListScreenState extends State<CircleListScreen> {
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: Text(
-                              '👥 ${circle.members.length} সদস্য',
+                              '👥 ${circle.members.length} সদস্য • ${circle.centerType}',
                             ),
                             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                             onTap: () {

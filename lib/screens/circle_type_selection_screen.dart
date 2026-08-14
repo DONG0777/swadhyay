@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
-import '../generated/l10n/app_localizations.dart';
 import '../services/auth_service.dart';
 import 'circle_create_screen.dart';
+import '../generated/l10n/app_localizations.dart';
 
 class CircleTypeSelectionScreen extends StatefulWidget {
   const CircleTypeSelectionScreen({super.key});
@@ -22,7 +22,6 @@ class _CircleTypeSelectionScreenState extends State<CircleTypeSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('📌 সার্কেলের ধরন নির্বাচন'),

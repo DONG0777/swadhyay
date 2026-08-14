@@ -4,8 +4,8 @@ import '../models/circle_model.dart';
 class CircleService {
   final supabase = Supabase.instance.client;
 
-  // নতুন সার্কেল তৈরি করা
-  Future<Circle> createCircle(String name, String description, String userId) async {
+  // নতুন সার্কেল তৈরি (শুধু community_centers টেবিলে)
+  Future<Circle> createCircle(String name, String description, String userId, {String centerType = 'family'}) async {
     final inviteCode = _generateInviteCode();
 
     final Map<String, dynamic> data = {
@@ -15,40 +15,54 @@ class CircleService {
       'created_by': userId,
       'members': [userId],
       'leaderboard': {userId: 0},
+      'center_type': centerType,
     };
 
+    print('📝 সার্কেল তৈরি করা হচ্ছে: $data');
+
     final response = await supabase
-        .from('circles')
+        .from('community_centers') // 🔥 সঠিক টেবিল
         .insert(data)
         .select()
         .single();
 
+    print('✅ সার্কেল তৈরি হয়েছে: ${response['id']}');
     return Circle.fromJson(response);
   }
 
-  // ইনভাইট কোড দিয়ে সার্কেলে জয়েন করা
-  Future<Circle> joinCircle(String inviteCode, String userId) async {
-    // সার্কেল খুঁজে বের করা
+  // ইউজারের সব সার্কেল লোড (community_centers থেকে)
+  Future<List<Circle>> getUserCircles(String userId) async {
+    print('🔍 ইউজারের সার্কেল খোঁজা হচ্ছে: $userId');
+    
     final response = await supabase
-        .from('circles')
+        .from('community_centers') // 🔥 সঠিক টেবিল
+        .select('*')
+        .contains('members', [userId]);
+
+    print('📦 পাওয়া সার্কেল: ${response.length} টি');
+    return List<Circle>.from(response.map((e) => Circle.fromJson(e)));
+  }
+
+  // ইনভাইট কোড দিয়ে জয়েন
+  Future<Circle> joinCircle(String inviteCode, String userId) async {
+    final response = await supabase
+        .from('community_centers')
         .select('*')
         .eq('invite_code', inviteCode)
         .single();
 
     final circle = Circle.fromJson(response);
 
-    // ইউজার ইতিমধ্যে মেম্বার কিনা চেক
     if (circle.members.contains(userId)) {
       throw Exception('আপনি ইতিমধ্যে এই সার্কেলের সদস্য।');
     }
 
-    // নতুন মেম্বার যোগ করা
     final updatedMembers = [...circle.members, userId];
     final updatedLeaderboard = Map<String, int>.from(circle.leaderboard);
     updatedLeaderboard[userId] = 0;
 
     final updateResponse = await supabase
-        .from('circles')
+        .from('community_centers')
         .update({
           'members': updatedMembers,
           'leaderboard': updatedLeaderboard,
@@ -60,35 +74,6 @@ class CircleService {
     return Circle.fromJson(updateResponse);
   }
 
-  // ইউজারের সব সার্কেল লোড করা
-  Future<List<Circle>> getUserCircles(String userId) async {
-    final response = await supabase
-        .from('circles')
-        .select('*')
-        .contains('members', [userId]);
-
-    return List<Circle>.from(response.map((e) => Circle.fromJson(e)));
-  }
-
-  // সার্কেলের লিডারবোর্ড আপডেট করা (কুইজ শেষে)
-  Future<void> updateLeaderboard(String circleId, String userId, int xp) async {
-    final response = await supabase
-        .from('circles')
-        .select('*')
-        .eq('id', circleId)
-        .single();
-
-    final circle = Circle.fromJson(response);
-    final updatedLeaderboard = Map<String, int>.from(circle.leaderboard);
-    updatedLeaderboard[userId] = (updatedLeaderboard[userId] ?? 0) + xp;
-
-    await supabase
-        .from('circles')
-        .update({'leaderboard': updatedLeaderboard})
-        .eq('id', circleId);
-  }
-
-  // ইনভাইট কোড জেনারেট করা
   String _generateInviteCode() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = DateTime.now().millisecondsSinceEpoch;

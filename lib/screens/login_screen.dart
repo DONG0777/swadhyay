@@ -15,10 +15,30 @@ class _LoginScreenState extends State<LoginScreen> {
   final AuthService _auth = AuthService();
   bool _isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _checkAlreadyLoggedIn();
+  }
+
+  Future<void> _checkAlreadyLoggedIn() async {
+    if (_auth.isSignedIn) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(onLanguageChanged: widget.onLanguageChanged),
+          ),
+        );
+      });
+    }
+  }
+
   Future<void> _signIn() async {
     setState(() => _isLoading = true);
     try {
       await _auth.signInWithGoogle();
+      // লগইন成功后 হোমে রিডাইরেক্ট
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -41,177 +61,107 @@ class _LoginScreenState extends State<LoginScreen> {
     final local = AppLocalizations.of(context);
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFFF6B00),
-              Color(0xFFFF8C00),
-              Colors.white,
-            ],
-            stops: [0.0, 0.4, 0.8],
+            colors: [const Color(0xFFFF6B00).withOpacity(0.8), Colors.white],
           ),
         ),
-        child: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // ===== সূর্যের লোগো (কমলা + সাদা) =====
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 20,
-                          offset: Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.wb_sunny,
-                      size: 70,
-                      color: Color(0xFFFF6B00),
-                    ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.wb_sunny, size: 100, color: Colors.white),
+                const SizedBox(height: 20),
+                Text(
+                  '☀️ ${local.appTitle}',
+                  style: const TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  const SizedBox(height: 24),
-                  
-                  // ===== টাইটেল =====
-                  Text(
-                    '☀️ ${local.appTitle}',
-                    style: const TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(blurRadius: 8, color: Colors.black26, offset: Offset(0, 2)),
-                      ],
-                    ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  local.tagline,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white70,
+                    backgroundColor: Colors.transparent,
                   ),
-                  const SizedBox(height: 8),
-                  
-                  // ===== ট্যাগলাইন =====
-                  Text(
-                    local.tagline,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Colors.white70,
-                      shadows: [
-                        Shadow(blurRadius: 6, color: Colors.black26, offset: Offset(0, 1)),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 48),
-                  
-                  // ===== Google বাটন =====
-                  _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: _signIn,
-                            icon: const Icon(Icons.account_circle, color: Color(0xFFFF6B00)),
-                            label: Text(
-                              local.googleLogin,
-                              style: const TextStyle(fontSize: 16, color: Color(0xFF333333)),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Color(0xFF333333),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 4,
-                              shadowColor: Colors.black12,
-                            ),
-                          ),
-                        ),
-                  const SizedBox(height: 16),
-                  
-                  // ===== গেস্ট মোড =====
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        local.guestMode,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          shadows: [
-                            Shadow(blurRadius: 4, color: Colors.black26, offset: Offset(0, 1)),
-                          ],
+                ),
+                const SizedBox(height: 60),
+                _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : ElevatedButton.icon(
+                        onPressed: _signIn,
+                        icon: const Icon(Icons.account_circle, color: Colors.black87),
+                        label: Text(local.googleLogin, style: const TextStyle(fontSize: 18)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black87,
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomeScreen(onLanguageChanged: widget.onLanguageChanged),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          '🚪 ${local.guest}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            shadows: [
-                              Shadow(blurRadius: 6, color: Colors.black26, offset: Offset(0, 1)),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 32),
-                  
-                  // ===== ভাষা ড্রপডাউন =====
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.95),
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: const [
-                        BoxShadow(
-                          blurRadius: 10,
-                          color: Colors.black12,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      local.guestMode,
+                      style: TextStyle(color: Colors.white.withOpacity(0.8)),
                     ),
-                    child: DropdownButton<Locale>(
-                      value: Localizations.localeOf(context),
-                      underline: const SizedBox(),
-                      icon: const Icon(Icons.arrow_drop_down, color: Color(0xFFFF6B00)),
-                      items: const [
-                        DropdownMenuItem(value: Locale('bn'), child: Text('বাংলা')),
-                        DropdownMenuItem(value: Locale('hi'), child: Text('हिन्दी')),
-                        DropdownMenuItem(value: Locale('en'), child: Text('English')),
-                      ],
-                      onChanged: (Locale? newLocale) {
-                        if (newLocale != null) {
-                          widget.onLanguageChanged(newLocale);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginScreen(onLanguageChanged: widget.onLanguageChanged),
-                            ),
-                          );
-                        }
+                    const SizedBox(width: 8),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(onLanguageChanged: widget.onLanguageChanged),
+                          ),
+                        );
                       },
+                      child: Text(
+                        '🚪 ${local.guest}',
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.9),
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                ],
-              ),
+                  child: DropdownButton<Locale>(
+                    value: Localizations.localeOf(context),
+                    underline: const SizedBox(),
+                    items: const [
+                      DropdownMenuItem(value: Locale('bn'), child: Text('বাংলা')),
+                      DropdownMenuItem(value: Locale('hi'), child: Text('हिन्दी')),
+                      DropdownMenuItem(value: Locale('en'), child: Text('English')),
+                    ],
+                    onChanged: (Locale? newLocale) {
+                      if (newLocale != null) {
+                        widget.onLanguageChanged(newLocale);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginScreen(onLanguageChanged: widget.onLanguageChanged),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ),

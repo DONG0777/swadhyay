@@ -34,6 +34,23 @@ class _SwadhyayAppState extends State<SwadhyayApp> {
   void initState() {
     super.initState();
     _loadLanguage();
+    _handleAuthRedirect();
+  }
+
+  void _handleAuthRedirect() {
+    // Web-এ OAuth রিডাইরেক্ট হ্যান্ডেল করুন
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final supabase = Supabase.instance.client;
+      try {
+        // ইউজার ইতিমধ্যে লগইন আছে কিনা চেক করুন
+        final session = supabase.auth.currentSession;
+        if (session != null) {
+          print('✅ User already logged in: ${session.user.id}');
+        }
+      } catch (e) {
+        print('⚠️ Auth check error: $e');
+      }
+    });
   }
 
   Future<void> _loadLanguage() async {

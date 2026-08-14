@@ -3,11 +3,15 @@
 class AuthService {
   final supabase = Supabase.instance.client;
 
-  // গুগল দিয়ে সাইন-ইন (সঠিক OAuthProvider ব্যবহার)
+  // গুগল দিয়ে সাইন-ইন (Web-এর জন্য সঠিক রিডাইরেক্ট)
   Future<void> signInWithGoogle() async {
+    // 🔥 Web-এর জন্য রিডাইরেক্ট URL (লোকালহোস্ট বা প্রোডাকশন)
+    final redirectUrl = 'http://localhost:5000'; // লোকাল টেস্টিং
+    // final redirectUrl = 'https://DONG0777.github.io/swadhyay/'; // প্রোডাকশন
+
     await supabase.auth.signInWithOAuth(
       OAuthProvider.google,
-      redirectTo: 'http://localhost:5000', // ওয়েবের জন্য রিডাইরেক্ট URL
+      redirectTo: redirectUrl,
     );
   }
 
@@ -28,9 +32,9 @@ class AuthService {
   // ইউজার ইমেইল
   String? get userEmail => currentUser?.email;
 
-  // ইউজারের নাম (গুগল থেকে)
+  // ইউজারের নাম
   String? get userName => currentUser?.userMetadata?['full_name'] ?? currentUser?.email?.split('@').first;
 
-  // স্ট্রিম: অথ স্টেট চেঞ্জ
+  // অথ স্টেট চেঞ্জ
   Stream<AuthState> get authStateChanges => supabase.auth.onAuthStateChange;
 }
