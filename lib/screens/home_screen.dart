@@ -6,6 +6,7 @@ import 'challenge_screen.dart';
 import 'circle_list_screen.dart';
 import 'admin_login_screen.dart';
 import 'checkin_screen.dart';
+import 'circle_proposals_screen.dart';
 import '../widgets/daily_pillars_widget.dart';
 import '../widgets/network_status_widget.dart';
 import '../services/auth_service.dart';
@@ -170,7 +171,6 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  // ===== সূর্যের লোগো =====
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: const BoxDecoration(
@@ -191,8 +191,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
-                  // ===== স্বাগতম =====
                   Text(
                     '${local.welcome}, ${_auth.userName ?? local.guest}!',
                     style: theme.textTheme.headlineLarge?.copyWith(
@@ -201,8 +199,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  
-                  // ===== স্ট্রিক ও XP কার্ড =====
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -212,8 +208,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  
-                  // ===== বাটনসমূহ =====
                   Wrap(
                     spacing: 10,
                     runSpacing: 10,
@@ -288,6 +282,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           backgroundColor: const Color(0xFF4CAF50),
                         ),
                       ),
+                      // 🔥 NEW: সার্বিক প্রস্তাব বাটন
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const CircleProposalsScreen()),
+                          );
+                        },
+                        icon: const Icon(Icons.how_to_vote, size: 18),
+                        label: const Text('🗳️ সার্বিক প্রস্তাব', style: TextStyle(fontSize: 12)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF7B1FA2),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 24),
@@ -335,4 +345,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-

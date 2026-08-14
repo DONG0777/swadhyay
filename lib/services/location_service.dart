@@ -3,7 +3,6 @@
 class LocationService {
   static const double defaultRadius = 100; // মিটার
 
-  // লোকেশন পারমিশন চেক
   static Future<bool> hasPermission() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) return false;
@@ -17,7 +16,6 @@ class LocationService {
     return true;
   }
 
-  // বর্তমান লোকেশন পাওয়া
   static Future<Position> getCurrentLocation() async {
     final hasPerm = await hasPermission();
     if (!hasPerm) throw Exception('Location permission denied');
@@ -26,7 +24,6 @@ class LocationService {
     );
   }
 
-  // নির্দিষ্ট লোকেশনে আছে কিনা চেক করা
   static Future<bool> isAtLocation({
     required double targetLat,
     required double targetLon,
@@ -44,7 +41,6 @@ class LocationService {
     }
   }
 
-  // GPS ভেরিফাই বাটনের জন্য (সার্কেল প্রস্তাবের সময়)
   static Future<bool> verifyLocation({
     required double targetLat,
     required double targetLon,
@@ -52,7 +48,7 @@ class LocationService {
   }) async {
     final hasPerm = await hasPermission();
     if (!hasPerm) {
-      throw Exception('GPS permission required. Please enable location services.');
+      throw Exception('GPS permission required.');
     }
     final isAt = await isAtLocation(
       targetLat: targetLat,

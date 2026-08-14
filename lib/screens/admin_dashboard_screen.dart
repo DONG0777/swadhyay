@@ -115,7 +115,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 📊 KPI কার্ড
                       Row(
                         children: [
                           _buildAnalyticsCard('👥 মোট ইউজার', '$_totalUsers', Colors.blue),
@@ -127,7 +126,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      // 📈 সাপ্তাহিক গ্রোথ (বার চার্ট)
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: _cardDecoration(),
@@ -171,11 +169,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // 📊 কন্টেন্ট এনগেজমেন্ট + লোকেশন (২ কলাম)
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // কন্টেন্ট বার (অনুভূমিক)
                           Expanded(
                             child: Container(
                               padding: const EdgeInsets.all(16),
@@ -216,7 +212,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                             ),
                           ),
                           const SizedBox(width: 12),
-                          // লোকেশন ডোনাট (স্ট্যাক)
                           Expanded(
                             child: Container(
                               padding: const EdgeInsets.all(16),
@@ -238,7 +233,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      // 🔘 অ্যাকশন বাটন
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
@@ -247,7 +241,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           _buildActionButton(icon: Icons.upload_file, label: 'JSON আপলোড', color: Colors.blue, onPressed: _showBulkUploadDialog),
                           _buildActionButton(icon: Icons.library_books, label: 'কন্টেন্ট', color: Colors.purple, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminContentManagerScreen()))),
                           _buildActionButton(icon: Icons.notifications_active, label: 'নোটিফিকেশন', color: Colors.deepOrange, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AdminNotificationScreen(adminId: _auth.userId, circleId: 'YOUR_CIRCLE_ID')))),
-                          // 🔥 প্রস্তাব বাটন
+                          _buildActionButton(icon: Icons.people, label: 'ইউজার লিস্ট', color: Colors.indigo, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminUsersListScreen()))),
+                          _buildActionButton(icon: Icons.location_on, label: 'লোকেশন', color: Colors.teal, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminLocationScreen()))),
+                          _buildActionButton(icon: Icons.analytics, label: 'অ্যানালিটিক্স', color: Colors.deepPurple, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAnalyticsDashboardScreen()))),
+                          // 🔥 নতুন প্রস্তাব বাটন
                           _buildActionButton(
                             icon: Icons.pending_actions,
                             label: 'প্রস্তাব',
@@ -259,15 +256,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                               );
                             },
                           ),
-                          _buildActionButton(icon: Icons.people, label: 'ইউজার লিস্ট', color: Colors.indigo, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminUsersListScreen()))),
-                          _buildActionButton(icon: Icons.location_on, label: 'লোকেশন', color: Colors.teal, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminLocationScreen()))),
-                          _buildActionButton(icon: Icons.analytics, label: 'অ্যানালিটিক্স', color: Colors.deepPurple, onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminAnalyticsDashboardScreen()))),
                         ],
                       ),
                       const SizedBox(height: 20),
 
-                      // 📋 প্রশ্ন তালিকা
-                      const Text('📋 প্রশ্ন তালিকা', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const Text(
+                        '📋 প্রশ্ন তালিকা',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
                       _questions.isEmpty
                           ? const Center(child: Text('কোনো প্রশ্ন নেই'))
@@ -289,14 +285,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                     trailing: Row(mainAxisSize: MainAxisSize.min, children: [
                                       IconButton(icon: const Icon(Icons.edit, color: Colors.blue), onPressed: () => _showAddEditDialog(question: q)),
                                       IconButton(icon: const Icon(Icons.delete, color: Colors.red), onPressed: () async {
-                                        final confirm = await showDialog<bool>(context: context, builder: (context) => AlertDialog(
-                                          title: const Text('Delete?'),
-                                          content: Text('Delete "${q.questionText}"?'),
-                                          actions: [
-                                            TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('No')),
-                                            TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Yes', style: TextStyle(color: Colors.red))),
-                                          ],
-                                        ));
+                                        final confirm = await showDialog<bool>(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: const Text('Delete?'),
+                                            content: Text('Delete "${q.questionText}"?'),
+                                            actions: [
+                                              TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('No')),
+                                              TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Yes', style: TextStyle(color: Colors.red))),
+                                            ],
+                                          ),
+                                        );
                                         if (confirm ?? false) { await _service.deleteQuestion(q.id!); _loadAllData(); }
                                       }),
                                     ]),
@@ -338,7 +337,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
-  Widget _buildActionButton({required IconData icon, required String label, required Color color, required VoidCallback onPressed}) {
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
     return SizedBox(
       width: (MediaQuery.of(context).size.width - 48) / 3,
       child: ElevatedButton.icon(
@@ -355,7 +359,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
-  // লোকেশন ডোনাট চার্ট (Stack + Container)
   Widget _buildLocationDonut() {
     final total = _locationStats.values.reduce((a, b) => a + b);
     if (total == 0) return const Center(child: Text('কোনো ডেটা নেই'));
@@ -397,7 +400,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Future<void> _showBulkUploadDialog() async {}
 }
 
-// কাস্টম পেইন্টার (ডোনাট চার্টের জন্য)
 class _DonutPainter extends CustomPainter {
   final double startAngle;
   final double sweepAngle;

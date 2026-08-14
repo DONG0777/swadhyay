@@ -15,15 +15,12 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
   final AuthService _auth = AuthService();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
   final TextEditingController _latController = TextEditingController();
   final TextEditingController _lngController = TextEditingController();
   
   bool _isGpsVerified = false;
   bool _isLoading = false;
   String? _gpsError;
-  double? _verifiedLat;
-  double? _verifiedLng;
 
   Future<void> _verifyGPS() async {
     setState(() {
@@ -36,8 +33,6 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
       await LocationService.verifyLocation(targetLat: lat, targetLon: lng);
       setState(() {
         _isGpsVerified = true;
-        _verifiedLat = lat;
-        _verifiedLng = lng;
         _isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
@@ -77,14 +72,14 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
         'leaderboard': {_auth.userId: 0},
         'invite_code': _generateInviteCode(),
         'status': 'pending',
-        'proposed_location': _addressController.text.trim(),
-        'proposed_latitude': _verifiedLat,
-        'proposed_longitude': _verifiedLng,
+        'proposed_latitude': double.parse(_latController.text.trim()),
+        'proposed_longitude': double.parse(_lngController.text.trim()),
         'proposed_radius': 100,
         'vote_count': 0,
+        'vouches': {},
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('✅ প্রস্তাব জমা হয়েছে! ভোটিং শুরু হবে।'), backgroundColor: Colors.green),
+        const SnackBar(content: Text('✅ প্রস্তাব জমা হয়েছে!'), backgroundColor: Colors.green),
       );
       Navigator.pop(context, true);
     } catch (e) {
@@ -108,7 +103,6 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('🌍 সার্বিক সার্কেল প্রস্তাব'),
@@ -136,11 +130,6 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
               maxLines: 3,
             ),
             const SizedBox(height: 12),
-            TextField(
-              controller: _addressController,
-              decoration: const InputDecoration(labelText: '📍 ঠিকানা *', border: OutlineInputBorder()),
-            ),
-            const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
@@ -161,8 +150,6 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
               ],
             ),
             const SizedBox(height: 16),
-
-            // GPS ভেরিফাই বাটন
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -207,7 +194,6 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
               ),
             ),
             const SizedBox(height: 20),
-
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
