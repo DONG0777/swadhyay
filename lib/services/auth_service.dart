@@ -3,11 +3,13 @@
 class AuthService {
   final supabase = Supabase.instance.client;
 
-  // গুগল দিয়ে সাইন-ইন (Web-এর জন্য সঠিক রিডাইরেক্ট)
+  // গুগল দিয়ে সাইন-ইন
   Future<void> signInWithGoogle() async {
-    // 🔥 Web-এর জন্য রিডাইরেক্ট URL (লোকালহোস্ট বা প্রোডাকশন)
-    final redirectUrl = 'http://localhost:5000'; // লোকাল টেস্টিং
-    // final redirectUrl = 'https://DONG0777.github.io/swadhyay/'; // প্রোডাকশন
+    // 🔥 প্রোডাকশন URL (GitHub Pages)
+    final redirectUrl = 'https://DONG0777.github.io/swadhyay/';
+    
+    // লোকাল ডেভেলপমেন্টের জন্য (টেস্টিং)
+    // final redirectUrl = 'http://localhost:5000';
 
     await supabase.auth.signInWithOAuth(
       OAuthProvider.google,
