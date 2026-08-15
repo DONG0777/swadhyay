@@ -15,7 +15,6 @@ class AppLocalizations {
 
   static const Map<String, Map<String, String>> _localizedValues = {
     'bn': {
-      // ===== Existing Keys (keep all) =====
       'appTitle': 'স্বাধ্যায়',
       'tagline': 'দৈনিক আত্মশিক্ষা ও সাংস্কৃতিক সচেতনতা',
       'welcome': 'স্বাগতম',
@@ -40,8 +39,29 @@ class AppLocalizations {
       'requirements': '📋 প্রয়োজনীয়তা',
       'benefits': '🌟 সুবিধা',
       'iUnderstand': '✅ বুঝেছি',
-
-      // ===== Universal Proposal System (Bengali) =====
+      // Challenge days
+      'challenge_day_1': 'শুরু: সংকল্প ও লক্ষ্য নির্ধারণ',
+      'challenge_day_2': 'শৃঙ্খলা: দৈনিক রুটিন তৈরি',
+      'challenge_day_3': 'আত্মবিশ্বাস: নিজের উপর আস্থা',
+      'challenge_day_4': 'জ্ঞান: ভালো বই পড়া',
+      'challenge_day_5': 'সেবা: সমাজের জন্য কাজ',
+      'challenge_day_6': 'স্বাস্থ্য: সূর্য নমস্কার',
+      'challenge_day_7': 'ধ্যান: মানসিক শান্তি',
+      'challenge_day_8': 'কৃতজ্ঞতা: জীবনের প্রতি কৃতজ্ঞতা',
+      'challenge_day_9': 'উদারতা: অন্যদের সাহায্য',
+      'challenge_day_10': 'সাহস: ভয়কে জয় করা',
+      'challenge_day_11': 'প্রেম: পরিবারের প্রতি যত্ন',
+      'challenge_day_12': 'সততা: সত্যের পথে চলা',
+      'challenge_day_13': 'পরিশ্রম: লক্ষ্যের জন্য কাজ',
+      'challenge_day_14': 'ক্ষমা: ভুলকে মেনে নেওয়া',
+      'challenge_day_15': 'ধৈর্য: সময়ের অপেক্ষা',
+      'challenge_day_16': 'আশা: ভালো দিনের প্রতীক্ষা',
+      'challenge_day_17': 'আত্মনির্ভরতা: নিজের পায়ে দাঁড়ানো',
+      'challenge_day_18': 'জ্ঞানার্জন: নতুন কিছু শেখা',
+      'challenge_day_19': 'নেতৃত্ব: অন্যদের পথ দেখানো',
+      'challenge_day_20': 'ঐক্য: সকলকে সাথে নেওয়া',
+      'challenge_day_21': 'পূর্ণতা: ২১ দিনের জয়',
+      // Universal Proposal
       'universalProposal': '🌍 সার্বিক প্রস্তাব',
       'newProposal': 'নতুন প্রস্তাব দিন',
       'proposalName': 'সার্কেলের নাম *',
@@ -75,7 +95,53 @@ class AppLocalizations {
       'proposalVoting': '🗳️ voting',
     },
     'hi': {
-      // ===== Universal Proposal System (Hindi) =====
+      'appTitle': 'स्वाध्याय',
+      'tagline': 'दैनिक आत्म-शिक्षा और सांस्कृतिक जागरूकता',
+      'welcome': 'स्वागत है',
+      'startQuiz': 'क्विज़ शुरू करें',
+      'streak': 'स्ट्रीक',
+      'xp': 'एक्सपी',
+      'challenge': 'दीप्त यात्रा',
+      'circle': 'सर्कल',
+      'checkin': 'चेक-इन',
+      'admin': 'एडमिन पैनल',
+      'profile': 'प्रोफ़ाइल',
+      'logout': 'लॉगआउट',
+      'guest': 'अतिथि',
+      'score': 'स्कोर',
+      'share': 'शेयर करें',
+      'backHome': 'होम पर वापस जाएं',
+      'googleLogin': 'Google से लॉगिन करें',
+      'guestMode': 'अतिथि मोड में प्रवेश करें',
+      'changeLanguage': 'भाषा बदलें',
+      'online': 'ऑनलाइन',
+      'offline': 'ऑफलाइन',
+      'requirements': '📋 आवश्यकताएँ',
+      'benefits': '🌟 लाभ',
+      'iUnderstand': '✅ समझ गया',
+      // Challenge days
+      'challenge_day_1': 'शुरुआत: संकल्प और लक्ष्य निर्धारण',
+      'challenge_day_2': 'अनुशासन: दैनिक दिनचर्या बनाना',
+      'challenge_day_3': 'आत्मविश्वास: स्वयं पर भरोसा',
+      'challenge_day_4': 'ज्ञान: अच्छी किताबें पढ़ना',
+      'challenge_day_5': 'सेवा: समाज के लिए काम',
+      'challenge_day_6': 'स्वास्थ्य: सूर्य नमस्कार',
+      'challenge_day_7': 'ध्यान: मानसिक शांति',
+      'challenge_day_8': 'कृतज्ञता: जीवन के प्रति आभार',
+      'challenge_day_9': 'उदारता: दूसरों की मदद',
+      'challenge_day_10': 'साहस: डर को जीतना',
+      'challenge_day_11': 'प्रेम: परिवार की देखभाल',
+      'challenge_day_12': 'ईमानदारी: सत्य के पथ पर चलना',
+      'challenge_day_13': 'परिश्रम: लक्ष्य के लिए काम',
+      'challenge_day_14': 'क्षमा: गलती स्वीकार करना',
+      'challenge_day_15': 'धैर्य: समय की प्रतीक्षा',
+      'challenge_day_16': 'आशा: अच्छे दिनों की प्रतीक्षा',
+      'challenge_day_17': 'आत्मनिर्भरता: अपने पैरों पर खड़े होना',
+      'challenge_day_18': 'ज्ञानार्जन: कुछ नया सीखना',
+      'challenge_day_19': 'नेतृत्व: दूसरों को रास्ता दिखाना',
+      'challenge_day_20': 'एकता: सभी को साथ लेकर चलना',
+      'challenge_day_21': 'पूर्णता: 21 दिन की जीत',
+      // Universal Proposal
       'universalProposal': '🌍 सार्वभौमिक प्रस्ताव',
       'newProposal': 'नया प्रस्ताव दें',
       'proposalName': 'सर्कल का नाम *',
@@ -109,7 +175,53 @@ class AppLocalizations {
       'proposalVoting': '🗳️ voting',
     },
     'en': {
-      // ===== Universal Proposal System (English) =====
+      'appTitle': 'Swadhyay',
+      'tagline': 'Daily self-study and cultural awareness',
+      'welcome': 'Welcome',
+      'startQuiz': 'Start Quiz',
+      'streak': 'Streak',
+      'xp': 'XP',
+      'challenge': 'Dipto Jatra',
+      'circle': 'Circle',
+      'checkin': 'Check-in',
+      'admin': 'Admin Panel',
+      'profile': 'Profile',
+      'logout': 'Logout',
+      'guest': 'Guest',
+      'score': 'Score',
+      'share': 'Share',
+      'backHome': 'Back to Home',
+      'googleLogin': 'Login with Google',
+      'guestMode': 'Enter Guest Mode',
+      'changeLanguage': 'Change Language',
+      'online': 'Online',
+      'offline': 'Offline',
+      'requirements': '📋 Requirements',
+      'benefits': '🌟 Benefits',
+      'iUnderstand': '✅ I Understand',
+      // Challenge days
+      'challenge_day_1': 'Start: Commitment and goal setting',
+      'challenge_day_2': 'Discipline: Create daily routine',
+      'challenge_day_3': 'Confidence: Trust yourself',
+      'challenge_day_4': 'Knowledge: Read good books',
+      'challenge_day_5': 'Service: Work for society',
+      'challenge_day_6': 'Health: Surya Namaskar',
+      'challenge_day_7': 'Meditation: Mental peace',
+      'challenge_day_8': 'Gratitude: Be thankful for life',
+      'challenge_day_9': 'Generosity: Help others',
+      'challenge_day_10': 'Courage: Conquer fear',
+      'challenge_day_11': 'Love: Care for family',
+      'challenge_day_12': 'Honesty: Walk the path of truth',
+      'challenge_day_13': 'Hard work: Work towards goals',
+      'challenge_day_14': 'Forgiveness: Accept mistakes',
+      'challenge_day_15': 'Patience: Wait for the right time',
+      'challenge_day_16': 'Hope: Await good days',
+      'challenge_day_17': 'Self-reliance: Stand on your own feet',
+      'challenge_day_18': 'Learning: Learn something new',
+      'challenge_day_19': 'Leadership: Show others the way',
+      'challenge_day_20': 'Unity: Take everyone together',
+      'challenge_day_21': 'Completion: 21-day victory',
+      // Universal Proposal
       'universalProposal': '🌍 Universal Proposal',
       'newProposal': 'Submit New Proposal',
       'proposalName': 'Circle Name *',
@@ -148,7 +260,7 @@ class AppLocalizations {
     return _localizedValues[locale.languageCode]?[key] ?? _localizedValues['en']![key]!;
   }
 
-  // ===== UI Getters (existing) =====
+  // ===== UI Getters =====
   String get appTitle => translate('appTitle');
   String get tagline => translate('tagline');
   String get welcome => translate('welcome');
@@ -174,7 +286,10 @@ class AppLocalizations {
   String get benefits => translate('benefits');
   String get iUnderstand => translate('iUnderstand');
 
-  // ===== Universal Proposal System Getters =====
+  // ===== Challenge Days =====
+  String challengeDay(int day) => translate('challenge_day_$day');
+
+  // ===== Universal Proposal =====
   String get universalProposal => translate('universalProposal');
   String get newProposal => translate('newProposal');
   String get proposalName => translate('proposalName');

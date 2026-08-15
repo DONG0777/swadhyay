@@ -23,6 +23,7 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
   String? _gpsError;
 
   Future<void> _verifyGPS() async {
+    final local = AppLocalizations.of(context);
     setState(() {
       _isLoading = true;
       _gpsError = null;
@@ -36,10 +37,7 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
         _isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context).gpsVerified),
-          backgroundColor: Colors.green,
-        ),
+        SnackBar(content: Text(local.gpsVerified), backgroundColor: Colors.green),
       );
     } catch (e) {
       setState(() {
@@ -126,12 +124,18 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
             const SizedBox(height: 16),
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: local.proposalName, border: const OutlineInputBorder()),
+              decoration: InputDecoration(
+                labelText: local.proposalName,
+                border: const OutlineInputBorder(),
+              ),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _descController,
-              decoration: InputDecoration(labelText: local.proposalDescription, border: const OutlineInputBorder()),
+              decoration: InputDecoration(
+                labelText: local.proposalDescription,
+                border: const OutlineInputBorder(),
+              ),
               maxLines: 3,
             ),
             const SizedBox(height: 12),
@@ -140,7 +144,10 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
                 Expanded(
                   child: TextField(
                     controller: _latController,
-                    decoration: InputDecoration(labelText: local.proposalLatitude, border: const OutlineInputBorder()),
+                    decoration: InputDecoration(
+                      labelText: local.proposalLatitude,
+                      border: const OutlineInputBorder(),
+                    ),
                     keyboardType: TextInputType.number,
                   ),
                 ),
@@ -148,7 +155,10 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
                 Expanded(
                   child: TextField(
                     controller: _lngController,
-                    decoration: InputDecoration(labelText: local.proposalLongitude, border: const OutlineInputBorder()),
+                    decoration: InputDecoration(
+                      labelText: local.proposalLongitude,
+                      border: const OutlineInputBorder(),
+                    ),
                     keyboardType: TextInputType.number,
                   ),
                 ),
@@ -173,14 +183,19 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
                       const SizedBox(width: 8),
                       Text(
                         _isGpsVerified ? local.gpsVerified : local.gpsRequired,
-                        style: TextStyle(color: _isGpsVerified ? Colors.green : Colors.grey),
+                        style: TextStyle(
+                          color: _isGpsVerified ? Colors.green : Colors.grey,
+                        ),
                       ),
                     ],
                   ),
                   if (_gpsError != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
-                      child: Text(_gpsError!, style: const TextStyle(color: Colors.red, fontSize: 12)),
+                      child: Text(
+                        _gpsError!,
+                        style: const TextStyle(color: Colors.red, fontSize: 12),
+                      ),
                     ),
                   const SizedBox(height: 8),
                   SizedBox(
@@ -188,7 +203,9 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
                     child: ElevatedButton.icon(
                       onPressed: _isLoading ? null : _verifyGPS,
                       icon: const Icon(Icons.gps_fixed),
-                      label: Text(_isGpsVerified ? local.gpsVerifyAgain : local.gpsVerify),
+                      label: Text(
+                        _isGpsVerified ? local.gpsVerifyAgain : local.gpsVerify,
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _isGpsVerified ? Colors.green : const Color(0xFFFF6B00),
                         foregroundColor: Colors.white,
