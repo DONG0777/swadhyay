@@ -1,6 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'propose_circle_screen.dart'; // 🔥 ইম্পোর্ট যোগ করা হয়েছে
+import 'propose_circle_screen.dart';
 import '../services/auth_service.dart';
 import '../generated/l10n/app_localizations.dart';
 
@@ -46,10 +46,11 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
   }
 
   Future<void> _vote(String proposalId, bool vote) async {
+    final local = AppLocalizations.of(context);
     final userId = _auth.userId;
     if (userId == 'guest_123') {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('🔑 দয়া করে লগইন করুন'), backgroundColor: Colors.orange),
+        SnackBar(content: Text(local.loginRequired), backgroundColor: Colors.orange),
       );
       return;
     }
@@ -64,7 +65,7 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
 
       if (existing != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('❌ আপনি ইতিমধ্যে ভোট দিয়েছেন!'), backgroundColor: Colors.orange),
+          SnackBar(content: Text(local.alreadyVoted), backgroundColor: Colors.orange),
         );
         return;
       }
@@ -100,7 +101,7 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(vote ? '✅ সমর্থন দিয়েছেন!' : '❌ বিপক্ষে ভোট দিয়েছেন!'),
+          content: Text(vote ? local.voteSupport : local.voteOppose),
           backgroundColor: vote ? Colors.green : Colors.red,
         ),
       );
@@ -117,7 +118,7 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
     final local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('🌍 সার্বিক সার্কেল প্রস্তাব'),
+        title: Text(local.universalProposal),
         backgroundColor: const Color(0xFFFF6B00),
         foregroundColor: Colors.white,
         actions: [
@@ -129,7 +130,7 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
                 MaterialPageRoute(builder: (context) => const ProposeCircleScreen()),
               );
             },
-            tooltip: 'নতুন প্রস্তাব দিন',
+            tooltip: local.newProposal,
           ),
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -148,13 +149,13 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
                         children: [
                           const Icon(Icons.hourglass_empty, size: 80, color: Colors.grey),
                           const SizedBox(height: 16),
-                          const Text(
-                            'কোনো প্রস্তাব নেই',
-                            style: TextStyle(fontSize: 16),
+                          Text(
+                            local.noProposals,
+                            style: const TextStyle(fontSize: 16),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'আপনি প্রথম সার্বিক সার্কেলের প্রস্তাব দিন!',
+                          Text(
+                            local.beFirst,
                             style: TextStyle(color: Colors.grey),
                           ),
                           const SizedBox(height: 16),
@@ -166,7 +167,7 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
                               );
                             },
                             icon: const Icon(Icons.add),
-                            label: const Text('📤 প্রস্তাব দিন'),
+                            label: Text(local.newProposal),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFFF6B00),
                               foregroundColor: Colors.white,
@@ -213,14 +214,14 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            proposal['name'] ?? 'নাম নেই',
+                                            proposal['name'] ?? 'No name',
                                             style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           Text(
-                                            '📌 স্ট্যাটাস: $status',
+                                            '${local.proposalStatus} $status',
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: _getStatusColor(status),
@@ -240,7 +241,7 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Text(
-                                        '$voteCount ভোট',
+                                        '$voteCount ${local.proposalVotes}',
                                         style: TextStyle(
                                           color: Colors.blue[700],
                                           fontWeight: FontWeight.bold,
@@ -252,7 +253,7 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  proposal['description'] ?? 'কোনো বিবরণ নেই',
+                                  proposal['description'] ?? 'No description',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey[600],
@@ -283,7 +284,7 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
                                         ElevatedButton.icon(
                                           onPressed: () => _vote(proposal['id'], true),
                                           icon: const Icon(Icons.thumb_up, size: 16),
-                                          label: const Text('সমর্থন'),
+                                          label: Text(local.proposalSupport),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.green,
                                             foregroundColor: Colors.white,
@@ -300,7 +301,7 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
                                         ElevatedButton.icon(
                                           onPressed: () => _vote(proposal['id'], false),
                                           icon: const Icon(Icons.thumb_down, size: 16),
-                                          label: const Text('বিপক্ষে'),
+                                          label: Text(local.proposalOppose),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.red,
                                             foregroundColor: Colors.white,
@@ -318,7 +319,7 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
                                           onPressed: () {
                                             Navigator.pushReplacementNamed(context, '/login');
                                           },
-                                          child: const Text('🔑 লগইন করে ভোট দিন'),
+                                          child: Text(local.loginToVote),
                                         ),
                                       ],
                                     ],
@@ -333,13 +334,13 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
                                       color: Colors.green[100],
                                       borderRadius: BorderRadius.circular(20),
                                     ),
-                                    child: const Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(Icons.check_circle, color: Colors.green, size: 16),
-                                        SizedBox(width: 4),
+                                        const SizedBox(width: 4),
                                         Text(
-                                          '✅ সক্রিয়',
+                                          local.proposalActive,
                                           style: TextStyle(
                                             color: Colors.green,
                                             fontWeight: FontWeight.bold,
@@ -358,13 +359,13 @@ class _CircleProposalsScreenState extends State<CircleProposalsScreen> {
                                       color: Colors.red[100],
                                       borderRadius: BorderRadius.circular(20),
                                     ),
-                                    child: const Row(
+                                    child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(Icons.close, color: Colors.red, size: 16),
-                                        SizedBox(width: 4),
+                                        const SizedBox(width: 4),
                                         Text(
-                                          '❌ প্রত্যাখ্যাত',
+                                          local.proposalRejected,
                                           style: TextStyle(
                                             color: Colors.red,
                                             fontWeight: FontWeight.bold,

@@ -36,7 +36,10 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
         _isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('✅ GPS ভেরিফাই সফল!'), backgroundColor: Colors.green),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).gpsVerified),
+          backgroundColor: Colors.green,
+        ),
       );
     } catch (e) {
       setState(() {
@@ -47,15 +50,16 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
   }
 
   Future<void> _submitProposal() async {
+    final local = AppLocalizations.of(context);
     if (_nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('❌ নাম দিন'), backgroundColor: Colors.orange),
+        SnackBar(content: Text(local.proposalNameRequired), backgroundColor: Colors.orange),
       );
       return;
     }
     if (!_isGpsVerified) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('❌ প্রথমে GPS ভেরিফাই করুন'), backgroundColor: Colors.orange),
+        SnackBar(content: Text(local.gpsFirst), backgroundColor: Colors.orange),
       );
       return;
     }
@@ -79,7 +83,7 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
         'vouches': {},
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('✅ প্রস্তাব জমা হয়েছে!'), backgroundColor: Colors.green),
+        SnackBar(content: Text(local.proposalSubmitted), backgroundColor: Colors.green),
       );
       Navigator.pop(context, true);
     } catch (e) {
@@ -103,9 +107,10 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('🌍 সার্বিক সার্কেল প্রস্তাব'),
+        title: Text(local.universalProposal),
         backgroundColor: const Color(0xFFFF6B00),
         foregroundColor: Colors.white,
       ),
@@ -114,19 +119,19 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'সার্বিক সার্কেল তৈরি করতে GPS ভেরিফিকেশন ও ভোটিং প্রয়োজন।',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
+            Text(
+              local.gpsRequired,
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: '🏷️ সার্কেলের নাম *', border: OutlineInputBorder()),
+              decoration: InputDecoration(labelText: local.proposalName, border: const OutlineInputBorder()),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _descController,
-              decoration: const InputDecoration(labelText: '📝 বিবরণ', border: OutlineInputBorder()),
+              decoration: InputDecoration(labelText: local.proposalDescription, border: const OutlineInputBorder()),
               maxLines: 3,
             ),
             const SizedBox(height: 12),
@@ -135,7 +140,7 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
                 Expanded(
                   child: TextField(
                     controller: _latController,
-                    decoration: const InputDecoration(labelText: 'ল্যাটিটিউড *', border: OutlineInputBorder()),
+                    decoration: InputDecoration(labelText: local.proposalLatitude, border: const OutlineInputBorder()),
                     keyboardType: TextInputType.number,
                   ),
                 ),
@@ -143,7 +148,7 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
                 Expanded(
                   child: TextField(
                     controller: _lngController,
-                    decoration: const InputDecoration(labelText: 'লংগিটিউড *', border: OutlineInputBorder()),
+                    decoration: InputDecoration(labelText: local.proposalLongitude, border: const OutlineInputBorder()),
                     keyboardType: TextInputType.number,
                   ),
                 ),
@@ -167,7 +172,7 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        _isGpsVerified ? '✅ GPS ভেরিফাই করা হয়েছে' : '📍 এই লোকেশনে গিয়ে ভেরিফাই করুন',
+                        _isGpsVerified ? local.gpsVerified : local.gpsRequired,
                         style: TextStyle(color: _isGpsVerified ? Colors.green : Colors.grey),
                       ),
                     ],
@@ -183,7 +188,7 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
                     child: ElevatedButton.icon(
                       onPressed: _isLoading ? null : _verifyGPS,
                       icon: const Icon(Icons.gps_fixed),
-                      label: Text(_isGpsVerified ? 'পুনরায় ভেরিফাই করুন' : '📍 GPS ভেরিফাই করুন'),
+                      label: Text(_isGpsVerified ? local.gpsVerifyAgain : local.gpsVerify),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _isGpsVerified ? Colors.green : const Color(0xFFFF6B00),
                         foregroundColor: Colors.white,
@@ -205,7 +210,7 @@ class _ProposeCircleScreenState extends State<ProposeCircleScreen> {
                 ),
                 child: _isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('📤 প্রস্তাব জমা দিন', style: TextStyle(fontSize: 16)),
+                    : Text(local.submitProposal, style: const TextStyle(fontSize: 16)),
               ),
             ),
           ],

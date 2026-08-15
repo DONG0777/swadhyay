@@ -1,15 +1,28 @@
 ﻿{
-  "name": "Swadhyay - আত্মশিক্ষা ও সাংস্কৃতিক সচেতনতা",
-  "short_name": "Swadhyay",
-  "description": "দৈনিক আত্মশিক্ষা, কুইজ, চ্যালেঞ্জ ও কমিউনিটি প্ল্যাটফর্ম",
-  "start_url": "/swadhyay/",
-  "display": "standalone",
-  "background_color": "#FFFFFF",
-  "theme_color": "#FF6B00",
-  "icons": [
-    {"src": "icons/Icon-192.png", "sizes": "192x192", "type": "image/png"},
-    {"src": "icons/Icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
-  ],
-  "orientation": "portrait",
-  "categories": ["education", "lifestyle", "social"]
+    "name":  "Swadhyay - আত্মশিক্ষা ও সাংস্কৃতিক সচেতনতা",
+    "short_name":  "Swadhyay",
+    "description":  "দৈনিক আত্মশিক্ষা, কুইজ, চ্যালেঞ্জ ও কমিউনিটি প্ল্যাটফর্ম",
+    "start_url":  "/swadhyay/",
+    "display":  "standalone",
+    "background_color":  "#FFFFFF",
+    "theme_color":  "#FF6B00",
+    "icons":  [
+                  {
+                      "src":  "icons/Icon-192.png",
+                      "sizes":  "192x192",
+                      "type":  "image/png"
+                  },
+                  {
+                      "src":  "icons/Icon-512.png",
+                      "sizes":  "512x512",
+                      "type":  "image/png",
+                      "purpose":  "any maskable"
+                  }
+              ],
+    "orientation":  "portrait",
+    "categories":  [
+                       "education",
+                       "lifestyle",
+                       "social"
+                   ]
 }

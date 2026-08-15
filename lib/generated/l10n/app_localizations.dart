@@ -15,6 +15,7 @@ class AppLocalizations {
 
   static const Map<String, Map<String, String>> _localizedValues = {
     'bn': {
+      // ===== Existing Keys (keep all) =====
       'appTitle': 'স্বাধ্যায়',
       'tagline': 'দৈনিক আত্মশিক্ষা ও সাংস্কৃতিক সচেতনতা',
       'welcome': 'স্বাগতম',
@@ -40,174 +41,106 @@ class AppLocalizations {
       'benefits': '🌟 সুবিধা',
       'iUnderstand': '✅ বুঝেছি',
 
-      // চ্যালেঞ্জের বর্ণনা
-      'challenge_day_1': 'শুরু: সংকল্প ও লক্ষ্য নির্ধারণ',
-      'challenge_day_2': 'শৃঙ্খলা: দৈনিক রুটিন তৈরি',
-      'challenge_day_3': 'আত্মবিশ্বাস: নিজের উপর আস্থা',
-      'challenge_day_4': 'জ্ঞান: ভালো বই পড়া',
-      'challenge_day_5': 'সেবা: সমাজের জন্য কাজ',
-      'challenge_day_6': 'স্বাস্থ্য: সূর্য নমস্কার',
-      'challenge_day_7': 'ধ্যান: মানসিক শান্তি',
-      'challenge_day_8': 'কৃতজ্ঞতা: জীবনের প্রতি কৃতজ্ঞতা',
-      'challenge_day_9': 'উদারতা: অন্যদের সাহায্য',
-      'challenge_day_10': 'সাহস: ভয়কে জয় করা',
-      'challenge_day_11': 'প্রেম: পরিবারের প্রতি যত্ন',
-      'challenge_day_12': 'সততা: সত্যের পথে চলা',
-      'challenge_day_13': 'পরিশ্রম: লক্ষ্যের জন্য কাজ',
-      'challenge_day_14': 'ক্ষমা: ভুলকে মেনে নেওয়া',
-      'challenge_day_15': 'ধৈর্য: সময়ের অপেক্ষা',
-      'challenge_day_16': 'আশা: ভালো দিনের প্রতীক্ষা',
-      'challenge_day_17': 'আত্মনির্ভরতা: নিজের পায়ে দাঁড়ানো',
-      'challenge_day_18': 'জ্ঞানার্জন: নতুন কিছু শেখা',
-      'challenge_day_19': 'নেতৃত্ব: অন্যদের পথ দেখানো',
-      'challenge_day_20': 'ঐক্য: সকলকে সাথে নেওয়া',
-      'challenge_day_21': 'পূর্ণতা: ২১ দিনের জয়',
-
-      // সার্কেল গাইড
-      'familyCircleTitle': '🏠 পারিবারিক সার্কেল',
-      'familyCircleDesc': 'পরিবার ও আত্মীয়দের জন্য একটি প্রাইভেট সার্কেল।',
-      'familyCircleReq': '✅ শুধু ইনভাইটের মাধ্যমে যোগ দিন।\n✅ সর্বনিম্ন ২ জন সদস্য।\n✅ জিপিএস ভেরিফিকেশন প্রয়োজন নেই।',
-      'familyCircleBen': '🌟 পরিবারের সাথে নিয়মিত চর্চা করুন।\n🌟 স্ট্রিক ও এক্সপি সংগ্রহ করুন।\n🌟 নিরাপদ ও ব্যক্তিগত পরিবেশ।',
-
-      'socialCircleTitle': '🤝 সামাজিক সার্কেল',
-      'socialCircleDesc': 'বন্ধু, প্রতিবেশী বা সহকর্মীদের জন্য একটি খোলা সার্কেল।',
-      'socialCircleReq': '✅ জিপিএস ভেরিফিকেশন প্রয়োজন।\n✅ সর্বনিম্ন ৩ জন সদস্য।\n✅ অ্যাডমিন অনুমোদন প্রয়োজন।',
-      'socialCircleBen': '🌟 নতুন মানুষদের সাথে পরিচিত হন।\n🌟 গ্রুপ অ্যাক্টিভিটি করুন।\n🌟 কমিউনিটি তৈরি করুন।',
-
-      'universalCircleTitle': '🌍 সার্বিক সার্কেল',
-      'universalCircleDesc': 'সবার জন্য উন্মুক্ত একটি পাবলিক সার্কেল।',
-      'universalCircleReq': '✅ জিপিএস ভেরিফিকেশন আবশ্যক।\n✅ ২টি সামাজিক সার্কেলের অনুমোদন প্রয়োজন।\n✅ সর্বনিম্ন ৫ জন সদস্য।\n✅ ৬টি ভোট প্রয়োজন।',
-      'universalCircleBen': '🌟 বড় কমিউনিটির সাথে সংযুক্ত হন।\n🌟 ইভেন্ট ও মিটআপ আয়োজন করুন।\n🌟 লিডারশিপের সুযোগ।',
+      // ===== Universal Proposal System (Bengali) =====
+      'universalProposal': '🌍 সার্বিক প্রস্তাব',
+      'newProposal': 'নতুন প্রস্তাব দিন',
+      'proposalName': 'সার্কেলের নাম *',
+      'proposalDescription': 'বিবরণ',
+      'proposalLatitude': 'ল্যাটিটিউড *',
+      'proposalLongitude': 'লংগিটিউড *',
+      'gpsVerify': '📍 GPS ভেরিফাই করুন',
+      'gpsVerified': '✅ GPS ভেরিফাই করা হয়েছে',
+      'gpsVerifyAgain': 'পুনরায় ভেরিফাই করুন',
+      'gpsRequired': '📍 এই লোকেশনে গিয়ে ভেরিফাই করুন',
+      'submitProposal': '📤 প্রস্তাব জমা দিন',
+      'proposalSubmitted': '✅ প্রস্তাব জমা হয়েছে!',
+      'proposalNameRequired': '❌ নাম দিন',
+      'gpsFirst': '❌ প্রথমে GPS ভেরিফাই করুন',
+      'noProposals': 'কোনো প্রস্তাব নেই',
+      'beFirst': 'আপনি প্রথম সার্বিক সার্কেলের প্রস্তাব দিন!',
+      'proposalStatus': '📌 স্ট্যাটাস:',
+      'proposalVotes': 'ভোট',
+      'proposalSupport': 'সমর্থন',
+      'proposalOppose': 'বিপক্ষে',
+      'loginToVote': '🔑 লগইন করে ভোট দিন',
+      'alreadyVoted': '❌ আপনি ইতিমধ্যে ভোট দিয়েছেন!',
+      'voteSupport': '✅ সমর্থন দিয়েছেন!',
+      'voteOppose': '❌ বিপক্ষে ভোট দিয়েছেন!',
+      'loginRequired': '🔑 দয়া করে লগইন করুন',
+      'proposalActive': '✅ সক্রিয়',
+      'proposalRejected': '❌ প্রত্যাখ্যাত',
+      'proposalPending': '⏳ pending',
+      'proposalGpsVerified': '📍 GPS verified',
+      'proposalVouching': '🤝 vouching',
+      'proposalVoting': '🗳️ voting',
     },
     'hi': {
-      'appTitle': 'स्वाध्याय',
-      'tagline': 'दैनिक आत्म-शिक्षा और सांस्कृतिक जागरूकता',
-      'welcome': 'स्वागत है',
-      'startQuiz': 'क्विज़ शुरू करें',
-      'streak': 'स्ट्रीक',
-      'xp': 'एक्सपी',
-      'challenge': 'दीप्त यात्रा',
-      'circle': 'सर्कल',
-      'checkin': 'चेक-इन',
-      'admin': 'एडमिन पैनल',
-      'profile': 'प्रोफ़ाइल',
-      'logout': 'लॉगआउट',
-      'guest': 'अतिथि',
-      'score': 'स्कोर',
-      'share': 'शेयर करें',
-      'backHome': 'होम पर वापस जाएं',
-      'googleLogin': 'Google से लॉगिन करें',
-      'guestMode': 'अतिथि मोड में प्रवेश करें',
-      'changeLanguage': 'भाषा बदलें',
-      'online': 'ऑनलाइन',
-      'offline': 'ऑफलाइन',
-      'requirements': '📋 आवश्यकताएँ',
-      'benefits': '🌟 लाभ',
-      'iUnderstand': '✅ समझ गया',
-
-      // चैलेंज विवरण
-      'challenge_day_1': 'शुरुआत: संकल्प और लक्ष्य निर्धारण',
-      'challenge_day_2': 'अनुशासन: दैनिक दिनचर्या बनाना',
-      'challenge_day_3': 'आत्मविश्वास: स्वयं पर भरोसा',
-      'challenge_day_4': 'ज्ञान: अच्छी किताबें पढ़ना',
-      'challenge_day_5': 'सेवा: समाज के लिए काम',
-      'challenge_day_6': 'स्वास्थ्य: सूर्य नमस्कार',
-      'challenge_day_7': 'ध्यान: मानसिक शांति',
-      'challenge_day_8': 'कृतज्ञता: जीवन के प्रति आभार',
-      'challenge_day_9': 'उदारता: दूसरों की मदद',
-      'challenge_day_10': 'साहस: डर को जीतना',
-      'challenge_day_11': 'प्रेम: परिवार की देखभाल',
-      'challenge_day_12': 'ईमानदारी: सत्य के पथ पर चलना',
-      'challenge_day_13': 'परिश्रम: लक्ष्य के लिए काम',
-      'challenge_day_14': 'क्षमा: गलती स्वीकार करना',
-      'challenge_day_15': 'धैर्य: समय की प्रतीक्षा',
-      'challenge_day_16': 'आशा: अच्छे दिनों की प्रतीक्षा',
-      'challenge_day_17': 'आत्मनिर्भरता: अपने पैरों पर खड़े होना',
-      'challenge_day_18': 'ज्ञानार्जन: कुछ नया सीखना',
-      'challenge_day_19': 'नेतृत्व: दूसरों को रास्ता दिखाना',
-      'challenge_day_20': 'एकता: सभी को साथ लेकर चलना',
-      'challenge_day_21': 'पूर्णता: 21 दिन की जीत',
-
-      // सर्कल गाइड
-      'familyCircleTitle': '🏠 पारिवारिक सर्कल',
-      'familyCircleDesc': 'परिवार और रिश्तेदारों के लिए एक निजी सर्कल।',
-      'familyCircleReq': '✅ केवल आमंत्रण द्वारा शामिल हों।\n✅ न्यूनतम 2 सदस्य।\n✅ जीपीएस सत्यापन की आवश्यकता नहीं।',
-      'familyCircleBen': '🌟 परिवार के साथ नियमित अभ्यास करें।\n🌟 स्ट्रीक और एक्सपी इकट्ठा करें।\n🌟 सुरक्षित और निजी वातावरण।',
-
-      'socialCircleTitle': '🤝 सामाजिक सर्कल',
-      'socialCircleDesc': 'मित्रों, पड़ोसियों या सहकर्मियों के लिए एक खुला सर्कल।',
-      'socialCircleReq': '✅ जीपीएस सत्यापन आवश्यक।\n✅ न्यूनतम 3 सदस्य।\n✅ एडमिन अनुमोदन आवश्यक।',
-      'socialCircleBen': '🌟 नए लोगों से मिलें।\n🌟 समूह गतिविधियाँ करें।\n🌟 समुदाय बनाएं।',
-
-      'universalCircleTitle': '🌍 सार्वभौमिक सर्कल',
-      'universalCircleDesc': 'सभी के लिए खुला एक सार्वजनिक सर्कल।',
-      'universalCircleReq': '✅ जीपीएस सत्यापन अनिवार्य।\n✅ 2 सामाजिक सर्कल की स्वीकृति आवश्यक।\n✅ न्यूनतम 5 सदस्य।\n✅ 6 वोट आवश्यक।',
-      'universalCircleBen': '🌟 बड़े समुदाय से जुड़ें।\n🌟 इवेंट और मीटअप आयोजित करें।\n🌟 नेतृत्व के अवसर।',
+      // ===== Universal Proposal System (Hindi) =====
+      'universalProposal': '🌍 सार्वभौमिक प्रस्ताव',
+      'newProposal': 'नया प्रस्ताव दें',
+      'proposalName': 'सर्कल का नाम *',
+      'proposalDescription': 'विवरण',
+      'proposalLatitude': 'अक्षांश *',
+      'proposalLongitude': 'देशांतर *',
+      'gpsVerify': '📍 GPS सत्यापित करें',
+      'gpsVerified': '✅ GPS सत्यापित किया गया',
+      'gpsVerifyAgain': 'पुनः सत्यापित करें',
+      'gpsRequired': '📍 इस स्थान पर जाकर सत्यापित करें',
+      'submitProposal': '📤 प्रस्ताव जमा करें',
+      'proposalSubmitted': '✅ प्रस्ताव जमा हो गया!',
+      'proposalNameRequired': '❌ नाम दें',
+      'gpsFirst': '❌ पहले GPS सत्यापित करें',
+      'noProposals': 'कोई प्रस्ताव नहीं',
+      'beFirst': 'आप पहला सार्वभौमिक सर्कल प्रस्ताव दें!',
+      'proposalStatus': '📌 स्थिति:',
+      'proposalVotes': 'वोट',
+      'proposalSupport': 'समर्थन',
+      'proposalOppose': 'विरोध',
+      'loginToVote': '🔑 वोट करने के लिए लॉगिन करें',
+      'alreadyVoted': '❌ आप पहले ही वोट कर चुके हैं!',
+      'voteSupport': '✅ आपने समर्थन किया!',
+      'voteOppose': '❌ आपने विरोध किया!',
+      'loginRequired': '🔑 कृपया लॉगिन करें',
+      'proposalActive': '✅ सक्रिय',
+      'proposalRejected': '❌ अस्वीकृत',
+      'proposalPending': '⏳ pending',
+      'proposalGpsVerified': '📍 GPS verified',
+      'proposalVouching': '🤝 vouching',
+      'proposalVoting': '🗳️ voting',
     },
     'en': {
-      'appTitle': 'Swadhyay',
-      'tagline': 'Daily self-study and cultural awareness',
-      'welcome': 'Welcome',
-      'startQuiz': 'Start Quiz',
-      'streak': 'Streak',
-      'xp': 'XP',
-      'challenge': 'Dipto Jatra',
-      'circle': 'Circle',
-      'checkin': 'Check-in',
-      'admin': 'Admin Panel',
-      'profile': 'Profile',
-      'logout': 'Logout',
-      'guest': 'Guest',
-      'score': 'Score',
-      'share': 'Share',
-      'backHome': 'Back to Home',
-      'googleLogin': 'Login with Google',
-      'guestMode': 'Enter Guest Mode',
-      'changeLanguage': 'Change Language',
-      'online': 'Online',
-      'offline': 'Offline',
-      'requirements': '📋 Requirements',
-      'benefits': '🌟 Benefits',
-      'iUnderstand': '✅ I Understand',
-
-      // Challenge descriptions
-      'challenge_day_1': 'Start: Commitment and goal setting',
-      'challenge_day_2': 'Discipline: Create daily routine',
-      'challenge_day_3': 'Confidence: Trust yourself',
-      'challenge_day_4': 'Knowledge: Read good books',
-      'challenge_day_5': 'Service: Work for society',
-      'challenge_day_6': 'Health: Surya Namaskar',
-      'challenge_day_7': 'Meditation: Mental peace',
-      'challenge_day_8': 'Gratitude: Be thankful for life',
-      'challenge_day_9': 'Generosity: Help others',
-      'challenge_day_10': 'Courage: Conquer fear',
-      'challenge_day_11': 'Love: Care for family',
-      'challenge_day_12': 'Honesty: Walk the path of truth',
-      'challenge_day_13': 'Hard work: Work towards goals',
-      'challenge_day_14': 'Forgiveness: Accept mistakes',
-      'challenge_day_15': 'Patience: Wait for the right time',
-      'challenge_day_16': 'Hope: Await good days',
-      'challenge_day_17': 'Self-reliance: Stand on your own feet',
-      'challenge_day_18': 'Learning: Learn something new',
-      'challenge_day_19': 'Leadership: Show others the way',
-      'challenge_day_20': 'Unity: Take everyone together',
-      'challenge_day_21': 'Completion: 21-day victory',
-
-      // Circle Guide
-      'familyCircleTitle': '🏠 Family Circle',
-      'familyCircleDesc': 'A private circle for family and relatives.',
-      'familyCircleReq': '✅ Join only by invite.\n✅ Minimum 2 members.\n✅ No GPS verification required.',
-      'familyCircleBen': '🌟 Regular practice with family.\n🌟 Collect streaks and XP.\n🌟 Safe and private environment.',
-
-      'socialCircleTitle': '🤝 Social Circle',
-      'socialCircleDesc': 'An open circle for friends, neighbors, or colleagues.',
-      'socialCircleReq': '✅ GPS verification required.\n✅ Minimum 3 members.\n✅ Admin approval required.',
-      'socialCircleBen': '🌟 Meet new people.\n🌟 Do group activities.\n🌟 Build a community.',
-
-      'universalCircleTitle': '🌍 Universal Circle',
-      'universalCircleDesc': 'A public circle open to everyone.',
-      'universalCircleReq': '✅ GPS verification mandatory.\n✅ Requires approval from 2 social circles.\n✅ Minimum 5 members.\n✅ 6 votes required.',
-      'universalCircleBen': '🌟 Connect with a larger community.\n🌟 Organize events and meetups.\n🌟 Leadership opportunities.',
+      // ===== Universal Proposal System (English) =====
+      'universalProposal': '🌍 Universal Proposal',
+      'newProposal': 'Submit New Proposal',
+      'proposalName': 'Circle Name *',
+      'proposalDescription': 'Description',
+      'proposalLatitude': 'Latitude *',
+      'proposalLongitude': 'Longitude *',
+      'gpsVerify': '📍 Verify GPS',
+      'gpsVerified': '✅ GPS Verified',
+      'gpsVerifyAgain': 'Verify Again',
+      'gpsRequired': '📍 Go to this location and verify',
+      'submitProposal': '📤 Submit Proposal',
+      'proposalSubmitted': '✅ Proposal Submitted!',
+      'proposalNameRequired': '❌ Please enter a name',
+      'gpsFirst': '❌ Please verify GPS first',
+      'noProposals': 'No proposals',
+      'beFirst': 'Be the first to submit a Universal Circle proposal!',
+      'proposalStatus': '📌 Status:',
+      'proposalVotes': 'votes',
+      'proposalSupport': 'Support',
+      'proposalOppose': 'Oppose',
+      'loginToVote': '🔑 Login to vote',
+      'alreadyVoted': '❌ You have already voted!',
+      'voteSupport': '✅ You supported!',
+      'voteOppose': '❌ You opposed!',
+      'loginRequired': '🔑 Please login',
+      'proposalActive': '✅ Active',
+      'proposalRejected': '❌ Rejected',
+      'proposalPending': '⏳ pending',
+      'proposalGpsVerified': '📍 GPS verified',
+      'proposalVouching': '🤝 vouching',
+      'proposalVoting': '🗳️ voting',
     }
   };
 
@@ -215,7 +148,7 @@ class AppLocalizations {
     return _localizedValues[locale.languageCode]?[key] ?? _localizedValues['en']![key]!;
   }
 
-  // UI Getters
+  // ===== UI Getters (existing) =====
   String get appTitle => translate('appTitle');
   String get tagline => translate('tagline');
   String get welcome => translate('welcome');
@@ -241,24 +174,38 @@ class AppLocalizations {
   String get benefits => translate('benefits');
   String get iUnderstand => translate('iUnderstand');
 
-  // চ্যালেঞ্জের দিন
-  String challengeDay(int day) => translate('challenge_day_$day');
-
-  // Circle Guide Getters
-  String get familyCircleTitle => translate('familyCircleTitle');
-  String get familyCircleDesc => translate('familyCircleDesc');
-  String get familyCircleReq => translate('familyCircleReq');
-  String get familyCircleBen => translate('familyCircleBen');
-
-  String get socialCircleTitle => translate('socialCircleTitle');
-  String get socialCircleDesc => translate('socialCircleDesc');
-  String get socialCircleReq => translate('socialCircleReq');
-  String get socialCircleBen => translate('socialCircleBen');
-
-  String get universalCircleTitle => translate('universalCircleTitle');
-  String get universalCircleDesc => translate('universalCircleDesc');
-  String get universalCircleReq => translate('universalCircleReq');
-  String get universalCircleBen => translate('universalCircleBen');
+  // ===== Universal Proposal System Getters =====
+  String get universalProposal => translate('universalProposal');
+  String get newProposal => translate('newProposal');
+  String get proposalName => translate('proposalName');
+  String get proposalDescription => translate('proposalDescription');
+  String get proposalLatitude => translate('proposalLatitude');
+  String get proposalLongitude => translate('proposalLongitude');
+  String get gpsVerify => translate('gpsVerify');
+  String get gpsVerified => translate('gpsVerified');
+  String get gpsVerifyAgain => translate('gpsVerifyAgain');
+  String get gpsRequired => translate('gpsRequired');
+  String get submitProposal => translate('submitProposal');
+  String get proposalSubmitted => translate('proposalSubmitted');
+  String get proposalNameRequired => translate('proposalNameRequired');
+  String get gpsFirst => translate('gpsFirst');
+  String get noProposals => translate('noProposals');
+  String get beFirst => translate('beFirst');
+  String get proposalStatus => translate('proposalStatus');
+  String get proposalVotes => translate('proposalVotes');
+  String get proposalSupport => translate('proposalSupport');
+  String get proposalOppose => translate('proposalOppose');
+  String get loginToVote => translate('loginToVote');
+  String get alreadyVoted => translate('alreadyVoted');
+  String get voteSupport => translate('voteSupport');
+  String get voteOppose => translate('voteOppose');
+  String get loginRequired => translate('loginRequired');
+  String get proposalActive => translate('proposalActive');
+  String get proposalRejected => translate('proposalRejected');
+  String get proposalPending => translate('proposalPending');
+  String get proposalGpsVerified => translate('proposalGpsVerified');
+  String get proposalVouching => translate('proposalVouching');
+  String get proposalVoting => translate('proposalVoting');
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

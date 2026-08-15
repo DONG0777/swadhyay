@@ -77,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final bool isGuest = _auth.userId == 'guest_123';
 
     return Scaffold(
       appBar: AppBar(
@@ -282,22 +283,37 @@ class _HomeScreenState extends State<HomeScreen> {
                           backgroundColor: const Color(0xFF4CAF50),
                         ),
                       ),
-                      // 🔥 NEW: সার্বিক প্রস্তাব বাটন
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const CircleProposalsScreen()),
-                          );
-                        },
-                        icon: const Icon(Icons.how_to_vote, size: 18),
-                        label: const Text('🗳️ সার্বিক প্রস্তাব', style: TextStyle(fontSize: 12)),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF7B1FA2),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      // Universal Proposal button (only for logged-in users)
+                      if (!isGuest)
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const CircleProposalsScreen()),
+                            );
+                          },
+                          icon: const Icon(Icons.how_to_vote, size: 18),
+                          label: const Text('🗳️ Universal Proposal', style: TextStyle(fontSize: 12)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF7B1FA2),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                          ),
                         ),
-                      ),
+                      // Login button for guest mode
+                      if (isGuest)
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(context, '/login');
+                          },
+                          icon: const Icon(Icons.login, size: 18),
+                          label: Text('🔑 ${local.googleLogin}', style: const TextStyle(fontSize: 12)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFF6B00),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                          ),
+                        ),
                     ],
                   ),
                   const SizedBox(height: 24),
