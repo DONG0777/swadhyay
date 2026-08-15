@@ -283,7 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           backgroundColor: const Color(0xFF4CAF50),
                         ),
                       ),
-                      // Universal Proposal button (only for logged-in users)
+                      // Universal Proposal Button - Fully Multilingual
                       if (!isGuest)
                         ElevatedButton.icon(
                           onPressed: () {
@@ -293,7 +293,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           icon: const Icon(Icons.how_to_vote, size: 18),
-                          label: const Text('🗳️ Universal Proposal', style: TextStyle(fontSize: 12)),
+                          label: Text(
+                            local.universalProposal,
+                            style: const TextStyle(fontSize: 12),
+                          ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF7B1FA2),
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
