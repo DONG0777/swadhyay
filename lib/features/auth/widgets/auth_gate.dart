@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../home/screens/home_screen.dart';
 import '../screens/login_screen.dart';
 import '../services/auth_service.dart';
 
@@ -28,11 +29,7 @@ class AuthGate extends StatelessWidget {
           return const LoginScreen();
         }
 
-        return const Scaffold(
-          body: Center(
-            child: Text('Authenticated'),
-          ),
-        );
+        return HomeScreen();
       },
     );
   }
