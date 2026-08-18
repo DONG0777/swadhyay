@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../services/auth_service.dart';
-import 'register_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _authService = AuthService();
@@ -25,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  Future<void> _signIn() async {
+  Future<void> _register() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
@@ -39,13 +38,13 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await _authService.signInWithEmail(
+      await _authService.signUpWithEmail(
         email: email,
         password: password,
       );
 
       if (mounted) {
-        _showMessage('Signed in successfully.');
+        _showMessage('Registration successful. Please check your email.');
       }
     } on AuthException catch (error) {
       if (mounted) {
@@ -70,19 +69,15 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<void> _openRegister() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const RegisterScreen(),
-      ),
-    );
+  void _openLogin() {
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign in'),
+        title: const Text('Create account'),
       ),
       body: SafeArea(
         child: Padding(
@@ -113,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: _isLoading ? null : _signIn,
+                  onPressed: _isLoading ? null : _register,
                   child: _isLoading
                       ? const SizedBox(
                           height: 20,
@@ -122,13 +117,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             strokeWidth: 2,
                           ),
                         )
-                      : const Text('Sign in'),
+                      : const Text('Create account'),
                 ),
               ),
               const SizedBox(height: 12),
               TextButton(
-                onPressed: _isLoading ? null : _openRegister,
-                child: const Text('Create an account'),
+                onPressed: _isLoading ? null : _openLogin,
+                child: const Text('Already have an account? Sign in'),
               ),
             ],
           ),
