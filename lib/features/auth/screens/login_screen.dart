@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../services/auth_service.dart';
@@ -49,7 +49,11 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } on AuthException catch (error) {
       if (mounted) {
-        _showMessage(error.message);
+        if (_isEmailNotConfirmedError(error)) {
+          await _showEmailVerificationDialog(email);
+        } else {
+          _showMessage(error.message);
+        }
       }
     } catch (_) {
       if (mounted) {
@@ -62,6 +66,90 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = false;
       });
     }
+  }
+
+  bool _isEmailNotConfirmedError(AuthException error) {
+    final message = error.message.toLowerCase();
+
+    return message.contains('email not confirmed') ||
+        message.contains('email_not_confirmed');
+  }
+
+  Future<void> _showEmailVerificationDialog(String email) async {
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        bool isResending = false;
+
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            Future<void> resend() async {
+              setDialogState(() {
+                isResending = true;
+              });
+
+              try {
+                await _authService.resendVerificationEmail(
+                  email: email,
+                );
+
+                if (dialogContext.mounted) {
+                  Navigator.of(dialogContext).pop();
+                }
+
+                if (mounted) {
+                  _showMessage('Verification email sent again.');
+                }
+              } on AuthException catch (error) {
+                if (dialogContext.mounted) {
+                  _showMessage(error.message);
+                }
+              } catch (_) {
+                if (dialogContext.mounted) {
+                  _showMessage(
+                    'Something went wrong. Please try again.',
+                  );
+                }
+              }
+
+              if (dialogContext.mounted) {
+                setDialogState(() {
+                  isResending = false;
+                });
+              }
+            }
+
+            return AlertDialog(
+              title: const Text('Email not verified'),
+              content: Text(
+                'Please verify $email before signing in. '
+                'Check your inbox for the verification email.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isResending
+                      ? null
+                      : () => Navigator.of(dialogContext).pop(),
+                  child: const Text('Close'),
+                ),
+                FilledButton(
+                  onPressed: isResending ? null : resend,
+                  child: isResending
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text('Resend email'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   void _showMessage(String message) {

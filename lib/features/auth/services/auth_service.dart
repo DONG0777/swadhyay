@@ -1,4 +1,4 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
+﻿import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
   final SupabaseClient _client;
@@ -29,6 +29,15 @@ class AuthService {
     return _client.auth.signUp(
       email: email,
       password: password,
+    );
+  }
+
+  Future<void> resendVerificationEmail({
+    required String email,
+  }) async {
+    await _client.auth.resend(
+      type: OtpType.signup,
+      email: email,
     );
   }
 
