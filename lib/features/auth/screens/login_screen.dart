@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _authService = AuthService();
 
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
 
   @override
   void dispose() {
@@ -64,6 +65,30 @@ class _LoginScreenState extends State<LoginScreen> {
     if (mounted) {
       setState(() {
         _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    setState(() {
+      _isGoogleLoading = true;
+    });
+
+    try {
+      await _authService.signInWithGoogle();
+    } on AuthException catch (error) {
+      if (mounted) {
+        _showMessage(error.message);
+      }
+    } catch (_) {
+      if (mounted) {
+        _showMessage('Google sign-in could not be started.');
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _isGoogleLoading = false;
       });
     }
   }
@@ -168,6 +193,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isBusy = _isLoading || _isGoogleLoading;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sign in'),
@@ -181,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                enabled: !_isLoading,
+                enabled: !isBusy,
                 decoration: const InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(),
@@ -191,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 controller: _passwordController,
                 obscureText: true,
-                enabled: !_isLoading,
+                enabled: !isBusy,
                 decoration: const InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(),
@@ -201,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: _isLoading ? null : _signIn,
+                  onPressed: isBusy ? null : _signIn,
                   child: _isLoading
                       ? const SizedBox(
                           height: 20,
@@ -214,8 +241,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: isBusy ? null : _signInWithGoogle,
+                  child: _isGoogleLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text('Continue with Google'),
+                ),
+              ),
+              const SizedBox(height: 12),
               TextButton(
-                onPressed: _isLoading ? null : _openRegister,
+                onPressed: isBusy ? null : _openRegister,
                 child: const Text('Create an account'),
               ),
             ],

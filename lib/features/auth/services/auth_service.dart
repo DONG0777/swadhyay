@@ -1,7 +1,10 @@
-﻿import 'package:supabase_flutter/supabase_flutter.dart';
+﻿import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
-  static const String _emailRedirectUrl = 'org.swadhyay.app://login-callback';
+  static const String _mobileRedirectUrl =
+      'org.swadhyay.app://login-callback';
+
   final SupabaseClient _client;
 
   AuthService({SupabaseClient? client})
@@ -30,7 +33,16 @@ class AuthService {
     return _client.auth.signUp(
       email: email,
       password: password,
-      emailRedirectTo: _emailRedirectUrl,
+      emailRedirectTo:
+          kIsWeb ? null : _mobileRedirectUrl,
+    );
+  }
+
+  Future<void> signInWithGoogle() async {
+    await _client.auth.signInWithOAuth(
+      OAuthProvider.google,
+      redirectTo:
+          kIsWeb ? null : _mobileRedirectUrl,
     );
   }
 
@@ -40,7 +52,8 @@ class AuthService {
     await _client.auth.resend(
       type: OtpType.signup,
       email: email,
-      emailRedirectTo: _emailRedirectUrl,
+      emailRedirectTo:
+          kIsWeb ? null : _mobileRedirectUrl,
     );
   }
 
