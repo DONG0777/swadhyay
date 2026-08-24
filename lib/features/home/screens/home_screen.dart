@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 
 import '../../auth/services/auth_service.dart';
+import '../../profile/screens/profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -9,6 +10,14 @@ class HomeScreen extends StatelessWidget {
 
   Future<void> _signOut() {
     return _authService.signOut();
+  }
+
+  void _openProfile(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const ProfileScreen(),
+      ),
+    );
   }
 
   @override
@@ -21,7 +30,12 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Swadhyay'),
         actions: [
           IconButton(
-            onPressed: () => _signOut(),
+            onPressed: () => _openProfile(context),
+            tooltip: 'My Profile',
+            icon: const Icon(Icons.person_outline),
+          ),
+          IconButton(
+            onPressed: _signOut,
             tooltip: 'Sign out',
             icon: const Icon(Icons.logout),
           ),
