@@ -2,6 +2,7 @@
 
 import '../../auth/services/auth_service.dart';
 import '../../profile/screens/profile_screen.dart';
+import '../../surya_namaskar/screens/surya_namaskar_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -16,6 +17,14 @@ class HomeScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => const ProfileScreen(),
+      ),
+    );
+  }
+
+  void _openSuryaNamaskar(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const SuryaNamaskarScreen(),
       ),
     );
   }
@@ -57,6 +66,45 @@ class HomeScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 32),
+              Card(
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () => _openSuryaNamaskar(context),
+                  child: const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.wb_sunny_outlined,
+                          size: 36,
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'সূর্য নমস্কার',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                '১২ ধাপে সূর্য নমস্কার শিখুন',
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.chevron_right),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
               const Card(
                 child: Padding(
                   padding: EdgeInsets.all(20),
