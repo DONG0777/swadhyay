@@ -81,23 +81,70 @@ class _SuryaNamaskarScreenState extends State<SuryaNamaskarScreen> {
                         step.title,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      if (step.mantra != null) ...[
+                      if (step.mantra != null &&
+                          step.mantra!.trim().isNotEmpty) ...[
                         const SizedBox(height: 16),
                         Text(
                           'মন্ত্র',
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                         const SizedBox(height: 4),
-                        Text(step.mantra!),
+                        Text(
+                          step.mantra!,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
                       ],
-                      if (step.mantraMeaning != null) ...[
+                      if (step.mantraMeaning != null &&
+                          step.mantraMeaning!.trim().isNotEmpty) ...[
                         const SizedBox(height: 12),
                         Text(
                           'অর্থ',
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                         const SizedBox(height: 4),
-                        Text(step.mantraMeaning!),
+                        Text(
+                          step.mantraMeaning!,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
+                      if (step.description != null &&
+                          step.description!.trim().isNotEmpty) ...[
+                        const SizedBox(height: 16),
+                        Text(
+                          'বিবরণ',
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          step.description!,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                      if (step.instructions != null &&
+                          step.instructions!.trim().isNotEmpty) ...[
+                        const SizedBox(height: 16),
+                        Text(
+                          'কীভাবে করবেন',
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          step.instructions!,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                      if (step.benefits != null &&
+                          step.benefits!.trim().isNotEmpty) ...[
+                        const SizedBox(height: 16),
+                        Text(
+                          'উপকারিতা',
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          step.benefits!,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       ],
                     ],
                   ),
