@@ -90,15 +90,6 @@ class _SuryaNamaskarScreenState extends State<SuryaNamaskarScreen> {
                         const SizedBox(height: 4),
                         Text(step.mantra!),
                       ],
-                      if (step.mantraTransliteration != null) ...[
-                        const SizedBox(height: 12),
-                        Text(
-                          'উচ্চারণ',
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(step.mantraTransliteration!),
-                      ],
                       if (step.mantraMeaning != null) ...[
                         const SizedBox(height: 12),
                         Text(
