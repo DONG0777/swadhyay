@@ -4,6 +4,8 @@
   final String languageCode;
   final String title;
   final String? mantra;
+  final String? mantraTransliteration;
+  final String? mantraMeaning;
   final String? description;
   final String? instructions;
   final String? benefits;
@@ -16,6 +18,8 @@
     required this.languageCode,
     required this.title,
     this.mantra,
+    this.mantraTransliteration,
+    this.mantraMeaning,
     this.description,
     this.instructions,
     this.benefits,
@@ -30,6 +34,8 @@
       languageCode: map['language_code'] as String,
       title: map['title'] as String,
       mantra: map['mantra'] as String?,
+      mantraTransliteration: map['mantra_transliteration'] as String?,
+      mantraMeaning: map['mantra_meaning'] as String?,
       description: map['description'] as String?,
       instructions: map['instructions'] as String?,
       benefits: map['benefits'] as String?,
@@ -49,6 +55,8 @@
       'language_code': languageCode,
       'title': title,
       'mantra': mantra,
+      'mantra_transliteration': mantraTransliteration,
+      'mantra_meaning': mantraMeaning,
       'description': description,
       'instructions': instructions,
       'benefits': benefits,

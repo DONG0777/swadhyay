@@ -54,6 +54,8 @@ class SuryaNamaskarService {
         languageCode: translation?.languageCode ?? base.languageCode,
         title: translation?.title ?? base.title,
         mantra: translation?.mantra ?? base.mantra,
+        mantraTransliteration: translation?.mantraTransliteration,
+        mantraMeaning: translation?.mantraMeaning,
         description: translation?.description ?? base.description,
         imageUrl: base.imageUrl,
         instructions: translation?.instructions,
