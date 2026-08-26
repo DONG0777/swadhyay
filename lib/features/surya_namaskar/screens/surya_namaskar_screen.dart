@@ -50,9 +50,12 @@ class _SuryaNamaskarScreenState extends State<SuryaNamaskarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('সূর্য নমস্কার'),
+        centerTitle: false,
       ),
       body: FutureBuilder<List<SuryaNamaskarContent>>(
         future: _contentFuture,
@@ -87,122 +90,32 @@ class _SuryaNamaskarScreenState extends State<SuryaNamaskarScreen> {
 
           return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
-                child: Column(
-                  children: [
-                    Text(
-                      'ধাপ ${_currentStep + 1} / ${content.length}',
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                    const SizedBox(height: 10),
-                    LinearProgressIndicator(
-                      value: (_currentStep + 1) / content.length,
-                    ),
-                  ],
-                ),
+              _StepProgressHeader(
+                currentStep: _currentStep,
+                totalSteps: content.length,
               ),
               Expanded(
                 child: PageView.builder(
                   controller: _pageController,
+                  itemCount: content.length,
                   onPageChanged: (index) {
                     setState(() {
                       _currentStep = index;
                     });
                   },
-                  itemCount: content.length,
                   itemBuilder: (context, index) {
-                    final step = content[index];
-
-                    return SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                step.title,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineSmall,
-                              ),
-                              if (step.mantra != null &&
-                                  step.mantra!.trim().isNotEmpty) ...[
-                                const SizedBox(height: 24),
-                                _ContentSection(
-                                  title: 'মন্ত্র',
-                                  content: step.mantra!,
-                                ),
-                              ],
-                              if (step.mantraMeaning != null &&
-                                  step.mantraMeaning!.trim().isNotEmpty) ...[
-                                const SizedBox(height: 20),
-                                _ContentSection(
-                                  title: 'অর্থ',
-                                  content: step.mantraMeaning!,
-                                ),
-                              ],
-                              if (step.description != null &&
-                                  step.description!.trim().isNotEmpty) ...[
-                                const SizedBox(height: 20),
-                                _ContentSection(
-                                  title: 'বিবরণ',
-                                  content: step.description!,
-                                ),
-                              ],
-                              if (step.instructions != null &&
-                                  step.instructions!.trim().isNotEmpty) ...[
-                                const SizedBox(height: 20),
-                                _ContentSection(
-                                  title: 'কীভাবে করবেন',
-                                  content: step.instructions!,
-                                ),
-                              ],
-                              if (step.benefits != null &&
-                                  step.benefits!.trim().isNotEmpty) ...[
-                                const SizedBox(height: 20),
-                                _ContentSection(
-                                  title: 'উপকারিতা',
-                                  content: step.benefits!,
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ),
+                    return _StepContent(
+                      step: content[index],
+                      theme: theme,
                     );
                   },
                 ),
               ),
-              SafeArea(
-                top: false,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed:
-                              _currentStep == 0 ? null : _goToPrevious,
-                          icon: const Icon(Icons.arrow_back),
-                          label: const Text('পূর্ববর্তী'),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: FilledButton.icon(
-                          onPressed: _currentStep == content.length - 1
-                              ? null
-                              : () => _goToNext(content.length),
-                          icon: const Icon(Icons.arrow_forward),
-                          label: const Text('পরবর্তী'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              _NavigationBar(
+                currentStep: _currentStep,
+                totalSteps: content.length,
+                onPrevious: _goToPrevious,
+                onNext: () => _goToNext(content.length),
               ),
             ],
           );
@@ -212,30 +125,326 @@ class _SuryaNamaskarScreenState extends State<SuryaNamaskarScreen> {
   }
 }
 
-class _ContentSection extends StatelessWidget {
-  final String title;
-  final String content;
+class _StepProgressHeader extends StatelessWidget {
+  final int currentStep;
+  final int totalSteps;
 
-  const _ContentSection({
-    required this.title,
-    required this.content,
+  const _StepProgressHeader({
+    required this.currentStep,
+    required this.totalSteps,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final theme = Theme.of(context);
+    final progress = (currentStep + 1) / totalSteps;
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 14),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                'সূর্য নমস্কার',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                'ধাপ ${currentStep + 1} / $totalSteps',
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 7,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StepContent extends StatelessWidget {
+  final SuryaNamaskarContent step;
+  final ThemeData theme;
+
+  const _StepContent({
+    required this.step,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 20),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 760),
+          child: Card(
+            elevation: 0,
+            clipBehavior: Clip.antiAlias,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(22, 24, 22, 28),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _StepTitle(
+                    stepNumber: step.stepNumber,
+                    title: step.title,
+                  ),
+                  if (_hasText(step.mantra)) ...[
+                    const SizedBox(height: 28),
+                    _MantraSection(
+                      mantra: step.mantra!,
+                      theme: theme,
+                    ),
+                  ],
+                  if (_hasText(step.mantraMeaning)) ...[
+                    const SizedBox(height: 24),
+                    _ContentSection(
+                      title: 'অর্থ',
+                      content: step.mantraMeaning!,
+                      icon: Icons.lightbulb_outline,
+                    ),
+                  ],
+                  if (_hasText(step.description)) ...[
+                    const SizedBox(height: 24),
+                    _ContentSection(
+                      title: 'বিবরণ',
+                      content: step.description!,
+                      icon: Icons.info_outline,
+                    ),
+                  ],
+                  if (_hasText(step.instructions)) ...[
+                    const SizedBox(height: 24),
+                    _ContentSection(
+                      title: 'কীভাবে করবেন',
+                      content: step.instructions!,
+                      icon: Icons.accessibility_new,
+                    ),
+                  ],
+                  if (_hasText(step.benefits)) ...[
+                    const SizedBox(height: 24),
+                    _ContentSection(
+                      title: 'উপকারিতা',
+                      content: step.benefits!,
+                      icon: Icons.favorite_border,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  bool _hasText(String? value) {
+    return value != null && value.trim().isNotEmpty;
+  }
+}
+
+class _StepTitle extends StatelessWidget {
+  final int stepNumber;
+  final String title;
+
+  const _StepTitle({
+    required this.stepNumber,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium,
+        Container(
+          width: 42,
+          height: 42,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            '$stepNumber',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.onPrimaryContainer,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
         ),
-        const SizedBox(height: 6),
-        Text(
-          content,
-          style: Theme.of(context).textTheme.bodyLarge,
+        const SizedBox(width: 14),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 3),
+            child: Text(
+              title,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+                height: 1.2,
+              ),
+            ),
+          ),
         ),
       ],
+    );
+  }
+}
+
+class _MantraSection extends StatelessWidget {
+  final String mantra;
+  final ThemeData theme;
+
+  const _MantraSection({
+    required this.mantra,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primaryContainer.withOpacity(0.45),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: theme.colorScheme.primary.withOpacity(0.18),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'মন্ত্র',
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            mantra,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+              height: 1.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ContentSection extends StatelessWidget {
+  final String title;
+  final String content;
+  final IconData icon;
+
+  const _ContentSection({
+    required this.title,
+    required this.content,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          icon,
+          size: 21,
+          color: theme.colorScheme.primary,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 7),
+              Text(
+                content,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  height: 1.55,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _NavigationBar extends StatelessWidget {
+  final int currentStep;
+  final int totalSteps;
+  final VoidCallback onPrevious;
+  final VoidCallback onNext;
+
+  const _NavigationBar({
+    required this.currentStep,
+    required this.totalSteps,
+    required this.onPrevious,
+    required this.onNext,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+        child: Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: currentStep == 0 ? null : onPrevious,
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('পূর্ববর্তী'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: FilledButton.icon(
+                onPressed: currentStep == totalSteps - 1 ? null : onNext,
+                icon: Icon(
+                  currentStep == totalSteps - 1
+                      ? Icons.check
+                      : Icons.arrow_forward,
+                ),
+                label: Text(
+                  currentStep == totalSteps - 1 ? 'সম্পন্ন' : 'পরবর্তী',
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
