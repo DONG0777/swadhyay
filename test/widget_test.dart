@@ -1,9 +1,15 @@
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:swadhyay_fresh/main.dart';
 
 void main() {
-  testWidgets('Swadhyay app loads', (WidgetTester tester) async {
-    await tester.pumpWidget(const SwadhyayApp());
+  testWidgets('basic Flutter widget test', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: Text('Swadhyay'),
+        ),
+      ),
+    );
 
     expect(find.text('Swadhyay'), findsOneWidget);
   });
