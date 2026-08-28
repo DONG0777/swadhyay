@@ -1,7 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../auth/services/auth_service.dart';
+import '../../admin/services/admin_service.dart';
 import '../../profile/screens/profile_screen.dart';
+import '../../admin/screens/admin_dashboard_screen.dart';
 import '../../surya_namaskar/screens/surya_namaskar_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -42,6 +44,26 @@ class HomeScreen extends StatelessWidget {
             onPressed: () => _openProfile(context),
             tooltip: 'My Profile',
             icon: const Icon(Icons.person_outline),
+          ),
+          FutureBuilder<bool>(
+            future: AdminService().isAdmin(),
+            builder: (context, snapshot) {
+              if (snapshot.data != true) {
+                return const SizedBox.shrink();
+              }
+
+              return IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const AdminDashboardScreen(),
+                    ),
+                  );
+                },
+                tooltip: 'Admin Dashboard',
+                icon: const Icon(Icons.admin_panel_settings_outlined),
+              );
+            },
           ),
           IconButton(
             onPressed: _signOut,
