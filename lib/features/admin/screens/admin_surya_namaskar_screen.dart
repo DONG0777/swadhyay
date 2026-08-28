@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../surya_namaskar/models/surya_namaskar_content.dart';
 import '../../surya_namaskar/services/surya_namaskar_service.dart';
@@ -32,6 +32,10 @@ class _AdminSuryaNamaskarScreenState
     BuildContext context,
     SuryaNamaskarContent step,
   ) async {
+    debugPrint(
+      'ADMIN EDITOR OPEN: step=${step.stepNumber}, id=${step.id}',
+    );
+
     final saved = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
         builder: (_) =>

@@ -1,4 +1,4 @@
-﻿import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AdminSuryaNamaskarService {
   final SupabaseClient _client;
@@ -6,6 +6,17 @@ class AdminSuryaNamaskarService {
   AdminSuryaNamaskarService({SupabaseClient? client})
       : _client = client ?? Supabase.instance.client;
 
+  Future<void> updateImageUrl({
+    required String suryaNamaskarId,
+    required String imageUrl,
+  }) async {
+    await _client
+        .from('surya_namaskar')
+        .update({
+          'image_url': imageUrl,
+        })
+        .eq('id', suryaNamaskarId);
+  }
   Future<void> updateBengaliContent({
     required String suryaNamaskarId,
     required String title,
