@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../surya_namaskar/models/surya_namaskar_content.dart';
 import '../../surya_namaskar/services/surya_namaskar_service.dart';
@@ -32,10 +32,6 @@ class _AdminSuryaNamaskarScreenState
     BuildContext context,
     SuryaNamaskarContent step,
   ) async {
-    debugPrint(
-      'ADMIN EDITOR OPEN: step=${step.stepNumber}, id=${step.id}',
-    );
-
     final saved = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
         builder: (_) =>
@@ -117,26 +113,71 @@ class _StepCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = step.imageUrl?.trim();
+    final hasImage = imageUrl != null && imageUrl.isNotEmpty;
+
     return Card(
       child: ListTile(
-        contentPadding: const EdgeInsets.all(16),
-        leading: CircleAvatar(
-          child: Text('${step.stepNumber}'),
-        ),
-        title: Text(
-          step.title,
-          style: const TextStyle(
-            fontWeight: FontWeight.w700,
+        contentPadding: const EdgeInsets.all(12),
+        leading: SizedBox(
+          width: 72,
+          height: 72,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: hasImage
+                ? Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) {
+                      return _placeholder(context);
+                    },
+                  )
+                : _placeholder(context),
           ),
+        ),
+        title: Row(
+          children: [
+            CircleAvatar(
+              radius: 14,
+              child: Text(
+                '${step.stepNumber}',
+                style: const TextStyle(fontSize: 12),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                step.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ],
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 6),
           child: Text(
-            step.mantra ?? '',
+            hasImage
+                ? (step.mantra ?? '')
+                : 'Image not assigned',
           ),
         ),
         trailing: const Icon(Icons.chevron_right),
         onTap: onTap,
+      ),
+    );
+  }
+
+  Widget _placeholder(BuildContext context) {
+    return Container(
+      color: Theme.of(context)
+          .colorScheme
+          .surfaceContainerHighest,
+      alignment: Alignment.center,
+      child: const Icon(
+        Icons.image_outlined,
+        size: 30,
       ),
     );
   }
