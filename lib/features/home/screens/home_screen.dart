@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import '../../auth/services/auth_service.dart';
-import '../../admin/services/admin_service.dart';
-import '../../profile/screens/profile_screen.dart';
 import '../../admin/screens/admin_dashboard_screen.dart';
+import '../../admin/services/admin_service.dart';
+import '../../auth/services/auth_service.dart';
+import '../../profile/screens/profile_screen.dart';
 import '../../surya_namaskar/screens/surya_namaskar_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -103,8 +103,7 @@ class HomeScreen extends StatelessWidget {
                         SizedBox(width: 16),
                         Expanded(
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'সূর্য নমস্কার',
