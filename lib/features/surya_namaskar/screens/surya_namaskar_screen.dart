@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../models/surya_namaskar_content.dart';
 import '../services/surya_namaskar_service.dart';
@@ -54,8 +55,12 @@ class _SuryaNamaskarScreenState extends State<SuryaNamaskarScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('সূর্য নমস্কার'),
-        centerTitle: false,
+        title: Text(
+          'সূর্য নমস্কার',
+          style: GoogleFonts.notoSansBengali(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
       body: FutureBuilder<List<SuryaNamaskarContent>>(
         future: _contentFuture,
@@ -73,6 +78,7 @@ class _SuryaNamaskarScreenState extends State<SuryaNamaskarScreen> {
                 child: Text(
                   'সূর্য নমস্কারের তথ্য লোড করা যায়নি।\n\n${snapshot.error}',
                   textAlign: TextAlign.center,
+                  style: GoogleFonts.notoSansBengali(),
                 ),
               ),
             );
@@ -81,9 +87,10 @@ class _SuryaNamaskarScreenState extends State<SuryaNamaskarScreen> {
           final content = snapshot.data ?? [];
 
           if (content.isEmpty) {
-            return const Center(
+            return Center(
               child: Text(
                 'কোনো সূর্য নমস্কারের তথ্য পাওয়া যায়নি।',
+                style: GoogleFonts.notoSansBengali(),
               ),
             );
           }
@@ -149,13 +156,15 @@ class _StepProgressHeader extends StatelessWidget {
             children: [
               Text(
                 'সূর্য নমস্কার',
-                style: theme.textTheme.titleMedium?.copyWith(
+                style: GoogleFonts.notoSansBengali(
+                  textStyle: theme.textTheme.titleMedium,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               Text(
                 'ধাপ ${currentStep + 1} / $totalSteps',
-                style: theme.textTheme.labelLarge?.copyWith(
+                style: GoogleFonts.notoSansBengali(
+                  textStyle: theme.textTheme.labelLarge,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -203,6 +212,53 @@ class _StepContent extends StatelessWidget {
                     stepNumber: step.stepNumber,
                     title: step.title,
                   ),
+                  if (_hasText(step.imageUrl)) ...[
+                    const SizedBox(height: 22),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: AspectRatio(
+                        aspectRatio: 4 / 3,
+                        child: Image.network(
+                          step.imageUrl!,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          loadingBuilder:
+                              (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+
+                            return const SizedBox(
+                              height: 220,
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              height: 220,
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.broken_image_outlined,
+                                    size: 48,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'ছবিটি লোড করা যায়নি।',
+                                    style: GoogleFonts.notoSansBengali(),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                   if (_hasText(step.mantra)) ...[
                     const SizedBox(height: 28),
                     _MantraSection(
@@ -294,7 +350,8 @@ class _StepTitle extends StatelessWidget {
             padding: const EdgeInsets.only(top: 3),
             child: Text(
               title,
-              style: theme.textTheme.headlineSmall?.copyWith(
+              style: GoogleFonts.notoSansBengali(
+                textStyle: theme.textTheme.headlineSmall,
                 fontWeight: FontWeight.w700,
                 height: 1.2,
               ),
@@ -332,7 +389,8 @@ class _MantraSection extends StatelessWidget {
         children: [
           Text(
             'মন্ত্র',
-            style: theme.textTheme.labelLarge?.copyWith(
+            style: GoogleFonts.notoSansBengali(
+              textStyle: theme.textTheme.labelLarge,
               color: theme.colorScheme.primary,
               fontWeight: FontWeight.w700,
             ),
@@ -340,7 +398,8 @@ class _MantraSection extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             mantra,
-            style: theme.textTheme.titleLarge?.copyWith(
+            style: GoogleFonts.notoSansBengali(
+              textStyle: theme.textTheme.titleLarge,
               fontWeight: FontWeight.w600,
               height: 1.5,
             ),
@@ -381,14 +440,16 @@ class _ContentSection extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: theme.textTheme.titleMedium?.copyWith(
+                style: GoogleFonts.notoSansBengali(
+                  textStyle: theme.textTheme.titleMedium,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const SizedBox(height: 7),
               Text(
                 content,
-                style: theme.textTheme.bodyLarge?.copyWith(
+                style: GoogleFonts.notoSansBengali(
+                  textStyle: theme.textTheme.bodyLarge,
                   height: 1.55,
                 ),
               ),
@@ -425,7 +486,10 @@ class _NavigationBar extends StatelessWidget {
               child: OutlinedButton.icon(
                 onPressed: currentStep == 0 ? null : onPrevious,
                 icon: const Icon(Icons.arrow_back),
-                label: const Text('পূর্ববর্তী'),
+                label: Text(
+                  'পূর্ববর্তী',
+                  style: GoogleFonts.notoSansBengali(),
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -439,6 +503,7 @@ class _NavigationBar extends StatelessWidget {
                 ),
                 label: Text(
                   currentStep == totalSteps - 1 ? 'সম্পন্ন' : 'পরবর্তী',
+                  style: GoogleFonts.notoSansBengali(),
                 ),
               ),
             ),
