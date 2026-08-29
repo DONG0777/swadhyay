@@ -3,6 +3,7 @@
 import '../../admin/screens/admin_dashboard_screen.dart';
 import '../../admin/services/admin_service.dart';
 import '../../auth/services/auth_service.dart';
+import '../../daily_swadhyay/screens/daily_commitment_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../surya_namaskar/screens/surya_namaskar_screen.dart';
 import '../../user_context/screens/user_context_screen.dart';
@@ -36,6 +37,14 @@ class HomeScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => const UserContextScreen(),
+      ),
+    );
+  }
+
+  void _openDailyCommitment(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const DailyCommitmentScreen(),
       ),
     );
   }
@@ -162,6 +171,44 @@ class HomeScreen extends StatelessWidget {
                               SizedBox(height: 4),
                               Text(
                                 'তুমি এখন কোথায় আছ এবং তোমার সবচেয়ে বড় প্রয়োজন কী?',
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.chevron_right),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Card(
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () => _openDailyCommitment(context),
+                  child: const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.flag_outlined,
+                          size: 36,
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'আজকের সংকল্প',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                'একটি ছোট কাজ বেছে নিন এবং আজ পালন করুন',
                               ),
                             ],
                           ),
