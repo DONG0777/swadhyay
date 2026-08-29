@@ -17,7 +17,7 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
   DailyCommitment? _commitment;
   bool _isLoading = true;
   bool _isSaving = false;
-  bool _isCompleting = false;
+  bool _isUpdatingStatus = false;
 
   @override
   void initState() {
@@ -115,29 +115,51 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
   }
 
   Future<void> _completeCommitment() async {
-    if (_commitment == null || _commitment!.isCompleted) {
+    if (_commitment == null || _commitment!.status != 'pending') {
       return;
     }
 
+    await _updateStatus(
+      action: _service.completeTodayCommitment,
+      successMessage: 'আজকের সংকল্প সম্পন্ন হয়েছে।',
+    );
+  }
+
+  Future<void> _markCommitmentMissed() async {
+    if (_commitment == null || _commitment!.status != 'pending') {
+      return;
+    }
+
+    await _updateStatus(
+      action: _service.markTodayCommitmentMissed,
+      successMessage:
+          'আজকের সংকল্প সম্পন্ন হয়নি। কারণটি বুঝে নেওয়ার সময় এসেছে।',
+    );
+  }
+
+  Future<void> _updateStatus({
+    required Future<DailyCommitment> Function() action,
+    required String successMessage,
+  }) async {
     setState(() {
-      _isCompleting = true;
+      _isUpdatingStatus = true;
     });
 
     try {
-      final completed = await _service.completeTodayCommitment();
+      final updatedCommitment = await action();
 
       if (!mounted) {
         return;
       }
 
       setState(() {
-        _commitment = completed;
-        _isCompleting = false;
+        _commitment = updatedCommitment;
+        _isUpdatingStatus = false;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('আজকের সংকল্প সম্পন্ন হয়েছে।'),
+        SnackBar(
+          content: Text(successMessage),
         ),
       );
     } catch (error) {
@@ -146,12 +168,12 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
       }
 
       setState(() {
-        _isCompleting = false;
+        _isUpdatingStatus = false;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('সংকল্প সম্পন্ন করা যায়নি: $error'),
+          content: Text('সংকল্পের status পরিবর্তন করা যায়নি: $error'),
         ),
       );
     }
@@ -187,15 +209,15 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                       controller: _controller,
                       maxLines: 4,
                       maxLength: 500,
+                      enabled: _commitment == null &&
+                          !_isSaving &&
+                          !_isUpdatingStatus,
                       decoration: const InputDecoration(
                         labelText: 'আমার আজকের সংকল্প',
                         hintText:
                             'যেমন: রাগের মুহূর্তে উত্তর দেওয়ার আগে ১০ সেকেন্ড থামব।',
                         border: OutlineInputBorder(),
                       ),
-                      enabled: _commitment == null &&
-                          !_isSaving &&
-                          !_isCompleting,
                     ),
                     const SizedBox(height: 16),
                     if (_commitment == null)
@@ -234,7 +256,7 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                                     Theme.of(context).textTheme.bodyLarge,
                               ),
                               const SizedBox(height: 20),
-                              if (_commitment!.isCompleted)
+                              if (_commitment!.status == 'completed')
                                 const Row(
                                   children: [
                                     Icon(Icons.check_circle_outline),
@@ -242,14 +264,22 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                                     Text('আজকের সংকল্প সম্পন্ন হয়েছে'),
                                   ],
                                 )
-                              else
+                              else if (_commitment!.status == 'missed')
+                                const Row(
+                                  children: [
+                                    Icon(Icons.info_outline),
+                                    SizedBox(width: 8),
+                                    Text('আজকের সংকল্প সম্পন্ন হয়নি'),
+                                  ],
+                                )
+                              else ...[
                                 SizedBox(
                                   width: double.infinity,
                                   child: FilledButton.icon(
-                                    onPressed: _isCompleting
+                                    onPressed: _isUpdatingStatus
                                         ? null
                                         : _completeCommitment,
-                                    icon: _isCompleting
+                                    icon: _isUpdatingStatus
                                         ? const SizedBox(
                                             width: 18,
                                             height: 18,
@@ -265,6 +295,22 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                                     ),
                                   ),
                                 ),
+                                const SizedBox(height: 12),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: OutlinedButton.icon(
+                                    onPressed: _isUpdatingStatus
+                                        ? null
+                                        : _markCommitmentMissed,
+                                    icon: const Icon(
+                                      Icons.event_busy_outlined,
+                                    ),
+                                    label: const Text(
+                                      'আমি পালন করতে পারিনি',
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
                         ),

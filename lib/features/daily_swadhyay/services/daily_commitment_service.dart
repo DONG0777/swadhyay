@@ -111,6 +111,35 @@ class DailyCommitmentService {
     return completeCommitmentForDate(DateTime.now());
   }
 
+  Future<DailyCommitment> markCommitmentMissedForDate(
+    DateTime date,
+  ) async {
+    final user = _client.auth.currentUser;
+
+    if (user == null) {
+      throw const AuthException('User is not signed in.');
+    }
+
+    final dateOnly = _dateOnly(date);
+
+    final data = await _client
+        .from('daily_commitments')
+        .update({
+          'status': 'missed',
+        })
+        .eq('user_id', user.id)
+        .eq('commitment_date', dateOnly)
+        .eq('status', 'pending')
+        .select()
+        .single();
+
+    return DailyCommitment.fromMap(data);
+  }
+
+  Future<DailyCommitment> markTodayCommitmentMissed() {
+    return markCommitmentMissedForDate(DateTime.now());
+  }
+
   String _dateOnly(DateTime date) {
     final year = date.year.toString().padLeft(4, '0');
     final month = date.month.toString().padLeft(2, '0');
