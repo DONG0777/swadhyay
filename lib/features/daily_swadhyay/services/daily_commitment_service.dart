@@ -81,6 +81,44 @@ class DailyCommitmentService {
     );
   }
 
+  Future<DailyCommitment> updateCommitmentForDate({
+    required DateTime date,
+    required String commitmentText,
+  }) async {
+    final user = _client.auth.currentUser;
+
+    if (user == null) {
+      throw const AuthException('User is not signed in.');
+    }
+
+    final trimmedText = commitmentText.trim();
+
+    if (trimmedText.isEmpty) {
+      throw ArgumentError('Commitment cannot be empty.');
+    }
+
+    if (trimmedText.length > 500) {
+      throw ArgumentError(
+        'Commitment cannot be longer than 500 characters.',
+      );
+    }
+
+    final dateOnly = _dateOnly(date);
+
+    final data = await _client
+        .from('daily_commitments')
+        .update({
+          'commitment_text': trimmedText,
+        })
+        .eq('user_id', user.id)
+        .eq('commitment_date', dateOnly)
+        .eq('status', 'pending')
+        .select()
+        .single();
+
+    return DailyCommitment.fromMap(data);
+  }
+
   Future<DailyCommitment> completeCommitmentForDate(
     DateTime date,
   ) async {

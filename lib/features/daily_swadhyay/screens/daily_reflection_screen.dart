@@ -4,6 +4,7 @@ import '../models/daily_commitment.dart';
 import '../models/daily_reflection.dart';
 import '../services/daily_commitment_service.dart';
 import '../services/daily_reflection_service.dart';
+import 'tomorrow_commitment_screen.dart';
 
 class DailyReflectionScreen extends StatefulWidget {
   const DailyReflectionScreen({super.key});
@@ -21,7 +22,8 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
   final TextEditingController _egoController = TextEditingController();
   final TextEditingController _idealGapController = TextEditingController();
   final TextEditingController _learningController = TextEditingController();
-  final TextEditingController _obstacleController = TextEditingController();
+  final TextEditingController _obstacleController =
+      TextEditingController();
 
   DailyCommitment? _commitment;
   DailyReflection? _reflection;
@@ -56,9 +58,12 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
         _commitment = commitment;
         _reflection = reflection;
         _egoController.text = reflection?.egoReflection ?? '';
-        _idealGapController.text = reflection?.idealGapReflection ?? '';
-        _learningController.text = reflection?.learningReflection ?? '';
-        _obstacleController.text = reflection?.obstacleReason ?? '';
+        _idealGapController.text =
+            reflection?.idealGapReflection ?? '';
+        _learningController.text =
+            reflection?.learningReflection ?? '';
+        _obstacleController.text =
+            reflection?.obstacleReason ?? '';
         _isLoading = false;
       });
     } catch (error) {
@@ -86,11 +91,24 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
     }
 
     if (!commitment.isCompleted &&
+        commitment.status != 'missed' &&
         _obstacleController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'নতুন সংকল্প নেওয়ার আগে আজ কী বাধা দিয়েছিল, সেটি লিখুন।',
+            'সংকল্প পূরণ না হলে বাধার কারণ লেখা বাধ্যতামূলক।',
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (commitment.status == 'missed' &&
+        _obstacleController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'সংকল্পটি পূরণ হয়নি। আগে কী বাধা দিয়েছিল সেটি লিখুন।',
           ),
         ),
       );
@@ -163,8 +181,19 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
     );
   }
 
+  void _openTomorrowCommitment() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const TomorrowCommitmentScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final canMoveToTomorrow =
+        _reflection != null && !_isSaving;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('রাতের আত্ম-বিশ্লেষণ'),
@@ -178,7 +207,8 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
                 padding: const EdgeInsets.all(24),
                 child: _commitment == null
                     ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start,
                         children: [
                           Text(
                             'আজকের সংকল্প আগে তৈরি করুন',
@@ -193,11 +223,13 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
                         ],
                       )
                     : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start,
                         children: [
                           Text(
                             'আজকের সংকল্প',
-                            style: Theme.of(context).textTheme.titleMedium,
+                            style:
+                                Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(height: 8),
                           Card(
@@ -213,14 +245,16 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
                           ),
                           const SizedBox(height: 24),
                           Text(
-                            _commitment!.isCompleted
-                                ? 'আজ একটু থামি'
-                                : 'আজকের অভিজ্ঞতাটা বুঝে নিই',
-                            style: Theme.of(context).textTheme.headlineSmall,
+                            _commitment!.status == 'missed'
+                                ? 'আজকের অভিজ্ঞতাটা বুঝে নিই'
+                                : 'আজ একটু থামি',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall,
                           ),
                           const SizedBox(height: 8),
                           const Text(
-                            'এখানে নিজেকে দোষ দেওয়ার জন্য নয়, নিজের প্যাটার্নকে বোঝার জন্য লিখুন।',
+                            'নিজেকে দোষ দেওয়ার জন্য নয়, নিজের প্যাটার্নকে বোঝার জন্য লিখুন।',
                           ),
                           const SizedBox(height: 24),
                           _reflectionField(
@@ -252,34 +286,31 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
                           if (!_commitment!.isCompleted) ...[
                             const SizedBox(height: 20),
                             const Text(
-                              'সংকল্পটি আজ পূরণ হয়নি। নতুন সংকল্প নেওয়ার আগে কারণটি বুঝে নেওয়া দরকার।',
+                              'সংকল্পটি আজ পূরণ হয়নি। আগে কারণটি বুঝে নেওয়া দরকার।',
                             ),
                             const SizedBox(height: 12),
                             _reflectionField(
                               controller: _obstacleController,
-                              label: 'কোন বাধাটা তোমাকে আজ আটকে দিয়েছিল?',
+                              label:
+                                  'কোন বাধাটা তোমাকে আজ আটকে দিয়েছিল?',
                               hint:
-                                  'সময়, পরিবেশ, অভ্যাস বা অন্য কোনো বাস্তব কারণ...',
+                                  'সময়, পরিবেশ, অভ্যাস বা অন্য কোনো বাস্তব কারণ...',
                               maxLength: 1000,
                               maxLines: 4,
-                            ),
-                          ],
-                          if (_reflection != null) ...[
-                            const SizedBox(height: 12),
-                            const Text(
-                              'আজকের আত্ম-বিশ্লেষণ সংরক্ষিত হয়েছে।',
                             ),
                           ],
                           const SizedBox(height: 20),
                           SizedBox(
                             width: double.infinity,
                             child: FilledButton(
-                              onPressed: _isSaving ? null : _saveReflection,
+                              onPressed:
+                                  _isSaving ? null : _saveReflection,
                               child: _isSaving
                                   ? const SizedBox(
                                       width: 20,
                                       height: 20,
-                                      child: CircularProgressIndicator(
+                                      child:
+                                          CircularProgressIndicator(
                                         strokeWidth: 2,
                                       ),
                                     )
@@ -290,6 +321,27 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
                                     ),
                             ),
                           ),
+                          if (_reflection != null) ...[
+                            const SizedBox(height: 12),
+                            const Text(
+                              'আজকের আত্ম-বিশ্লেষণ সংরক্ষিত হয়েছে।',
+                            ),
+                            const SizedBox(height: 20),
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton.icon(
+                                onPressed: canMoveToTomorrow
+                                    ? _openTomorrowCommitment
+                                    : null,
+                                icon: const Icon(
+                                  Icons.arrow_forward_outlined,
+                                ),
+                                label: const Text(
+                                  'আগামীকালের সংকল্প নিন',
+                                ),
+                              ),
+                            ),
+                          ],
                         ],
                       ),
               ),
@@ -297,4 +349,3 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
     );
   }
 }
-
