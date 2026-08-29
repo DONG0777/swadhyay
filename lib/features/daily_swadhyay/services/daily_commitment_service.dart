@@ -8,20 +8,20 @@ class DailyCommitmentService {
   DailyCommitmentService({SupabaseClient? client})
       : _client = client ?? Supabase.instance.client;
 
-  Future<DailyCommitment?> getTodayCommitment() async {
+  Future<DailyCommitment?> getCommitmentForDate(DateTime date) async {
     final user = _client.auth.currentUser;
 
     if (user == null) {
       return null;
     }
 
-    final today = _dateOnly(DateTime.now());
+    final dateOnly = _dateOnly(date);
 
     final data = await _client
         .from('daily_commitments')
         .select()
         .eq('user_id', user.id)
-        .eq('commitment_date', today)
+        .eq('commitment_date', dateOnly)
         .maybeSingle();
 
     if (data == null) {
@@ -31,7 +31,12 @@ class DailyCommitmentService {
     return DailyCommitment.fromMap(data);
   }
 
-  Future<DailyCommitment> createTodayCommitment({
+  Future<DailyCommitment?> getTodayCommitment() {
+    return getCommitmentForDate(DateTime.now());
+  }
+
+  Future<DailyCommitment> createCommitmentForDate({
+    required DateTime date,
     required String commitmentText,
   }) async {
     final user = _client.auth.currentUser;
@@ -52,13 +57,13 @@ class DailyCommitmentService {
       );
     }
 
-    final today = _dateOnly(DateTime.now());
+    final dateOnly = _dateOnly(date);
 
     final data = await _client
         .from('daily_commitments')
         .insert({
           'user_id': user.id,
-          'commitment_date': today,
+          'commitment_date': dateOnly,
           'commitment_text': trimmedText,
         })
         .select()
@@ -67,14 +72,25 @@ class DailyCommitmentService {
     return DailyCommitment.fromMap(data);
   }
 
-  Future<DailyCommitment> completeTodayCommitment() async {
+  Future<DailyCommitment> createTodayCommitment({
+    required String commitmentText,
+  }) {
+    return createCommitmentForDate(
+      date: DateTime.now(),
+      commitmentText: commitmentText,
+    );
+  }
+
+  Future<DailyCommitment> completeCommitmentForDate(
+    DateTime date,
+  ) async {
     final user = _client.auth.currentUser;
 
     if (user == null) {
       throw const AuthException('User is not signed in.');
     }
 
-    final today = _dateOnly(DateTime.now());
+    final dateOnly = _dateOnly(date);
 
     final data = await _client
         .from('daily_commitments')
@@ -83,12 +99,16 @@ class DailyCommitmentService {
           'completed_at': DateTime.now().toUtc().toIso8601String(),
         })
         .eq('user_id', user.id)
-        .eq('commitment_date', today)
+        .eq('commitment_date', dateOnly)
         .eq('status', 'pending')
         .select()
         .single();
 
     return DailyCommitment.fromMap(data);
+  }
+
+  Future<DailyCommitment> completeTodayCommitment() {
+    return completeCommitmentForDate(DateTime.now());
   }
 
   String _dateOnly(DateTime date) {
