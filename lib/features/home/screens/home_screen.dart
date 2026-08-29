@@ -2,12 +2,13 @@
 
 import '../../admin/screens/admin_dashboard_screen.dart';
 import '../../admin/services/admin_service.dart';
-import '../../auth/services/auth_service.dart';
 import '../../daily_swadhyay/screens/daily_commitment_screen.dart';
+import '../../daily_swadhyay/screens/daily_history_screen.dart';
 import '../../daily_swadhyay/screens/daily_reflection_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../surya_namaskar/screens/surya_namaskar_screen.dart';
 import '../../user_context/screens/user_context_screen.dart';
+import '../../auth/services/auth_service.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -58,6 +59,14 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  void _openDailyHistory(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const DailyHistoryScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = _authService.currentUser;
@@ -88,7 +97,9 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
                 tooltip: 'Admin Dashboard',
-                icon: const Icon(Icons.admin_panel_settings_outlined),
+                icon: const Icon(
+                  Icons.admin_panel_settings_outlined,
+                ),
               );
             },
           ),
@@ -108,7 +119,8 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Text(
                   'Welcome',
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style:
+                      Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -131,7 +143,8 @@ class HomeScreen extends StatelessWidget {
                           SizedBox(width: 16),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   'সূর্য নমস্কার',
@@ -270,6 +283,45 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
+                Card(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => _openDailyHistory(context),
+                    child: const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.insights_outlined,
+                            size: 36,
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'আমার যাত্রা',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'গত ৩০ দিনে আমি কীভাবে এগিয়েছি',
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.chevron_right),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -278,3 +330,4 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
