@@ -4,6 +4,7 @@ import '../../admin/screens/admin_dashboard_screen.dart';
 import '../../admin/services/admin_service.dart';
 import '../../daily_swadhyay/screens/daily_commitment_screen.dart';
 import '../../daily_swadhyay/screens/daily_history_screen.dart';
+import '../../daily_swadhyay/screens/growth_insight_screen.dart';
 import '../../daily_swadhyay/screens/daily_reflection_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../surya_namaskar/screens/surya_namaskar_screen.dart';
@@ -63,6 +64,14 @@ class HomeScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => const DailyHistoryScreen(),
+      ),
+    );
+  }
+
+  void _openGrowthInsight(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const GrowthInsightScreen(),
       ),
     );
   }
@@ -287,6 +296,44 @@ class HomeScreen extends StatelessWidget {
                 Card(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
+                    onTap: () => _openGrowthInsight(context),
+                    child: const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.auto_graph_outlined,
+                            size: 36,
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '৭ দিনের Growth Insight',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'তোমার নিজের data থেকে বুঝে নাও কোথায় এগোচ্ছ',
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.chevron_right),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),                const SizedBox(height: 16),
+                Card(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
                     onTap: () => _openDailyHistory(context),
                     child: const Padding(
                       padding: EdgeInsets.all(20),
@@ -330,4 +377,5 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
 
