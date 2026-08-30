@@ -3,7 +3,17 @@
 import '../models/community_place.dart';
 import '../models/community_routine.dart';
 import '../services/community_practice_service.dart';
+import '../services/community_service.dart';
 
+const _weekdayNames = [
+  'সোমবার',
+  'মঙ্গলবার',
+  'বুধবার',
+  'বৃহস্পতিবার',
+  'শুক্রবার',
+  'শনিবার',
+  'রবিবার',
+];
 class CommunityRoutineScreen extends StatefulWidget {
   final CommunityPlace place;
 
@@ -24,16 +34,6 @@ class _CommunityRoutineScreenState
 
   List<CommunityRoutine> _routines = [];
   bool _isLoading = true;
-
-  static const weekdayNames = [
-    'সোমবার',
-    'মঙ্গলবার',
-    'বুধবার',
-    'বৃহস্পতিবার',
-    'শুক্রবার',
-    'শনিবার',
-    'রবিবার',
-  ];
 
   @override
   void initState() {
@@ -65,7 +65,9 @@ class _CommunityRoutineScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Weekly routine লোড করা যায়নি: $error'),
+          content: Text(
+            'Weekly routine লোড করা যায়নি: $error',
+          ),
         ),
       );
     }
@@ -85,12 +87,35 @@ class _CommunityRoutineScreenState
     }
   }
 
+  Future<void> _createFirstSession(
+    CommunityRoutine routine,
+  ) async {
+    final created = await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(
+        builder: (_) => CommunityRoutineFirstSessionScreen(
+          place: widget.place,
+          routine: routine,
+        ),
+      ),
+    );
+
+    if (created == true && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'প্রথম Community Session তৈরি হয়েছে।',
+          ),
+        ),
+      );
+    }
+  }
+
   String _weekdayName(int weekday) {
     if (weekday < 1 || weekday > 7) {
       return '';
     }
 
-    return weekdayNames[weekday - 1];
+    return _weekdayNames[weekday - 1];
   }
 
   String _displayTime(String value) {
@@ -165,23 +190,67 @@ class _CommunityRoutineScreenState
                       (routine) => Card(
                         margin:
                             const EdgeInsets.only(bottom: 12),
-                        child: ListTile(
-                          leading: const Icon(
-                            Icons.calendar_today_outlined,
-                          ),
-                          title: Text(routine.title),
-                          subtitle: Text(
-                            '${_weekdayName(routine.weekday)}'
-                            ' • ${_displayTime(routine.startTime)}'
-                            ' • ${routine.durationMinutes} মিনিট',
-                          ),
-                          trailing: routine.isActive
-                              ? const Icon(
-                                  Icons.check_circle_outline,
-                                )
-                              : const Icon(
-                                  Icons.pause_circle_outline,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.calendar_today_outlined,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          routine.title,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          '${_weekdayName(routine.weekday)}'
+                                          ' • ${_displayTime(routine.startTime)}'
+                                          ' • ${routine.durationMinutes} মিনিট',
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Icon(
+                                    routine.isActive
+                                        ? Icons
+                                            .check_circle_outline
+                                        : Icons
+                                            .pause_circle_outline,
+                                  ),
+                                ],
+                              ),
+                              if (routine.isActive) ...[
+                                const SizedBox(height: 16),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: FilledButton.icon(
+                                    onPressed: () =>
+                                        _createFirstSession(
+                                      routine,
+                                    ),
+                                    icon: const Icon(
+                                      Icons.event_available_outlined,
+                                    ),
+                                    label: const Text(
+                                      'প্রথম Session তৈরি করুন',
+                                    ),
+                                  ),
                                 ),
+                              ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -214,7 +283,9 @@ class _CommunityRoutineCreateScreenState
       TextEditingController();
 
   int _weekday = DateTime.sunday;
-  TimeOfDay _time = const TimeOfDay(hour: 6, minute: 30);
+  TimeOfDay _time =
+      const TimeOfDay(hour: 6, minute: 30);
+
   bool _isSaving = false;
 
   @override
@@ -273,7 +344,9 @@ class _CommunityRoutineCreateScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Weekly routine তৈরি হয়েছে।'),
+          content: Text(
+            'Weekly routine তৈরি হয়েছে।',
+          ),
         ),
       );
 
@@ -289,7 +362,9 @@ class _CommunityRoutineCreateScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Routine তৈরি করা যায়নি: $error'),
+          content: Text(
+            'Routine তৈরি করা যায়নি: $error',
+          ),
         ),
       );
     }
@@ -316,15 +391,7 @@ class _CommunityRoutineCreateScreenState
                 (index) => DropdownMenuItem<int>(
                   value: index + 1,
                   child: Text(
-                    [
-                      'সোমবার',
-                      'মঙ্গলবার',
-                      'বুধবার',
-                      'বৃহস্পতিবার',
-                      'শুক্রবার',
-                      'শনিবার',
-                      'রবিবার',
-                    ][index],
+                    _weekdayNames[index],
                   ),
                 ),
               ),
@@ -352,15 +419,15 @@ class _CommunityRoutineCreateScreenState
             const SizedBox(height: 8),
             Card(
               child: ListTile(
-                leading: const Icon(
-                  Icons.schedule_outlined,
-                ),
+                leading:
+                    const Icon(Icons.schedule_outlined),
                 title: const Text('শুরু সময়'),
-                subtitle: Text(_time.format(context)),
-                trailing: const Icon(
-                  Icons.edit_outlined,
-                ),
-                onTap: _isSaving ? null : _selectTime,
+                subtitle:
+                    Text(_time.format(context)),
+                trailing:
+                    const Icon(Icons.edit_outlined),
+                onTap:
+                    _isSaving ? null : _selectTime,
               ),
             ),
             const SizedBox(height: 8),
@@ -370,7 +437,9 @@ class _CommunityRoutineCreateScreenState
                   Icons.timer_outlined,
                 ),
                 title: Text('সময়কাল'),
-                subtitle: Text('৬০ মিনিট — standard community practice'),
+                subtitle: Text(
+                  '৬০ মিনিট — standard community practice',
+                ),
               ),
             ),
             const SizedBox(height: 24),
@@ -383,7 +452,8 @@ class _CommunityRoutineCreateScreenState
                     ? const SizedBox(
                         width: 18,
                         height: 18,
-                        child: CircularProgressIndicator(
+                        child:
+                            CircularProgressIndicator(
                           strokeWidth: 2,
                         ),
                       )
@@ -401,3 +471,334 @@ class _CommunityRoutineCreateScreenState
     );
   }
 }
+
+class CommunityRoutineFirstSessionScreen
+    extends StatefulWidget {
+  final CommunityPlace place;
+  final CommunityRoutine routine;
+
+  const CommunityRoutineFirstSessionScreen({
+    required this.place,
+    required this.routine,
+    super.key,
+  });
+
+  @override
+  State<CommunityRoutineFirstSessionScreen>
+      createState() =>
+          _CommunityRoutineFirstSessionScreenState();
+}
+
+class _CommunityRoutineFirstSessionScreenState
+    extends State<CommunityRoutineFirstSessionScreen> {
+  final CommunityService _communityService =
+      CommunityService();
+
+  final CommunityPracticeService _practiceService =
+      CommunityPracticeService();
+
+  final TextEditingController _descriptionController =
+      TextEditingController();
+
+  bool _isSaving = false;
+
+  late DateTime _startsAt;
+  late DateTime _endsAt;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _startsAt = _nextRoutineOccurrence(widget.routine);
+    _endsAt = _startsAt.add(
+      Duration(
+        minutes: widget.routine.durationMinutes,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  DateTime _nextRoutineOccurrence(
+    CommunityRoutine routine,
+  ) {
+    final now = DateTime.now();
+
+    final timeParts = routine.startTime.split(':');
+
+    final hour = timeParts.isNotEmpty
+        ? int.tryParse(timeParts[0]) ?? 6
+        : 6;
+
+    final minute = timeParts.length > 1
+        ? int.tryParse(timeParts[1]) ?? 0
+        : 0;
+
+    var candidate = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    );
+
+    var daysUntil =
+        (routine.weekday - candidate.weekday + 7) % 7;
+
+    if (daysUntil == 0 &&
+        !candidate.isAfter(now)) {
+      daysUntil = 7;
+    }
+
+    candidate =
+        candidate.add(Duration(days: daysUntil));
+
+    return candidate;
+  }
+
+  String _formatDateTime(DateTime value) {
+    final day =
+        value.day.toString().padLeft(2, '0');
+    final month =
+        value.month.toString().padLeft(2, '0');
+    final hour =
+        value.hour.toString().padLeft(2, '0');
+    final minute =
+        value.minute.toString().padLeft(2, '0');
+
+    return '$day/$month/${value.year} '
+        '$hour:$minute';
+  }
+
+  Future<void> _selectStart() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: _startsAt,
+      firstDate: DateTime.now(),
+      lastDate:
+          DateTime.now().add(
+        const Duration(days: 365),
+      ),
+    );
+
+    if (date == null || !mounted) {
+      return;
+    }
+
+    final time = await showTimePicker(
+      context: context,
+      initialTime:
+          TimeOfDay.fromDateTime(_startsAt),
+    );
+
+    if (time == null || !mounted) {
+      return;
+    }
+
+    final selected = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
+
+    setState(() {
+      _startsAt = selected;
+
+      _endsAt = _startsAt.add(
+        Duration(
+          minutes: widget.routine.durationMinutes,
+        ),
+      );
+    });
+  }
+
+  Future<void> _saveSession() async {
+    if (!_endsAt.isAfter(_startsAt)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Session-এর শেষ সময় অবশ্যই শুরুর পরে হতে হবে।',
+          ),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isSaving = true;
+    });
+
+    try {
+      final session =
+          await _communityService.createSession(
+        placeId: widget.place.id,
+        routineId: widget.routine.id,
+        title: widget.routine.title,
+        description:
+            _descriptionController.text.trim(),
+        locationName: widget.place.name,
+        locationDetails: widget.place.address,
+        startsAt: _startsAt,
+        endsAt: _endsAt,
+        capacity: null,
+      );
+
+      await _practiceService.createDefaultAgenda(
+        session.id,
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'প্রথম Session এবং ১ ঘণ্টার কার্যক্রম তৈরি হয়েছে।',
+          ),
+        ),
+      );
+
+      Navigator.of(context).pop(true);
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _isSaving = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Session তৈরি করা যায়নি: $error',
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title:
+            const Text('প্রথম Community Session'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
+          children: [
+            Card(
+              child: ListTile(
+                leading: const Icon(
+                  Icons.location_city_outlined,
+                ),
+                title: Text(widget.place.name),
+                subtitle:
+                    Text(widget.place.address),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              widget.routine.title,
+              style:
+                  Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Routine: ${widget.routine.weekday}'
+              ' • ${widget.routine.startTime.substring(0, 5)}'
+              ' • ${widget.routine.durationMinutes} মিনিট',
+            ),
+            const SizedBox(height: 20),
+            Card(
+              child: ListTile(
+                leading:
+                    const Icon(Icons.event_outlined),
+                title: const Text(
+                  'প্রথম Session',
+                ),
+                subtitle:
+                    Text(_formatDateTime(_startsAt)),
+                trailing: const Icon(
+                  Icons.edit_calendar_outlined,
+                ),
+                onTap:
+                    _isSaving ? null : _selectStart,
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller:
+                  _descriptionController,
+              maxLines: 4,
+              maxLength: 2000,
+              decoration: const InputDecoration(
+                labelText: 'বিবরণ',
+                hintText:
+                    'এই প্রথম session সম্পর্কে সংক্ষেপে লিখুন...',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Card(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Row(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.schedule_outlined,
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'Session-এর সঙ্গে standard 60-minute community practice agenda স্বয়ংক্রিয়ভাবে যুক্ত হবে।',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed:
+                    _isSaving ? null : _saveSession,
+                icon: _isSaving
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child:
+                            CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.event_available_outlined,
+                      ),
+                label: const Text(
+                  'প্রথম Session তৈরি করুন',
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+

@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
+import '../models/community_place.dart';
 import '../services/community_practice_service.dart';
 import '../services/community_service.dart';
 
@@ -28,6 +29,9 @@ class _CommunitySessionCreateScreenState
   final TextEditingController _capacityController =
       TextEditingController();
 
+  List<CommunityPlace> _places = [];
+  CommunityPlace? _selectedPlace;
+
   DateTime _startsAt =
       DateTime.now().add(const Duration(days: 1));
 
@@ -36,7 +40,47 @@ class _CommunitySessionCreateScreenState
     const Duration(days: 1, hours: 1),
   );
 
+  bool _isLoadingPlaces = true;
   bool _isSaving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPlaces();
+  }
+
+  Future<void> _loadPlaces() async {
+    try {
+      final places =
+          await _practiceService.getCommunityPlaces();
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _places = places;
+        _selectedPlace = places.isNotEmpty ? places.first : null;
+        _isLoadingPlaces = false;
+      });
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _isLoadingPlaces = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Community place লোড করা যায়নি: $error',
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -100,7 +144,36 @@ class _CommunitySessionCreateScreenState
     });
   }
 
+  void _copyPlaceToLocation() {
+    final place = _selectedPlace;
+
+    if (place == null) {
+      return;
+    }
+
+    if (_locationController.text.trim().isEmpty) {
+      _locationController.text = place.name;
+    }
+
+    if (_locationDetailsController.text.trim().isEmpty) {
+      _locationDetailsController.text = place.address;
+    }
+  }
+
   Future<void> _saveSession() async {
+    final place = _selectedPlace;
+
+    if (place == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'প্রথমে একটি Community Place নির্বাচন করুন।',
+          ),
+        ),
+      );
+      return;
+    }
+
     final title = _titleController.text.trim();
     final location = _locationController.text.trim();
 
@@ -121,7 +194,9 @@ class _CommunitySessionCreateScreenState
     if (capacityText.isNotEmpty && capacity == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Capacity-এর জন্য একটি সংখ্যা দিন।'),
+          content: Text(
+            'Capacity-এর জন্য একটি সংখ্যা দিন।',
+          ),
         ),
       );
       return;
@@ -130,7 +205,9 @@ class _CommunitySessionCreateScreenState
     if (!_endsAt.isAfter(_startsAt)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('শেষ সময় অবশ্যই শুরুর পর হতে হবে।'),
+          content: Text(
+            'শেষ সময় অবশ্যই শুরুর পর হতে হবে।',
+          ),
         ),
       );
       return;
@@ -142,6 +219,8 @@ class _CommunitySessionCreateScreenState
 
     try {
       final session = await _service.createSession(
+        placeId: place.id,
+        routineId: null,
         title: title,
         description: _descriptionController.text,
         locationName: location,
@@ -198,6 +277,61 @@ class _CommunitySessionCreateScreenState
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoadingPlaces) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('নতুন Community Session'),
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (_places.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('নতুন Community Session'),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.location_city_outlined,
+                  size: 56,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Session তৈরি করার আগে একটি Community Place দরকার।',
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'আগে একটি নির্দিষ্ট Community Place তৈরি করুন।',
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                FilledButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  icon: const Icon(
+                    Icons.location_city_outlined,
+                  ),
+                  label: const Text(
+                    'ফিরে যান',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('নতুন Community Session'),
@@ -205,14 +339,47 @@ class _CommunitySessionCreateScreenState
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
+            DropdownButtonFormField<CommunityPlace>(
+              value: _selectedPlace,
+              isExpanded: true,
+              decoration: const InputDecoration(
+                labelText: 'Community Place',
+                border: OutlineInputBorder(),
+              ),
+              items: _places
+                  .map(
+                    (place) =>
+                        DropdownMenuItem<CommunityPlace>(
+                      value: place,
+                      child: Text(
+                        place.name,
+                        overflow:
+                            TextOverflow.ellipsis,
+                      ),
+                    ),
+                  )
+                  .toList(),
+              onChanged: _isSaving
+                  ? null
+                  : (value) {
+                      setState(() {
+                        _selectedPlace = value;
+                      });
+
+                      _copyPlaceToLocation();
+                    },
+            ),
+            const SizedBox(height: 16),
             TextField(
               controller: _titleController,
               maxLength: 200,
               decoration: const InputDecoration(
                 labelText: 'Session-এর নাম',
-                hintText: 'যেমন: সম্মিলিত সূর্য নমস্কার',
+                hintText:
+                    'যেমন: সম্মিলিত সূর্য নমস্কার',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -223,7 +390,8 @@ class _CommunitySessionCreateScreenState
               maxLength: 2000,
               decoration: const InputDecoration(
                 labelText: 'বিবরণ',
-                hintText: 'Session সম্পর্কে সংক্ষেপে লিখুন...',
+                hintText:
+                    'Session সম্পর্কে সংক্ষেপে লিখুন...',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -232,8 +400,7 @@ class _CommunitySessionCreateScreenState
               controller: _locationController,
               maxLength: 300,
               decoration: const InputDecoration(
-                labelText: 'স্থান',
-                hintText: 'যেমন: নির্দিষ্ট মাঠ / পার্ক',
+                labelText: 'Session-এর স্থান',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -244,14 +411,14 @@ class _CommunitySessionCreateScreenState
               maxLength: 1000,
               decoration: const InputDecoration(
                 labelText: 'স্থানের বিস্তারিত',
-                hintText: 'Gate, landmark ইত্যাদি...',
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
             Card(
               child: ListTile(
-                leading: const Icon(Icons.schedule_outlined),
+                leading:
+                    const Icon(Icons.schedule_outlined),
                 title: const Text('শুরু'),
                 subtitle: Text(
                   _formatDateTime(_startsAt),
@@ -267,7 +434,8 @@ class _CommunitySessionCreateScreenState
             const SizedBox(height: 8),
             Card(
               child: ListTile(
-                leading: const Icon(Icons.schedule_outlined),
+                leading:
+                    const Icon(Icons.schedule_outlined),
                 title: const Text('শেষ'),
                 subtitle: Text(
                   _formatDateTime(_endsAt),
@@ -283,7 +451,8 @@ class _CommunitySessionCreateScreenState
             const SizedBox(height: 16),
             TextField(
               controller: _capacityController,
-              keyboardType: TextInputType.number,
+              keyboardType:
+                  TextInputType.number,
               decoration: const InputDecoration(
                 labelText:
                     'সর্বোচ্চ অংশগ্রহণকারী (ঐচ্ছিক)',
@@ -291,7 +460,7 @@ class _CommunitySessionCreateScreenState
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             const Card(
               child: Padding(
                 padding: EdgeInsets.all(16),
@@ -314,12 +483,14 @@ class _CommunitySessionCreateScreenState
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: _isSaving ? null : _saveSession,
+                onPressed:
+                    _isSaving ? null : _saveSession,
                 icon: _isSaving
                     ? const SizedBox(
                         width: 18,
                         height: 18,
-                        child: CircularProgressIndicator(
+                        child:
+                            CircularProgressIndicator(
                           strokeWidth: 2,
                         ),
                       )
@@ -337,3 +508,4 @@ class _CommunitySessionCreateScreenState
     );
   }
 }
+

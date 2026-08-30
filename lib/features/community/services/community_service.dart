@@ -46,6 +46,8 @@ class CommunityService {
   }
 
   Future<CommunitySession> createSession({
+    required String placeId,
+    String? routineId,
     required String title,
     String? description,
     required String locationName,
@@ -85,23 +87,26 @@ class CommunityService {
       );
     }
 
-    final data = await _client
-        .from('community_sessions')
-        .insert({
-          'created_by': user.id,
-          'title': trimmedTitle,
-          'description': trimmedDescription,
-          'location_name': trimmedLocationName,
-          'location_details': trimmedLocationDetails,
-          'starts_at': startsAt.toUtc().toIso8601String(),
-          'ends_at': endsAt.toUtc().toIso8601String(),
-          'capacity': capacity,
-          'status': 'planned',
-        })
-        .select()
-        .single();
+    final result = await _client.rpc(
+      'create_community_session',
+      params: {
+        'p_place_id': placeId,
+        'p_routine_id': routineId,
+        'p_title': trimmedTitle,
+        'p_description': trimmedDescription,
+        'p_location_name': trimmedLocationName,
+        'p_location_details': trimmedLocationDetails,
+        'p_starts_at': startsAt.toUtc().toIso8601String(),
+        'p_ends_at': endsAt.toUtc().toIso8601String(),
+        'p_capacity': capacity,
+      },
+    );
 
-    return CommunitySession.fromMap(data);
+    if (result == null || result is! Map<String, dynamic>) {
+      throw StateError('Invalid session creation response.');
+    }
+
+    return CommunitySession.fromMap(result);
   }
 
   Future<SessionParticipant> joinSession(String sessionId) async {
@@ -111,16 +116,18 @@ class CommunityService {
       throw const AuthException('User is not signed in.');
     }
 
-    final data = await _client
-        .from('session_participants')
-        .insert({
-          'session_id': sessionId,
-          'user_id': user.id,
-        })
-        .select()
-        .single();
+    final result = await _client.rpc(
+      'join_community_session',
+      params: {
+        'p_session_id': sessionId,
+      },
+    );
 
-    return SessionParticipant.fromMap(data);
+    if (result == null || result is! Map<String, dynamic>) {
+      throw StateError('Invalid session join response.');
+    }
+
+    return SessionParticipant.fromMap(result);
   }
 
   Future<void> leaveSession(String sessionId) async {
@@ -231,4 +238,9 @@ class CommunityService {
     return trimmed;
   }
 }
+
+
+
+
+
 

@@ -49,21 +49,62 @@ class _CommunityPlacesScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Community place লোড করা যায়নি: $error'),
+          content: Text(
+            'Community place লোড করা যায়নি: $error',
+          ),
         ),
       );
     }
   }
 
   Future<void> _createPlace() async {
-    final created = await Navigator.of(context).push<bool>(
-      MaterialPageRoute<bool>(
+    final createdPlace =
+        await Navigator.of(context).push<CommunityPlace>(
+      MaterialPageRoute<CommunityPlace>(
         builder: (_) => const CommunityPlaceCreateScreen(),
       ),
     );
 
-    if (created == true) {
-      await _loadPlaces();
+    if (createdPlace == null || !mounted) {
+      return;
+    }
+
+    await _loadPlaces();
+
+    if (!mounted) {
+      return;
+    }
+
+    final setupRoutine = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            'কেন্দ্র তৈরি হয়েছে',
+          ),
+          content: const Text(
+            'এখন কি এই কেন্দ্রে নিয়মিত অনুশীলনের দিন ও সময় সেট করবেন?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text('পরে'),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text('এখনই সেট করি'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (setupRoutine == true && mounted) {
+      await _openPlace(createdPlace);
     }
   }
 
@@ -85,7 +126,9 @@ class _CommunityPlacesScreenState
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _createPlace,
-        icon: const Icon(Icons.add_location_alt_outlined),
+        icon: const Icon(
+          Icons.add_location_alt_outlined,
+        ),
         label: const Text('নতুন কেন্দ্র'),
       ),
       body: _isLoading
@@ -96,32 +139,44 @@ class _CommunityPlacesScreenState
               onRefresh: _loadPlaces,
               child: _places.isEmpty
                   ? ListView(
-                      physics: const AlwaysScrollableScrollPhysics(),
+                      physics:
+                          const AlwaysScrollableScrollPhysics(),
                       padding: const EdgeInsets.all(24),
-                      children: const [
-                        SizedBox(height: 70),
-                        Icon(
+                      children: [
+                        const SizedBox(height: 70),
+                        const Icon(
                           Icons.location_city_outlined,
                           size: 56,
                         ),
-                        SizedBox(height: 16),
-                        Center(
+                        const SizedBox(height: 16),
+                        const Center(
                           child: Text(
                             'এখনও কোনো কমিউনিটি কেন্দ্র তৈরি হয়নি।',
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        SizedBox(height: 8),
-                        Center(
+                        const SizedBox(height: 8),
+                        const Center(
                           child: Text(
                             'একটি নির্দিষ্ট স্থানকে নিয়মিত স্বাধ্যায় কেন্দ্র হিসেবে শুরু করুন।',
                             textAlign: TextAlign.center,
                           ),
                         ),
+                        const SizedBox(height: 24),
+                        FilledButton.icon(
+                          onPressed: _createPlace,
+                          icon: const Icon(
+                            Icons.add_location_alt_outlined,
+                          ),
+                          label: const Text(
+                            'প্রথম কেন্দ্র তৈরি করুন',
+                          ),
+                        ),
                       ],
                     )
                   : ListView.separated(
-                      physics: const AlwaysScrollableScrollPhysics(),
+                      physics:
+                          const AlwaysScrollableScrollPhysics(),
                       padding: const EdgeInsets.fromLTRB(
                         16,
                         16,
@@ -136,10 +191,12 @@ class _CommunityPlacesScreenState
 
                         return Card(
                           child: InkWell(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius:
+                                BorderRadius.circular(12),
                             onTap: () => _openPlace(place),
                             child: Padding(
-                              padding: const EdgeInsets.all(18),
+                              padding:
+                                  const EdgeInsets.all(18),
                               child: Row(
                                 children: [
                                   const Icon(
@@ -154,13 +211,15 @@ class _CommunityPlacesScreenState
                                       children: [
                                         Text(
                                           place.name,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge,
+                                          style:
+                                              Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge,
                                         ),
                                         const SizedBox(height: 5),
                                         Text(place.address),
-                                        if (place.description != null) ...[
+                                        if (place.description !=
+                                            null) ...[
                                           const SizedBox(height: 5),
                                           Text(
                                             place.description!,
@@ -172,7 +231,9 @@ class _CommunityPlacesScreenState
                                       ],
                                     ),
                                   ),
-                                  const Icon(Icons.chevron_right),
+                                  const Icon(
+                                    Icons.chevron_right,
+                                  ),
                                 ],
                               ),
                             ),
@@ -200,8 +261,10 @@ class _CommunityPlaceCreateScreenState
 
   final TextEditingController _nameController =
       TextEditingController();
+
   final TextEditingController _descriptionController =
       TextEditingController();
+
   final TextEditingController _addressController =
       TextEditingController();
 
@@ -222,7 +285,9 @@ class _CommunityPlaceCreateScreenState
     if (name.isEmpty || address.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('কেন্দ্রের নাম এবং ঠিকানা দিন।'),
+          content: Text(
+            'কেন্দ্রের নাম এবং ঠিকানা দিন।',
+          ),
         ),
       );
       return;
@@ -233,7 +298,8 @@ class _CommunityPlaceCreateScreenState
     });
 
     try {
-      await _service.createCommunityPlace(
+      final place =
+          await _service.createCommunityPlace(
         name: name,
         description: _descriptionController.text,
         address: address,
@@ -243,13 +309,7 @@ class _CommunityPlaceCreateScreenState
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('কমিউনিটি কেন্দ্র তৈরি হয়েছে।'),
-        ),
-      );
-
-      Navigator.of(context).pop(true);
+      Navigator.of(context).pop(place);
     } catch (error) {
       if (!mounted) {
         return;
@@ -261,7 +321,9 @@ class _CommunityPlaceCreateScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('কেন্দ্র তৈরি করা যায়নি: $error'),
+          content: Text(
+            'কেন্দ্র তৈরি করা যায়নি: $error',
+          ),
         ),
       );
     }
@@ -271,7 +333,9 @@ class _CommunityPlaceCreateScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('নতুন কমিউনিটি কেন্দ্র'),
+        title: const Text(
+          'নতুন কমিউনিটি কেন্দ্র',
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -282,7 +346,8 @@ class _CommunityPlaceCreateScreenState
               maxLength: 200,
               decoration: const InputDecoration(
                 labelText: 'কেন্দ্রের নাম',
-                hintText: 'যেমন: জলপাইগুড়ি স্বাধ্যায় কেন্দ্র',
+                hintText:
+                    'যেমন: জলপাইগুড়ি স্বাধ্যায় কেন্দ্র',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -305,7 +370,8 @@ class _CommunityPlaceCreateScreenState
               maxLength: 500,
               decoration: const InputDecoration(
                 labelText: 'ঠিকানা',
-                hintText: 'মাঠ / পার্ক / নির্দিষ্ট স্থান',
+                hintText:
+                    'মাঠ / পার্ক / নির্দিষ্ট স্থান',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -313,17 +379,23 @@ class _CommunityPlaceCreateScreenState
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: _isSaving ? null : _savePlace,
+                onPressed:
+                    _isSaving ? null : _savePlace,
                 icon: _isSaving
                     ? const SizedBox(
                         width: 18,
                         height: 18,
-                        child: CircularProgressIndicator(
+                        child:
+                            CircularProgressIndicator(
                           strokeWidth: 2,
                         ),
                       )
-                    : const Icon(Icons.add_location_alt_outlined),
-                label: const Text('কেন্দ্র তৈরি করুন'),
+                    : const Icon(
+                        Icons.add_location_alt_outlined,
+                      ),
+                label: const Text(
+                  'কেন্দ্র তৈরি করুন',
+                ),
               ),
             ),
           ],
