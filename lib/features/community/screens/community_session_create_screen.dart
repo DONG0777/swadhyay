@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
+import '../services/community_practice_service.dart';
 import '../services/community_service.dart';
 
 class CommunitySessionCreateScreen extends StatefulWidget {
@@ -13,6 +14,8 @@ class CommunitySessionCreateScreen extends StatefulWidget {
 class _CommunitySessionCreateScreenState
     extends State<CommunitySessionCreateScreen> {
   final CommunityService _service = CommunityService();
+  final CommunityPracticeService _practiceService =
+      CommunityPracticeService();
 
   final TextEditingController _titleController =
       TextEditingController();
@@ -124,12 +127,21 @@ class _CommunitySessionCreateScreenState
       return;
     }
 
+    if (!_endsAt.isAfter(_startsAt)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('শেষ সময় অবশ্যই শুরুর পর হতে হবে।'),
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _isSaving = true;
     });
 
     try {
-      await _service.createSession(
+      final session = await _service.createSession(
         title: title,
         description: _descriptionController.text,
         locationName: location,
@@ -139,17 +151,19 @@ class _CommunitySessionCreateScreenState
         capacity: capacity,
       );
 
+      await _practiceService.createDefaultAgenda(
+        session.id,
+      );
+
       if (!mounted) {
         return;
       }
 
-      setState(() {
-        _isSaving = false;
-      });
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Community session তৈরি হয়েছে।'),
+          content: Text(
+            'Community session এবং ১ ঘণ্টার কার্যক্রম তৈরি হয়েছে।',
+          ),
         ),
       );
 
@@ -165,7 +179,9 @@ class _CommunitySessionCreateScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Session তৈরি করা যায়নি: $error'),
+          content: Text(
+            'Session তৈরি করা যায়নি: $error',
+          ),
         ),
       );
     }
@@ -276,11 +292,29 @@ class _CommunitySessionCreateScreenState
               ),
             ),
             const SizedBox(height: 24),
+            const Card(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Row(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.timer_outlined),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'এই session তৈরি হলে standard 60-minute community practice agenda স্বয়ংক্রিয়ভাবে যুক্ত হবে।',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed:
-                    _isSaving ? null : _saveSession,
+                onPressed: _isSaving ? null : _saveSession,
                 icon: _isSaving
                     ? const SizedBox(
                         width: 18,

@@ -176,6 +176,51 @@ class CommunityService {
         .toList();
   }
 
+  bool isCurrentUserCreator(CommunitySession session) {
+    return _client.auth.currentUser?.id == session.createdBy;
+  }
+  Future<String> createCheckinToken(String sessionId) async {
+    final user = _client.auth.currentUser;
+
+    if (user == null) {
+      throw const AuthException('User is not signed in.');
+    }
+
+    final result = await _client.rpc(
+      'create_community_session_checkin_token',
+      params: {
+        'p_session_id': sessionId,
+      },
+    );
+
+    if (result == null) {
+      throw StateError('Check-in token was not returned.');
+    }
+
+    return result as String;
+  }
+
+  Future<SessionParticipant> checkInWithToken(String token) async {
+    final trimmedToken = token.trim();
+
+    if (trimmedToken.isEmpty) {
+      throw ArgumentError('Check-in token cannot be empty.');
+    }
+
+    final result = await _client.rpc(
+      'check_in_to_community_session',
+      params: {
+        'p_token': trimmedToken,
+      },
+    );
+
+    if (result == null || result is! Map<String, dynamic>) {
+      throw StateError('Invalid check-in response.');
+    }
+
+    return SessionParticipant.fromMap(result);
+  }
+
   String? _nullableText(String? value) {
     final trimmed = value?.trim();
 
@@ -186,3 +231,4 @@ class CommunityService {
     return trimmed;
   }
 }
+

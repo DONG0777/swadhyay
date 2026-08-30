@@ -6,6 +6,7 @@ import '../../daily_swadhyay/screens/daily_commitment_screen.dart';
 import '../../daily_swadhyay/screens/daily_history_screen.dart';
 import '../../daily_swadhyay/screens/growth_insight_screen.dart';
 import '../../community/screens/community_sessions_screen.dart';
+import '../../community/screens/community_places_screen.dart';
 import '../../daily_swadhyay/screens/daily_reflection_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../surya_namaskar/screens/surya_namaskar_screen.dart';
@@ -65,6 +66,14 @@ class HomeScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => const DailyHistoryScreen(),
+      ),
+    );
+  }
+
+  void _openCommunityPlaces(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const CommunityPlacesScreen(),
       ),
     );
   }
@@ -305,6 +314,44 @@ class HomeScreen extends StatelessWidget {
                 Card(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
+                    onTap: () => _openCommunityPlaces(context),
+                    child: const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.location_city_outlined,
+                            size: 36,
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'আমাদের কমিউনিটি',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'নির্দিষ্ট স্থানে নিয়মিত সম্মিলিত অনুশীলন',
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.chevron_right),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),                const SizedBox(height: 16),
+                Card(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
                     onTap: () => _openCommunitySessions(context),
                     child: const Padding(
                       padding: EdgeInsets.all(20),
@@ -424,6 +471,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
 
 
 

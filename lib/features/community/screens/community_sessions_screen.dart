@@ -4,6 +4,9 @@ import '../models/community_session.dart';
 import '../models/session_participant.dart';
 import '../services/community_service.dart';
 import 'community_session_create_screen.dart';
+import 'community_session_agenda_screen.dart';
+import 'community_session_qr_screen.dart';
+import 'community_session_scanner_screen.dart';
 
 class CommunitySessionsScreen extends StatefulWidget {
   const CommunitySessionsScreen({super.key});
@@ -395,9 +398,39 @@ class _CommunitySessionDetailScreenState
     return '$day/$month/${local.year}  $hour:$minute';
   }
 
+  Future<void> _openAgenda() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => CommunitySessionAgendaScreen(
+          session: widget.session,
+        ),
+      ),
+    );
+  }
+  Future<void> _openQrScreen() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => CommunitySessionQrScreen(
+          session: widget.session,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openScanner() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const CommunitySessionScannerScreen(),
+      ),
+    );
+
+    await _loadParticipation();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isJoined = _myParticipation != null;
+    final isCreator = _service.isCurrentUserCreator(widget.session);
 
     return Scaffold(
       appBar: AppBar(
@@ -471,7 +504,47 @@ class _CommunitySessionDetailScreenState
                     ),
                   ),
                   const SizedBox(height: 20),
-                  if (isJoined)
+                                    SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: _openAgenda,
+                      icon: const Icon(
+                        Icons.schedule_outlined,
+                      ),
+                      label: const Text(
+                        '১ ঘণ্টার কার্যক্রম দেখুন',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  if (isCreator) ...[
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: _openQrScreen,
+                        icon: const Icon(
+                          Icons.qr_code_2_outlined,
+                        ),
+                        label: const Text(
+                          'Check-in QR দেখান',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: _openScanner,
+                      icon: const Icon(
+                        Icons.qr_code_scanner_outlined,
+                      ),
+                      label: const Text(
+                        'QR scan করে উপস্থিতি দিন',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),                  if (isJoined)
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
@@ -521,3 +594,6 @@ class _CommunitySessionDetailScreenState
     );
   }
 }
+
+
+
