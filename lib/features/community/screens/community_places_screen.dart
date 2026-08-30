@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../models/community_place.dart';
 import '../services/community_practice_service.dart';
@@ -269,6 +270,9 @@ class _CommunityPlaceCreateScreenState
       TextEditingController();
 
   bool _isSaving = false;
+  bool _isLocating = false;
+  double? _latitude;
+  double? _longitude;
 
   @override
   void dispose() {
@@ -278,6 +282,117 @@ class _CommunityPlaceCreateScreenState
     super.dispose();
   }
 
+  Future<void> _useCurrentLocation() async {
+    if (_isSaving || _isLocating) {
+      return;
+    }
+
+    setState(() {
+      _isLocating = true;
+    });
+
+    try {
+      final serviceEnabled =
+          await Geolocator.isLocationServiceEnabled();
+
+      if (!serviceEnabled) {
+        if (!mounted) {
+          return;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'ডিভাইসের Location Service চালু করুন।',
+            ),
+          ),
+        );
+        return;
+      }
+
+      var permission =
+          await Geolocator.checkPermission();
+
+      if (permission == LocationPermission.denied) {
+        permission =
+            await Geolocator.requestPermission();
+      }
+
+      if (permission == LocationPermission.denied) {
+        if (!mounted) {
+          return;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Location permission দেওয়া হয়নি।',
+            ),
+          ),
+        );
+        return;
+      }
+
+      if (permission ==
+              LocationPermission.deniedForever) {
+        if (!mounted) {
+          return;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Location permission Settings থেকে চালু করতে হবে।',
+            ),
+          ),
+        );
+        return;
+      }
+
+      final position =
+          await Geolocator.getCurrentPosition(
+        locationSettings:
+            const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _latitude = position.latitude;
+        _longitude = position.longitude;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'এই স্থানের অবস্থান নেওয়া হয়েছে।',
+          ),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Location নেওয়া যায়নি: $error',
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLocating = false;
+        });
+      }
+    }
+  }
   Future<void> _savePlace() async {
     final name = _nameController.text.trim();
     final address = _addressController.text.trim();
@@ -303,6 +418,8 @@ class _CommunityPlaceCreateScreenState
         name: name,
         description: _descriptionController.text,
         address: address,
+        latitude: _latitude,
+        longitude: _longitude,
       );
 
       if (!mounted) {
@@ -375,7 +492,39 @@ class _CommunityPlaceCreateScreenState
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
+            Card(
+              child: ListTile(
+                leading: const Icon(
+                  Icons.my_location_outlined,
+                ),
+                title: const Text(
+                  'এই স্থানের অবস্থান ব্যবহার করুন',
+                ),
+                subtitle: Text(
+                  _latitude != null && _longitude != null
+                      ? 'Location নেওয়া হয়েছে'
+                      : 'Nearby Community খুঁজতে সাহায্য করবে',
+                ),
+                trailing: _isLocating
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Icon(
+                        _latitude != null &&
+                                _longitude != null
+                            ? Icons.check_circle_outline
+                            : Icons.location_searching_outlined,
+                      ),
+                onTap: _isSaving || _isLocating
+                    ? null
+                    : _useCurrentLocation,
+              ),
+            ),            const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
@@ -404,3 +553,8 @@ class _CommunityPlaceCreateScreenState
     );
   }
 }
+
+
+
+
+

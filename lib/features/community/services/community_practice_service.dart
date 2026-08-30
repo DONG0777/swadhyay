@@ -33,6 +33,8 @@ class CommunityPracticeService {
     String? description,
     required String address,
     String timezone = 'Asia/Kolkata',
+    double? latitude,
+    double? longitude,
   }) async {
     final user = _client.auth.currentUser;
 
@@ -57,6 +59,29 @@ class CommunityPracticeService {
       throw ArgumentError('Timezone cannot be empty.');
     }
 
+    final hasLatitude = latitude != null;
+    final hasLongitude = longitude != null;
+
+    if (hasLatitude != hasLongitude) {
+      throw ArgumentError(
+        'Latitude and longitude must be provided together.',
+      );
+    }
+
+    if (latitude != null &&
+        (latitude < -90 || latitude > 90)) {
+      throw ArgumentError(
+        'Latitude must be between -90 and 90.',
+      );
+    }
+
+    if (longitude != null &&
+        (longitude < -180 || longitude > 180)) {
+      throw ArgumentError(
+        'Longitude must be between -180 and 180.',
+      );
+    }
+
     final data = await _client
         .from('community_places')
         .insert({
@@ -69,9 +94,37 @@ class CommunityPracticeService {
         .select()
         .single();
 
-    return CommunityPlace.fromMap(data);
-  }
+    final place = CommunityPlace.fromMap(data);
 
+    if (latitude != null && longitude != null) {
+      try {
+        final result = await _client.rpc(
+          'set_community_place_location',
+          params: {
+            'p_place_id': place.id,
+            'p_latitude': latitude,
+            'p_longitude': longitude,
+          },
+        );
+
+        if (result == null ||
+            result is! Map<String, dynamic>) {
+          throw StateError(
+            'Invalid location save response.',
+          );
+        }
+
+        return CommunityPlace.fromMap(result);
+      } catch (error) {
+        throw StateError(
+          'Community place was created, but its location '
+          'could not be saved: $error',
+        );
+      }
+    }
+
+    return place;
+  }
   Future<List<CommunityRoutine>> getRoutines(
     String placeId, {
     bool activeOnly = false,
@@ -343,4 +396,5 @@ class CommunityPracticeService {
     return trimmed;
   }
 }
+
 
