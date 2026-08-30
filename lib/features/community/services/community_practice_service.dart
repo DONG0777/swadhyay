@@ -3,6 +3,7 @@
 import '../models/community_agenda_item.dart';
 import '../models/community_place.dart';
 import '../models/community_routine.dart';
+import '../models/nearby_community_place.dart';
 
 class CommunityPracticeService {
   final SupabaseClient _client;
@@ -10,6 +11,60 @@ class CommunityPracticeService {
   CommunityPracticeService({SupabaseClient? client})
       : _client = client ?? Supabase.instance.client;
 
+  Future<List<NearbyCommunityPlace>> getNearbyCommunityPlaces({
+    required double latitude,
+    required double longitude,
+    double radiusMeters = 5000,
+    int limit = 30,
+  }) async {
+    if (latitude < -90 || latitude > 90) {
+      throw ArgumentError(
+        'Latitude must be between -90 and 90.',
+      );
+    }
+
+    if (longitude < -180 || longitude > 180) {
+      throw ArgumentError(
+        'Longitude must be between -180 and 180.',
+      );
+    }
+
+    if (radiusMeters <= 0 || radiusMeters > 50000) {
+      throw ArgumentError(
+        'Radius must be between 1 and 50000 meters.',
+      );
+    }
+
+    if (limit <= 0 || limit > 100) {
+      throw ArgumentError(
+        'Limit must be between 1 and 100.',
+      );
+    }
+
+    final result = await _client.rpc(
+      'find_nearby_community_places',
+      params: {
+        'p_latitude': latitude,
+        'p_longitude': longitude,
+        'p_radius_meters': radiusMeters,
+        'p_limit': limit,
+      },
+    );
+
+    if (result is! List) {
+      throw StateError(
+        'Invalid nearby community response.',
+      );
+    }
+
+    return result
+        .map(
+          (row) => NearbyCommunityPlace.fromMap(
+            Map<String, dynamic>.from(row as Map),
+          ),
+        )
+        .toList();
+  }
   Future<List<CommunityPlace>> getCommunityPlaces({
     int limit = 50,
   }) async {
@@ -396,5 +451,7 @@ class CommunityPracticeService {
     return trimmed;
   }
 }
+
+
 
 

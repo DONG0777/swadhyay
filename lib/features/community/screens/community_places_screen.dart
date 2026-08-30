@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import '../models/community_place.dart';
 import '../services/community_practice_service.dart';
 import 'community_routine_screen.dart';
+import 'nearby_community_screen.dart';
 
 class CommunityPlacesScreen extends StatefulWidget {
   const CommunityPlacesScreen({super.key});
@@ -124,6 +125,22 @@ class _CommunityPlacesScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text('কমিউনিটি কেন্দ্র'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) =>
+                      const NearbyCommunityScreen(),
+                ),
+              );
+            },
+            tooltip: 'কাছাকাছি Community',
+            icon: const Icon(
+              Icons.near_me_outlined,
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _createPlace,
@@ -553,6 +570,8 @@ class _CommunityPlaceCreateScreenState
     );
   }
 }
+
+
 
 
 
