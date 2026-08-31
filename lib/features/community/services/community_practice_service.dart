@@ -4,6 +4,7 @@ import '../models/community_agenda_item.dart';
 import '../models/community_place.dart';
 import '../models/community_routine.dart';
 import '../models/nearby_community_place.dart';
+import '../models/my_community_place.dart';
 
 class CommunityPracticeService {
   final SupabaseClient _client;
@@ -11,6 +12,100 @@ class CommunityPracticeService {
   CommunityPracticeService({SupabaseClient? client})
       : _client = client ?? Supabase.instance.client;
 
+  Future<void> joinCommunity(String placeId) async {
+    if (placeId.trim().isEmpty) {
+      throw ArgumentError('Community place ID cannot be empty.');
+    }
+
+    final result = await _client.rpc(
+      'join_community_place',
+      params: {
+        'p_place_id': placeId,
+      },
+    );
+
+    if (result == null ||
+        result is! Map<String, dynamic>) {
+      throw StateError(
+        'Invalid community join response.',
+      );
+    }
+  }
+
+  Future<void> leaveCommunity(String placeId) async {
+    if (placeId.trim().isEmpty) {
+      throw ArgumentError('Community place ID cannot be empty.');
+    }
+
+    final result = await _client.rpc(
+      'leave_community_place',
+      params: {
+        'p_place_id': placeId,
+      },
+    );
+
+    if (result == null ||
+        result is! Map<String, dynamic>) {
+      throw StateError(
+        'Invalid community leave response.',
+      );
+    }
+  }
+
+  Future<List<MyCommunityPlace>> getMyCommunities({
+    int limit = 50,
+  }) async {
+    if (limit <= 0 || limit > 100) {
+      throw ArgumentError(
+        'Limit must be between 1 and 100.',
+      );
+    }
+
+    final user = _client.auth.currentUser;
+
+    if (user == null) {
+      throw const AuthException(
+        'User is not signed in.',
+      );
+    }
+
+    final memberships = await _client
+        .from('community_memberships')
+        .select('place_id, joined_at')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+        .order('joined_at', ascending: false)
+        .limit(limit);
+
+    final result = <MyCommunityPlace>[];
+
+    for (final row in memberships) {
+      final placeId = row['place_id'] as String;
+
+      final placeRow = await _client
+          .from('community_places')
+          .select()
+          .eq('id', placeId)
+          .maybeSingle();
+
+      if (placeRow == null) {
+        continue;
+      }
+
+      result.add(
+        MyCommunityPlace(
+          place: CommunityPlace.fromMap(
+            Map<String, dynamic>.from(placeRow),
+          ),
+          joinedAt: DateTime.parse(
+            row['joined_at'] as String,
+          ),
+        ),
+      );
+    }
+
+    return result;
+  }
   Future<List<NearbyCommunityPlace>> getNearbyCommunityPlaces({
     required double latitude,
     required double longitude,
@@ -451,7 +546,4 @@ class CommunityPracticeService {
     return trimmed;
   }
 }
-
-
-
 

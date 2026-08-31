@@ -7,6 +7,7 @@ import '../../daily_swadhyay/screens/daily_history_screen.dart';
 import '../../daily_swadhyay/screens/growth_insight_screen.dart';
 import '../../community/screens/community_sessions_screen.dart';
 import '../../community/screens/community_places_screen.dart';
+import '../../community/screens/my_community_screen.dart';
 import '../../daily_swadhyay/screens/daily_reflection_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../surya_namaskar/screens/surya_namaskar_screen.dart';
@@ -74,6 +75,14 @@ class HomeScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => const CommunityPlacesScreen(),
+      ),
+    );
+  }
+
+  void _openMyCommunity(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const MyCommunityScreen(),
       ),
     );
   }
@@ -314,6 +323,45 @@ class HomeScreen extends StatelessWidget {
                 Card(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
+                    onTap: () => _openMyCommunity(context),
+                    child: const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.groups_outlined,
+                            size: 36,
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'আমার Community',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'যে Community-গুলিতে তুমি যুক্ত আছ',
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.chevron_right),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Card(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
                     onTap: () => _openCommunityPlaces(context),
                     child: const Padding(
                       padding: EdgeInsets.all(20),
@@ -471,7 +519,4 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
-
-
 
