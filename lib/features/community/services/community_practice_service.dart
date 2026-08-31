@@ -232,19 +232,23 @@ class CommunityPracticeService {
       );
     }
 
-    final data = await _client
-        .from('community_places')
-        .insert({
-          'created_by': user.id,
-          'name': trimmedName,
-          'description': trimmedDescription,
-          'address': trimmedAddress,
-          'timezone': trimmedTimezone,
-        })
-        .select()
-        .single();
+    final result = await _client.rpc(
+      'create_community_place',
+      params: {
+        'p_name': trimmedName,
+        'p_description': trimmedDescription,
+        'p_address': trimmedAddress,
+        'p_timezone': trimmedTimezone,
+      },
+    );
 
-    final place = CommunityPlace.fromMap(data);
+    if (result == null || result is! Map<String, dynamic>) {
+      throw StateError(
+        'Invalid community place creation response.',
+      );
+    }
+
+    final place = CommunityPlace.fromMap(result);
 
     if (latitude != null && longitude != null) {
       try {
@@ -326,21 +330,24 @@ class CommunityPracticeService {
       throw ArgumentError('Routine title cannot be empty.');
     }
 
-    final data = await _client
-        .from('community_routines')
-        .insert({
-          'place_id': placeId,
-          'created_by': user.id,
-          'weekday': weekday,
-          'start_time': startTime,
-          'duration_minutes': durationMinutes,
-          'title': trimmedTitle,
-          'is_active': true,
-        })
-        .select()
-        .single();
+    final result = await _client.rpc(
+      'create_community_routine',
+      params: {
+        'p_place_id': placeId,
+        'p_weekday': weekday,
+        'p_start_time': startTime,
+        'p_title': trimmedTitle,
+        'p_duration_minutes': durationMinutes,
+      },
+    );
 
-    return CommunityRoutine.fromMap(data);
+    if (result == null || result is! Map<String, dynamic>) {
+      throw StateError(
+        'Invalid community routine creation response.',
+      );
+    }
+
+    return CommunityRoutine.fromMap(result);
   }
 
   Future<List<CommunityAgendaItem>> getSessionAgenda(
@@ -381,120 +388,51 @@ class CommunityPracticeService {
       throw ArgumentError('Agenda title cannot be empty.');
     }
 
-    final data = await _client
-        .from('community_session_agenda_items')
-        .insert({
-          'session_id': sessionId,
-          'sequence_number': sequenceNumber,
-          'activity_type': activityType,
-          'title': trimmedTitle,
-          'description': _nullableText(description),
-          'duration_minutes': durationMinutes,
-        })
-        .select()
-        .single();
+    final result = await _client.rpc(
+      'add_community_session_agenda_item',
+      params: {
+        'p_session_id': sessionId,
+        'p_sequence_number': sequenceNumber,
+        'p_activity_type': activityType,
+        'p_title': trimmedTitle,
+        'p_description': _nullableText(description),
+        'p_duration_minutes': durationMinutes,
+      },
+    );
 
-    return CommunityAgendaItem.fromMap(data);
+    if (result == null || result is! Map<String, dynamic>) {
+      throw StateError(
+        'Invalid community agenda item creation response.',
+      );
+    }
+
+    return CommunityAgendaItem.fromMap(result);
   }
 
   Future<List<CommunityAgendaItem>> createDefaultAgenda(
     String sessionId,
   ) async {
-    const defaultItems = [
-      {
-        'activity_type': 'gathering',
-        'title': 'সমবেত হওয়া',
-        'description': 'সবাই একত্রিত হয়ে অনুশীলনের জন্য প্রস্তুত হবে।',
-        'duration_minutes': 5,
+    final result = await _client.rpc(
+      'create_default_community_session_agenda',
+      params: {
+        'p_session_id': sessionId,
       },
-      {
-        'activity_type': 'prayer',
-        'title': 'প্রার্থনা / শান্তি মুহূর্ত',
-        'description': 'মনকে স্থির করে সম্মিলিতভাবে দিনের অনুশীলন শুরু করা।',
-        'duration_minutes': 5,
-      },
-      {
-        'activity_type': 'surya_namaskar',
-        'title': 'সূর্য নমস্কার',
-        'description': 'শরীর, শ্বাস ও শৃঙ্খলার সম্মিলিত অনুশীলন।',
-        'duration_minutes': 15,
-      },
-      {
-        'activity_type': 'mindfulness',
-        'title': 'মনন',
-        'description': 'কিছু সময় নীরবতা, শ্বাস ও আত্ম-পর্যবেক্ষণ।',
-        'duration_minutes': 10,
-      },
-      {
-        'activity_type': 'self_study',
-        'title': 'স্বাধ্যায়',
-        'description': 'একটি মূল্যবোধ বা চিন্তার বিষয় নিয়ে সংক্ষিপ্ত আলোচনা।',
-        'duration_minutes': 10,
-      },
-      {
-        'activity_type': 'social_dialogue',
-        'title': 'সামাজিক আলোচনা',
-        'description': 'স্থানীয় সমাজ ও পারস্পরিক দায়িত্ব নিয়ে কথা বলা।',
-        'duration_minutes': 5,
-      },
-      {
-        'activity_type': 'seva',
-        'title': 'Seva + সংকল্প',
-        'description': 'পরবর্তী দিনের ছোট সামাজিক বা ব্যক্তিগত কাজ নির্ধারণ।',
-        'duration_minutes': 5,
-      },
-      {
-        'activity_type': 'closing',
-        'title': 'সমাপ্তি',
-        'description': 'সংক্ষিপ্ত সমাপ্তি ও পরবর্তী session-এর জন্য প্রস্তুতি।',
-        'duration_minutes': 5,
-      },
-    ];
-
-    final totalMinutes = defaultItems.fold<int>(
-      0,
-      (total, item) => total + (item['duration_minutes'] as int),
     );
 
-    if (totalMinutes != 60) {
+    if (result == null || result is! List) {
       throw StateError(
-        'Default community agenda must total exactly 60 minutes.',
+        'Invalid default community agenda response.',
       );
     }
 
-    final existing = await getSessionAgenda(sessionId);
-
-    if (existing.isNotEmpty) {
-      return existing;
-    }
-
-    final rows = List.generate(
-      defaultItems.length,
-      (index) {
-        final item = defaultItems[index];
-
-        return {
-          'session_id': sessionId,
-          'sequence_number': index + 1,
-          'activity_type': item['activity_type'],
-          'title': item['title'],
-          'description': item['description'],
-          'duration_minutes': item['duration_minutes'],
-        };
-      },
-    );
-
-    final data = await _client
-        .from('community_session_agenda_items')
-        .insert(rows)
-        .select()
-        .order('sequence_number', ascending: true);
-
-    return data
-        .map((row) => CommunityAgendaItem.fromMap(row))
+    return result
+        .map(
+          (row) => CommunityAgendaItem.fromMap(
+            Map<String, dynamic>.from(row as Map),
+          ),
+        )
         .toList();
   }
-
   Future<CommunityAgendaItem> updateAgendaItem({
     required String itemId,
     required String title,
@@ -514,26 +452,33 @@ class CommunityPracticeService {
       );
     }
 
-    final data = await _client
-        .from('community_session_agenda_items')
-        .update({
-          'title': trimmedTitle,
-          'description': _nullableText(description),
-          'activity_type': activityType,
-          'duration_minutes': durationMinutes,
-        })
-        .eq('id', itemId)
-        .select()
-        .single();
+    final result = await _client.rpc(
+      'update_community_session_agenda_item',
+      params: {
+        'p_item_id': itemId,
+        'p_title': trimmedTitle,
+        'p_description': _nullableText(description),
+        'p_activity_type': activityType,
+        'p_duration_minutes': durationMinutes,
+      },
+    );
 
-    return CommunityAgendaItem.fromMap(data);
+    if (result == null || result is! Map<String, dynamic>) {
+      throw StateError(
+        'Invalid community agenda item update response.',
+      );
+    }
+
+    return CommunityAgendaItem.fromMap(result);
   }
 
   Future<void> deleteAgendaItem(String itemId) async {
-    await _client
-        .from('community_session_agenda_items')
-        .delete()
-        .eq('id', itemId);
+    await _client.rpc(
+      'delete_community_session_agenda_item',
+      params: {
+        'p_item_id': itemId,
+      },
+    );
   }
 
   String? _nullableText(String? value) {

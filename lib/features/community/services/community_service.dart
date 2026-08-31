@@ -137,11 +137,12 @@ class CommunityService {
       throw const AuthException('User is not signed in.');
     }
 
-    await _client
-        .from('session_participants')
-        .delete()
-        .eq('session_id', sessionId)
-        .eq('user_id', user.id);
+    await _client.rpc(
+      'leave_community_session',
+      params: {
+        'p_session_id': sessionId,
+      },
+    );
   }
 
   Future<SessionParticipant?> getMyParticipation(
@@ -238,9 +239,4 @@ class CommunityService {
     return trimmed;
   }
 }
-
-
-
-
-
 
