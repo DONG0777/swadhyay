@@ -39,11 +39,12 @@ class DailyCommitmentService {
     required DateTime date,
     required String commitmentText,
   }) async {
-    final user = _client.auth.currentUser;
+    _requireSignedIn();
 
-    if (user == null) {
-      throw const AuthException('User is not signed in.');
-    }
+    final targetDate = DateTime(date.year, date.month, date.day);
+    final today = DateTime.now();
+    final todayOnly = DateTime(today.year, today.month, today.day);
+    final tomorrow = todayOnly.add(const Duration(days: 1));
 
     final trimmedText = commitmentText.trim();
 
@@ -57,17 +58,27 @@ class DailyCommitmentService {
       );
     }
 
-    final dateOnly = _dateOnly(date);
+    late final Map<String, dynamic> data;
 
-    final data = await _client
-        .from('daily_commitments')
-        .insert({
-          'user_id': user.id,
-          'commitment_date': dateOnly,
-          'commitment_text': trimmedText,
-        })
-        .select()
-        .single();
+    if (targetDate == todayOnly) {
+      data = await _client.rpc(
+        'create_daily_commitment',
+        params: {
+          'p_commitment_text': trimmedText,
+        },
+      );
+    } else if (targetDate == tomorrow) {
+      data = await _client.rpc(
+        'create_tomorrow_daily_commitment',
+        params: {
+          'p_commitment_text': trimmedText,
+        },
+      );
+    } else {
+      throw ArgumentError(
+        'Commitments can only be created for today or tomorrow.',
+      );
+    }
 
     return DailyCommitment.fromMap(data);
   }
@@ -85,11 +96,12 @@ class DailyCommitmentService {
     required DateTime date,
     required String commitmentText,
   }) async {
-    final user = _client.auth.currentUser;
+    _requireSignedIn();
 
-    if (user == null) {
-      throw const AuthException('User is not signed in.');
-    }
+    final targetDate = DateTime(date.year, date.month, date.day);
+    final today = DateTime.now();
+    final todayOnly = DateTime(today.year, today.month, today.day);
+    final tomorrow = todayOnly.add(const Duration(days: 1));
 
     final trimmedText = commitmentText.trim();
 
@@ -103,18 +115,20 @@ class DailyCommitmentService {
       );
     }
 
-    final dateOnly = _dateOnly(date);
+    late final Map<String, dynamic> data;
 
-    final data = await _client
-        .from('daily_commitments')
-        .update({
-          'commitment_text': trimmedText,
-        })
-        .eq('user_id', user.id)
-        .eq('commitment_date', dateOnly)
-        .eq('status', 'pending')
-        .select()
-        .single();
+    if (targetDate == tomorrow) {
+      data = await _client.rpc(
+        'update_tomorrow_daily_commitment',
+        params: {
+          'p_commitment_text': trimmedText,
+        },
+      );
+    } else {
+      throw ArgumentError(
+        'Only tomorrow\'s pending commitment can be updated.',
+      );
+    }
 
     return DailyCommitment.fromMap(data);
   }
@@ -122,25 +136,21 @@ class DailyCommitmentService {
   Future<DailyCommitment> completeCommitmentForDate(
     DateTime date,
   ) async {
-    final user = _client.auth.currentUser;
+    _requireSignedIn();
 
-    if (user == null) {
-      throw const AuthException('User is not signed in.');
+    final targetDate = DateTime(date.year, date.month, date.day);
+    final today = DateTime.now();
+    final todayOnly = DateTime(today.year, today.month, today.day);
+
+    if (targetDate != todayOnly) {
+      throw ArgumentError(
+        'Only today\'s commitment can be completed.',
+      );
     }
 
-    final dateOnly = _dateOnly(date);
-
-    final data = await _client
-        .from('daily_commitments')
-        .update({
-          'status': 'completed',
-          'completed_at': DateTime.now().toUtc().toIso8601String(),
-        })
-        .eq('user_id', user.id)
-        .eq('commitment_date', dateOnly)
-        .eq('status', 'pending')
-        .select()
-        .single();
+    final data = await _client.rpc(
+      'complete_daily_commitment',
+    );
 
     return DailyCommitment.fromMap(data);
   }
@@ -152,30 +162,33 @@ class DailyCommitmentService {
   Future<DailyCommitment> markCommitmentMissedForDate(
     DateTime date,
   ) async {
-    final user = _client.auth.currentUser;
+    _requireSignedIn();
 
-    if (user == null) {
-      throw const AuthException('User is not signed in.');
+    final targetDate = DateTime(date.year, date.month, date.day);
+    final today = DateTime.now();
+    final todayOnly = DateTime(today.year, today.month, today.day);
+
+    if (targetDate != todayOnly) {
+      throw ArgumentError(
+        'Only today\'s commitment can be marked as missed.',
+      );
     }
 
-    final dateOnly = _dateOnly(date);
-
-    final data = await _client
-        .from('daily_commitments')
-        .update({
-          'status': 'missed',
-        })
-        .eq('user_id', user.id)
-        .eq('commitment_date', dateOnly)
-        .eq('status', 'pending')
-        .select()
-        .single();
+    final data = await _client.rpc(
+      'mark_daily_commitment_missed',
+    );
 
     return DailyCommitment.fromMap(data);
   }
 
   Future<DailyCommitment> markTodayCommitmentMissed() {
     return markCommitmentMissedForDate(DateTime.now());
+  }
+
+  void _requireSignedIn() {
+    if (_client.auth.currentUser == null) {
+      throw const AuthException('User is not signed in.');
+    }
   }
 
   String _dateOnly(DateTime date) {

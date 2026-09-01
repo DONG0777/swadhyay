@@ -1,4 +1,4 @@
-﻿import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/daily_reflection.dart';
 
@@ -44,12 +44,21 @@ class DailyReflectionService {
     String? learningReflection,
     String? obstacleReason,
   }) async {
-    final user = _client.auth.currentUser;
+    _requireSignedIn();
 
-    if (user == null) {
-      throw const AuthException('User is not signed in.');
+    final targetDate = DateTime(date.year, date.month, date.day);
+    final today = DateTime.now();
+    final todayOnly = DateTime(today.year, today.month, today.day);
+
+    if (targetDate != todayOnly) {
+      throw ArgumentError(
+        'Reflection can only be saved for today.',
+      );
     }
 
+    final trimmedEgo = _nullableText(egoReflection);
+    final trimmedIdealGap = _nullableText(idealGapReflection);
+    final trimmedLearning = _nullableText(learningReflection);
     final trimmedObstacle = _nullableText(obstacleReason);
 
     if (!commitmentCompleted && trimmedObstacle == null) {
@@ -58,23 +67,16 @@ class DailyReflectionService {
       );
     }
 
-    final data = await _client
-        .from('daily_reflections')
-        .upsert(
-          {
-            'user_id': user.id,
-            'commitment_id': commitmentId,
-            'reflection_date': _dateOnly(date),
-            'ego_reflection': _nullableText(egoReflection),
-            'ideal_gap_reflection': _nullableText(idealGapReflection),
-            'learning_reflection': _nullableText(learningReflection),
-            'obstacle_reason':
-                commitmentCompleted ? null : trimmedObstacle,
-          },
-          onConflict: 'user_id,reflection_date',
-        )
-        .select()
-        .single();
+    final data = await _client.rpc(
+      'save_daily_reflection',
+      params: {
+        'p_commitment_id': commitmentId,
+        'p_ego_reflection': trimmedEgo,
+        'p_ideal_gap_reflection': trimmedIdealGap,
+        'p_learning_reflection': trimmedLearning,
+        'p_obstacle_reason': trimmedObstacle,
+      },
+    );
 
     return DailyReflection.fromMap(data);
   }
@@ -96,6 +98,12 @@ class DailyReflectionService {
       learningReflection: learningReflection,
       obstacleReason: obstacleReason,
     );
+  }
+
+  void _requireSignedIn() {
+    if (_client.auth.currentUser == null) {
+      throw const AuthException('User is not signed in.');
+    }
   }
 
   String? _nullableText(String? value) {
