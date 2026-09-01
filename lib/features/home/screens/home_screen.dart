@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../admin/screens/admin_dashboard_screen.dart';
 import '../../admin/services/admin_service.dart';
@@ -11,6 +11,7 @@ import '../../community/screens/my_community_screen.dart';
 import '../../daily_swadhyay/screens/daily_reflection_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../surya_namaskar/screens/surya_namaskar_screen.dart';
+import '../../learning/screens/learning_screen.dart';
 import '../../user_context/screens/user_context_screen.dart';
 import '../../auth/services/auth_service.dart';
 
@@ -35,6 +36,14 @@ class HomeScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => const SuryaNamaskarScreen(),
+      ),
+    );
+  }
+
+  void _openLearning(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const LearningScreen(),
       ),
     );
   }
@@ -203,6 +212,44 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
+                Card(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => _openLearning(context),
+                    child: const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.menu_book_outlined,
+                            size: 36,
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Learning',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'জানুন, ভাবুন এবং নিজের জীবনে প্রয়োগ করুন',
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.chevron_right),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),                const SizedBox(height: 16),
                 Card(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
