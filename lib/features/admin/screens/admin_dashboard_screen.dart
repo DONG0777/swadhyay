@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../services/admin_service.dart';
+import 'admin_learning_screen.dart';
 import 'admin_surya_namaskar_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
@@ -97,6 +98,24 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       MaterialPageRoute<void>(
                         builder: (_) =>
                             const AdminSuryaNamaskarScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 12),
+              Card(
+                child: ListTile(
+                  leading: const Icon(Icons.menu_book_outlined),
+                  title: const Text('Learning Content'),
+                  subtitle: const Text(
+                    'Create and manage learning content',
+                  ),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const AdminLearningScreen(),
                       ),
                     );
                   },
