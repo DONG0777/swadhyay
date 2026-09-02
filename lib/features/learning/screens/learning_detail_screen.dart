@@ -1,5 +1,8 @@
 ﻿import 'package:flutter/material.dart';
 
+import '../../../core/localization/app_language_controller.dart';
+import '../../../core/localization/app_strings.dart';
+
 import '../models/learning_content.dart';
 import '../services/learning_service.dart';
 
@@ -36,10 +39,20 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
     });
 
     try {
-      final translations = await _service.getTranslations(
+      final selectedLanguage =
+          AppLanguageController.instance.languageCode;
+
+      var translations = await _service.getTranslations(
         contentId: widget.content.id,
-        languageCode: 'bn',
+        languageCode: selectedLanguage,
       );
+
+      if (translations.isEmpty && selectedLanguage != 'bn') {
+        translations = await _service.getTranslations(
+          contentId: widget.content.id,
+          languageCode: 'bn',
+        );
+      }
 
       if (!mounted) return;
 
@@ -49,7 +62,7 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
         _isLoading = false;
 
         if (_translation == null) {
-          _error = 'এই Learning content-এর বাংলা অনুবাদ পাওয়া যায়নি।';
+          _error = AppStrings.of(context).learningTranslationNotFound;
         }
       });
     } catch (error) {
@@ -57,7 +70,7 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
 
       setState(() {
         _isLoading = false;
-        _error = 'Learning content load failed.';
+        _error = AppStrings.of(context).learningLoadFailed;
       });
     }
   }
@@ -111,7 +124,7 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
               FilledButton.icon(
                 onPressed: _loadTranslation,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Retry'),
+                label: Text(AppStrings.of(context).retry),
               ),
             ],
           ),
@@ -120,6 +133,7 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
     }
 
     final translation = _translation!;
+    final strings = AppStrings.of(context);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -147,19 +161,19 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
           ),
           const SizedBox(height: 24),
           _buildSection(
-            title: 'সারাংশ',
+            title: strings.learningSummary,
             text: translation.summary,
           ),
           _buildSection(
-            title: 'মূল লেখা',
+            title: strings.learningMainContent,
             text: translation.body,
           ),
           _buildSection(
-            title: 'ভাবার প্রশ্ন',
+            title: strings.learningReflectionQuestion,
             text: translation.reflectionQuestion,
           ),
           _buildSection(
-            title: 'আজকের করণীয়',
+            title: strings.learningActionPrompt,
             text: translation.actionPrompt,
           ),
         ],
@@ -169,9 +183,11 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Learning'),
+        title: Text(strings.learning),
       ),
       body: SafeArea(
         child: _buildBody(),
@@ -179,3 +195,7 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
     );
   }
 }
+
+
+
+

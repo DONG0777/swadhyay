@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class AppStrings {
   static AppStrings of(BuildContext context) {
@@ -113,9 +113,51 @@ class AppStrings {
       };
 
   String get learningSubtitle => switch (languageCode) {
-        'hi' => 'ज्ञान और अभ्यासের মাধ্যমে এগিয়ে চলুন',
+        'hi' => 'ज्ञान और अभ्यास के माध्यम से आगे बढ़ें',
         'en' => 'Grow through knowledge and practice',
         _ => 'জ্ঞান ও অনুশীলনের মাধ্যমে এগিয়ে চলুন',
+      };
+
+  String get learningSummary => switch (languageCode) {
+        'hi' => 'सारांश',
+        'en' => 'Summary',
+        _ => 'সারাংশ',
+      };
+
+  String get learningMainContent => switch (languageCode) {
+        'hi' => 'मूल लेख',
+        'en' => 'Main Content',
+        _ => 'মূল লেখা',
+      };
+
+  String get learningReflectionQuestion => switch (languageCode) {
+        'hi' => 'विचार का प्रश्न',
+        'en' => 'Reflection Question',
+        _ => 'ভাবার প্রশ্ন',
+      };
+
+  String get learningActionPrompt => switch (languageCode) {
+        'hi' => 'आज का अभ्यास',
+        'en' => 'Today''s Practice',
+        _ => 'আজকের করণীয়',
+      };
+
+  String get retry => switch (languageCode) {
+        'hi' => 'पुनः प्रयास करें',
+        'en' => 'Retry',
+        _ => 'আবার চেষ্টা করুন',
+      };
+
+  String get learningLoadFailed => switch (languageCode) {
+        'hi' => 'सीखने की सामग्री लोड नहीं हो सकी।',
+        'en' => 'Learning content could not be loaded.',
+        _ => 'Learning content লোড করা যায়নি।',
+      };
+
+  String get learningTranslationNotFound => switch (languageCode) {
+        'hi' => 'इस सीखने की सामग्री का अनुवाद उपलब्ध नहीं है।',
+        'en' => 'Translation for this learning content is not available.',
+        _ => 'এই Learning content-এর অনুবাদ পাওয়া যায়নি।',
       };
 
   String get startMySwadhyay => switch (languageCode) {
@@ -310,3 +352,6 @@ class AppStrings {
         _ => 'তথ্য সংরক্ষণ করা যায়নি: $error',
       };
 }
+
+
+
