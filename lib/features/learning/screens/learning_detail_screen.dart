@@ -47,12 +47,6 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
         languageCode: selectedLanguage,
       );
 
-      if (translations.isEmpty && selectedLanguage != 'bn') {
-        translations = await _service.getTranslations(
-          contentId: widget.content.id,
-          languageCode: 'bn',
-        );
-      }
 
       if (!mounted) return;
 
@@ -195,7 +189,4 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
     );
   }
 }
-
-
-
 
