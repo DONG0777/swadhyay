@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
+import '../../../core/localization/app_strings.dart';
 import '../models/user_context.dart';
 import '../services/user_context_service.dart';
 
@@ -61,15 +62,18 @@ class _UserContextScreenState extends State<UserContextScreen> {
         _isLoading = false;
       });
 
+      final strings = AppStrings.of(context);
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Context load failed: $error'),
+          content: Text(strings.contextLoadFailed(error)),
         ),
       );
     }
   }
 
   Future<void> _saveContext() async {
+    final strings = AppStrings.of(context);
     final availableTimeText = _timeController.text.trim();
 
     int? availableTimeMinutes;
@@ -81,8 +85,8 @@ class _UserContextScreenState extends State<UserContextScreen> {
           availableTimeMinutes < 0 ||
           availableTimeMinutes > 1440) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('সময় ০ থেকে ১৪৪০ মিনিটের মধ্যে দিন।'),
+          SnackBar(
+            content: Text(strings.timeValidationError),
           ),
         );
         return;
@@ -114,8 +118,8 @@ class _UserContextScreenState extends State<UserContextScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('আপনার তথ্য সংরক্ষিত হয়েছে।'),
+        SnackBar(
+          content: Text(strings.contextSavedSuccessfully),
         ),
       );
     } catch (error) {
@@ -129,7 +133,7 @@ class _UserContextScreenState extends State<UserContextScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Save failed: $error'),
+          content: Text(strings.contextSaveFailed(error)),
         ),
       );
     }
@@ -137,9 +141,11 @@ class _UserContextScreenState extends State<UserContextScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('আমার অবস্থান'),
+        title: Text(strings.myContext),
       ),
       body: _isLoading
           ? const Center(
@@ -152,12 +158,12 @@ class _UserContextScreenState extends State<UserContextScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'তুমি এখন কোথায় আছ?',
+                      strings.whereAreYouNow,
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'তোমার বর্তমান জীবন ও প্রয়োজনকে নিজের ভাষায় বোঝাও।',
+                      strings.describeCurrentLife,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     const SizedBox(height: 28),
@@ -165,31 +171,31 @@ class _UserContextScreenState extends State<UserContextScreen> {
                       controller: _situationController,
                       maxLines: 5,
                       textInputAction: TextInputAction.newline,
-                      decoration: const InputDecoration(
-                        labelText: 'বর্তমানে তোমার জীবনে কী চলছে?',
-                        hintText: 'নিজের ভাষায় লিখো...',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: strings.currentSituation,
+                        hintText: strings.writeInYourOwnWords,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 20),
                     TextField(
                       controller: _needController,
                       maxLines: 4,
-                      decoration: const InputDecoration(
-                        labelText: 'তোমার জীবনের সবচেয়ে বড় প্রয়োজন কী?',
-                        hintText: 'যেমন: নিয়মিত হতে চাই, মনকে স্থির করতে চাই...',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: strings.biggestNeed,
+                        hintText: strings.biggestNeedHint,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 20),
                     TextField(
                       controller: _timeController,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'প্রতিদিন কত মিনিট দিতে পারবে?',
-                        hintText: 'যেমন: 20',
-                        suffixText: 'মিনিট',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: strings.availableTimePerDay,
+                        hintText: strings.minutesExample,
+                        suffixText: strings.minutes,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 28),
@@ -207,8 +213,8 @@ class _UserContextScreenState extends State<UserContextScreen> {
                               )
                             : Text(
                                 _context == null
-                                    ? 'সংরক্ষণ করুন'
-                                    : 'পরিবর্তন সংরক্ষণ করুন',
+                                    ? strings.save
+                                    : strings.saveChanges,
                               ),
                       ),
                     ),
