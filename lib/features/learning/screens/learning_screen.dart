@@ -1,4 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import '../../../core/localization/app_language_controller.dart';
+import '../../../core/localization/app_strings.dart';
 
 import '../models/learning_content.dart';
 import 'learning_detail_screen.dart';
@@ -17,6 +20,7 @@ class _LearningScreenState extends State<LearningScreen> {
   bool _isLoading = true;
   String? _error;
   List<LearningContent> _contents = [];
+  Map<String, LearningTranslation> _translations = {};
 
   @override
   void initState() {
@@ -31,12 +35,23 @@ class _LearningScreenState extends State<LearningScreen> {
     });
 
     try {
-      final contents = await _service.getPublishedContents();
+      final selectedLanguage =
+          AppLanguageController.instance.languageCode;
+
+      final contents = await _service.getPublishedContents(
+        languageCode: selectedLanguage,
+      );
+
+      final translations = await _service.getTranslationsForContents(
+        contentIds: contents.map((content) => content.id).toList(),
+        languageCode: selectedLanguage,
+      );
 
       if (!mounted) return;
 
       setState(() {
         _contents = contents;
+        _translations = translations;
         _isLoading = false;
       });
     } catch (error) {
@@ -44,38 +59,43 @@ class _LearningScreenState extends State<LearningScreen> {
 
       setState(() {
         _isLoading = false;
-        _error = 'Learning content load failed.';
+        _error = AppStrings.of(context).learningLoadFailed;
       });
     }
   }
 
   String _contentKindLabel(String kind) {
+    final strings = AppStrings.of(context);
+
     switch (kind) {
       case 'knowledge':
-        return 'Knowledge';
+        return strings.learningKindKnowledge;
       case 'quote':
-        return 'Quote';
+        return strings.learningKindQuote;
       case 'story':
-        return 'Story';
+        return strings.learningKindStory;
       case 'song':
-        return 'Song';
+        return strings.learningKindSong;
       case 'reflection':
-        return 'Reflection';
+        return strings.learningKindReflection;
       case 'civic_thought':
-        return 'Civic Thought';
+        return strings.learningKindCivicThought;
       case 'seva_idea':
-        return 'Seva Idea';
+        return strings.learningKindSevaIdea;
       case 'quiz':
-        return 'Quiz';
+        return strings.learningKindQuiz;
       default:
         return kind;
     }
   }
 
   Widget _buildContentCard(LearningContent content) {
-    final title = content.sourceTitle?.trim().isNotEmpty == true
-        ? content.sourceTitle!
-        : content.category;
+    final strings = AppStrings.of(context);
+    final translation = _translations[content.id];
+
+    if (translation == null) {
+      return const SizedBox.shrink();
+    }
 
     return Card(
       child: InkWell(
@@ -95,7 +115,7 @@ class _LearningScreenState extends State<LearningScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title,
+                translation.title,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 10),
@@ -104,19 +124,23 @@ class _LearningScreenState extends State<LearningScreen> {
                 runSpacing: 8,
                 children: [
                   Chip(
-                    label: Text(_contentKindLabel(content.contentKind)),
+                    label: Text(
+                      _contentKindLabel(content.contentKind),
+                    ),
                   ),
                   Chip(
                     label: Text(content.category),
                   ),
                   Chip(
-                    label: Text('${content.estimatedMinutes} min'),
+                    label: Text(
+                      '${content.estimatedMinutes} ${strings.minutes}',
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 8),
               Text(
-                'Difficulty: ${content.difficulty}',
+                '${strings.learningDifficulty}: ${content.difficulty}',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
@@ -127,6 +151,8 @@ class _LearningScreenState extends State<LearningScreen> {
   }
 
   Widget _buildBody() {
+    final strings = AppStrings.of(context);
+
     if (_isLoading) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -148,7 +174,7 @@ class _LearningScreenState extends State<LearningScreen> {
               FilledButton.icon(
                 onPressed: _loadContents,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Retry'),
+                label: Text(strings.retry),
               ),
             ],
           ),
@@ -162,11 +188,11 @@ class _LearningScreenState extends State<LearningScreen> {
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(24),
-          children: const [
-            SizedBox(height: 120),
+          children: [
+            const SizedBox(height: 120),
             Center(
               child: Text(
-                'No learning content available yet.',
+                strings.learningNoContent,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -190,9 +216,11 @@ class _LearningScreenState extends State<LearningScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Learning'),
+        title: Text(strings.learning),
       ),
       body: SafeArea(
         child: _buildBody(),

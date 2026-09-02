@@ -351,7 +351,65 @@ class AppStrings {
         'en' => 'Save failed: $error',
         _ => 'তথ্য সংরক্ষণ করা যায়নি: $error',
       };
+
+  String get learningKindKnowledge => switch (languageCode) {
+        'hi' => 'ज्ञान',
+        'en' => 'Knowledge',
+        _ => 'জ্ঞান',
+      };
+
+  String get learningKindQuote => switch (languageCode) {
+        'hi' => 'उद्धरण',
+        'en' => 'Quote',
+        _ => 'উক্তি',
+      };
+
+  String get learningKindStory => switch (languageCode) {
+        'hi' => 'कहानी',
+        'en' => 'Story',
+        _ => 'গল্প',
+      };
+
+  String get learningKindSong => switch (languageCode) {
+        'hi' => 'गीत',
+        'en' => 'Song',
+        _ => 'গান',
+      };
+
+  String get learningKindReflection => switch (languageCode) {
+        'hi' => 'आत्म-चिंतन',
+        'en' => 'Reflection',
+        _ => 'আত্মচিন্তন',
+      };
+
+  String get learningKindCivicThought => switch (languageCode) {
+        'hi' => 'नागरिक विचार',
+        'en' => 'Civic Thought',
+        _ => 'নাগরিক ভাবনা',
+      };
+
+  String get learningKindSevaIdea => switch (languageCode) {
+        'hi' => 'सेवा विचार',
+        'en' => 'Seva Idea',
+        _ => 'সেবা ভাবনা',
+      };
+
+  String get learningKindQuiz => switch (languageCode) {
+        'hi' => 'प्रश्नोत्तरी',
+        'en' => 'Quiz',
+        _ => 'কুইজ',
+      };
+
+  String get learningDifficulty => switch (languageCode) {
+        'hi' => 'कठिनाई',
+        'en' => 'Difficulty',
+        _ => 'কঠিনতার মাত্রা',
+      };
+
+  String get learningNoContent => switch (languageCode) {
+        'hi' => 'अभी कोई सीखने की सामग्री उपलब्ध नहीं है।',
+        'en' => 'No learning content available yet.',
+        _ => 'এখনও কোনো শেখার কনটেন্ট পাওয়া যায়নি।',
+      };
 }
-
-
 

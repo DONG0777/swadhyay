@@ -40,7 +40,9 @@ class LearningService {
   LearningService({SupabaseClient? client})
       : _client = client ?? Supabase.instance.client;
 
-  Future<List<LearningContent>> getPublishedContents() async {
+  Future<List<LearningContent>> getPublishedContents({
+    String? languageCode,
+  }) async {
     final result = await _client
         .from('learning_contents')
         .select(
@@ -51,9 +53,22 @@ class LearningService {
         .eq('status', 'published')
         .order('published_at', ascending: false);
 
-    return (result as List)
+    final contents = (result as List)
         .cast<Map<String, dynamic>>()
         .map(LearningContent.fromMap)
+        .toList();
+
+    if (languageCode == null || languageCode.trim().isEmpty) {
+      return contents;
+    }
+
+    final translations = await getTranslationsForContents(
+      contentIds: contents.map((content) => content.id).toList(),
+      languageCode: languageCode,
+    );
+
+    return contents
+        .where((content) => translations.containsKey(content.id))
         .toList();
   }
 
