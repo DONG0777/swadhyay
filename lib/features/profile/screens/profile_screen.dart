@@ -1,4 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+
+import '../../../core/localization/app_language_controller.dart';
+import '../../../core/localization/app_strings.dart';
 
 import '../services/profile_service.dart';
 
@@ -17,8 +20,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _cityController = TextEditingController();
   final _areaController = TextEditingController();
 
+  String _languageCode = 'bn';
+
   bool _isLoading = true;
   bool _isSaving = false;
+
+  static const _languages = <String, String>{
+    'bn': 'বাংলা',
+    'hi': 'हिन्दी',
+    'en': 'English',
+  };
 
   @override
   void initState() {
@@ -46,10 +57,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _phoneController.text = profile.phone ?? '';
         _cityController.text = profile.city ?? '';
         _areaController.text = profile.area ?? '';
+        _languageCode = _languages.containsKey(profile.languageCode)
+            ? profile.languageCode
+            : 'bn';
+        AppLanguageController.instance.setLanguage(_languageCode);
       }
     } catch (_) {
       if (mounted) {
-        _showMessage('Profile could not be loaded.');
+        _showMessage(AppStrings.of(context).profileCouldNotBeLoaded);
       }
     }
 
@@ -71,14 +86,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         phone: _phoneController.text.trim(),
         city: _cityController.text.trim(),
         area: _areaController.text.trim(),
+        languageCode: _languageCode,
       );
 
       if (mounted) {
-        _showMessage('Profile saved successfully.');
+        _showMessage(AppStrings.of(context).profileSavedSuccessfully);
       }
     } catch (_) {
       if (mounted) {
-        _showMessage('Profile could not be saved.');
+        _showMessage(AppStrings.of(context).profileCouldNotBeSaved);
       }
     }
 
@@ -116,9 +132,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Profile'),
+        title: Text(strings.myProfile),
       ),
       body: _isLoading
           ? const Center(
@@ -139,23 +157,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(height: 24),
                     _field(
-                      label: 'Name',
+                      label: strings.name,
                       controller: _nameController,
                     ),
                     _field(
-                      label: 'Phone',
+                      label: strings.phone,
                       controller: _phoneController,
                       keyboardType: TextInputType.phone,
                     ),
                     _field(
-                      label: 'City',
+                      label: strings.city,
                       controller: _cityController,
                     ),
                     _field(
-                      label: 'Area',
+                      label: strings.area,
                       controller: _areaController,
                     ),
+                    const SizedBox(height: 4),
+                    Text(
+                      strings.appLanguage,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(height: 8),
+                    DropdownButtonFormField<String>(
+                      value: _languageCode,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                      items: _languages.entries
+                          .map(
+                            (entry) => DropdownMenuItem<String>(
+                              value: entry.key,
+                              child: Text(entry.value),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: _isSaving
+                          ? null
+                          : (value) {
+                              if (value == null) return;
+
+                              setState(() {
+                                _languageCode = value;
+                              });
+                              AppLanguageController.instance.setLanguage(value);
+                            },
+                    ),
+                    const SizedBox(height: 24),
                     FilledButton(
                       onPressed: _isSaving ? null : _saveProfile,
                       child: _isSaving
@@ -166,7 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 strokeWidth: 2,
                               ),
                             )
-                          : const Text('Save Profile'),
+                          : Text(strings.saveProfile),
                     ),
                   ],
                 ),

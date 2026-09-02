@@ -1,27 +1,61 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+
+import '../../../core/localization/app_language_controller.dart';
+import '../../../core/localization/app_strings.dart';
 
 import '../../admin/screens/admin_dashboard_screen.dart';
 import '../../admin/services/admin_service.dart';
+import '../../auth/services/auth_service.dart';
+import '../../community/screens/community_places_screen.dart';
+import '../../community/screens/community_sessions_screen.dart';
+import '../../community/screens/my_community_screen.dart';
 import '../../daily_swadhyay/screens/daily_commitment_screen.dart';
 import '../../daily_swadhyay/screens/daily_history_screen.dart';
-import '../../daily_swadhyay/screens/growth_insight_screen.dart';
-import '../../community/screens/community_sessions_screen.dart';
-import '../../community/screens/community_places_screen.dart';
-import '../../community/screens/my_community_screen.dart';
 import '../../daily_swadhyay/screens/daily_reflection_screen.dart';
-import '../../profile/screens/profile_screen.dart';
-import '../../surya_namaskar/screens/surya_namaskar_screen.dart';
+import '../../daily_swadhyay/screens/growth_insight_screen.dart';
 import '../../learning/screens/learning_screen.dart';
+import '../../profile/screens/profile_screen.dart';
+import '../../profile/services/profile_service.dart';
+import '../../surya_namaskar/screens/surya_namaskar_screen.dart';
 import '../../user_context/screens/user_context_screen.dart';
-import '../../auth/services/auth_service.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final AuthService _authService = AuthService();
+  final ProfileService _profileService = ProfileService();
 
   Future<void> _signOut() {
     return _authService.signOut();
+  }
+
+  Future<void> _changeLanguage(
+    BuildContext context,
+    String languageCode,
+  ) async {
+    final controller = AppLanguageController.instance;
+
+    if (controller.languageCode == languageCode) {
+      return;
+    }
+
+    final previousLanguage = controller.languageCode;
+
+    controller.setLanguage(languageCode);
+
+    try {
+      await _profileService.updateLanguageCode(languageCode);
+    } catch (_) {
+      controller.setLanguage(previousLanguage);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Language could not be saved.'),
+          ),
+        );
+      }
+    }
   }
 
   void _openProfile(BuildContext context) {
@@ -114,16 +148,41 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+    final languageController = AppLanguageController.instance;
     final user = _authService.currentUser;
-    final email = user?.email ?? 'User';
+    final email = user?.email ?? strings.userFallback;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Swadhyay'),
         actions: [
+          DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: languageController.languageCode,
+              items: const [
+                DropdownMenuItem(
+                  value: 'bn',
+                  child: Text('বাংলা'),
+                ),
+                DropdownMenuItem(
+                  value: 'hi',
+                  child: Text('हिन्दी'),
+                ),
+                DropdownMenuItem(
+                  value: 'en',
+                  child: Text('English'),
+                ),
+              ],
+              onChanged: (value) {
+                if (value == null) return;
+                _changeLanguage(context, value);
+              },
+            ),
+          ),
           IconButton(
             onPressed: () => _openProfile(context),
-            tooltip: 'My Profile',
+            tooltip: strings.myProfile,
             icon: const Icon(Icons.person_outline),
           ),
           FutureBuilder<bool>(
@@ -141,7 +200,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   );
                 },
-                tooltip: 'Admin Dashboard',
+                tooltip: strings.adminDashboard,
                 icon: const Icon(
                   Icons.admin_panel_settings_outlined,
                 ),
@@ -150,7 +209,7 @@ class HomeScreen extends StatelessWidget {
           ),
           IconButton(
             onPressed: _signOut,
-            tooltip: 'Sign out',
+            tooltip: strings.signOut,
             icon: const Icon(Icons.logout),
           ),
         ],
@@ -163,9 +222,8 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Welcome',
-                  style:
-                      Theme.of(context).textTheme.headlineMedium,
+                  strings.welcome,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -177,35 +235,32 @@ class HomeScreen extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => _openSuryaNamaskar(context),
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.wb_sunny_outlined,
                             size: 36,
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'সূর্য নমস্কার',
-                                  style: TextStyle(
+                                  strings.suryaNamaskar,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(height: 4),
-                                Text(
-                                  '১২ ধাপে সূর্য নমস্কার শিখুন',
-                                ),
+                                const SizedBox(height: 4),
+                                Text(strings.suryaNamaskarSubtitle),
                               ],
                             ),
                           ),
-                          Icon(Icons.chevron_right),
+                          const Icon(Icons.chevron_right),
                         ],
                       ),
                     ),
@@ -216,73 +271,68 @@ class HomeScreen extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => _openLearning(context),
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.menu_book_outlined,
                             size: 36,
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Learning',
-                                  style: TextStyle(
+                                  strings.learning,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'জানুন, ভাবুন এবং নিজের জীবনে প্রয়োগ করুন',
-                                ),
+                                const SizedBox(height: 4),
+                                Text(strings.learningSubtitle),
                               ],
                             ),
                           ),
-                          Icon(Icons.chevron_right),
+                          const Icon(Icons.chevron_right),
                         ],
                       ),
                     ),
                   ),
-                ),                const SizedBox(height: 16),
+                ),
+                const SizedBox(height: 16),
                 Card(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => _openUserContext(context),
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.explore_outlined,
                             size: 36,
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'আমার স্বাধ্যায় শুরু করি',
-                                  style: TextStyle(
+                                  strings.startMySwadhyay,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'তুমি এখন কোথায় আছ এবং তোমার সবচেয়ে বড় প্রয়োজন কী?',
-                                ),
+                                const SizedBox(height: 4),
+                                Text(strings.startMySwadhyaySubtitle),
                               ],
                             ),
                           ),
-                          Icon(Icons.chevron_right),
+                          const Icon(Icons.chevron_right),
                         ],
                       ),
                     ),
@@ -293,35 +343,32 @@ class HomeScreen extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => _openDailyCommitment(context),
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.flag_outlined,
                             size: 36,
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'আজকের সংকল্প',
-                                  style: TextStyle(
+                                  strings.todaysCommitment,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'একটি ছোট কাজ বেছে নিন এবং আজ পালন করুন',
-                                ),
+                                const SizedBox(height: 4),
+                                Text(strings.todaysCommitmentSubtitle),
                               ],
                             ),
                           ),
-                          Icon(Icons.chevron_right),
+                          const Icon(Icons.chevron_right),
                         ],
                       ),
                     ),
@@ -332,35 +379,32 @@ class HomeScreen extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => _openDailyReflection(context),
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.self_improvement_outlined,
                             size: 36,
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'রাতের আত্ম-বিশ্লেষণ',
-                                  style: TextStyle(
+                                  strings.nightReflection,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'আজকের অভিজ্ঞতা থেকে নিজেকে একটু ভালো করে বুঝুন',
-                                ),
+                                const SizedBox(height: 4),
+                                Text(strings.nightReflectionSubtitle),
                               ],
                             ),
                           ),
-                          Icon(Icons.chevron_right),
+                          const Icon(Icons.chevron_right),
                         ],
                       ),
                     ),
@@ -371,35 +415,32 @@ class HomeScreen extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => _openMyCommunity(context),
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.groups_outlined,
                             size: 36,
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'আমার Community',
-                                  style: TextStyle(
+                                  strings.myCommunity,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'যে Community-গুলিতে তুমি যুক্ত আছ',
-                                ),
+                                const SizedBox(height: 4),
+                                Text(strings.myCommunitySubtitle),
                               ],
                             ),
                           ),
-                          Icon(Icons.chevron_right),
+                          const Icon(Icons.chevron_right),
                         ],
                       ),
                     ),
@@ -410,149 +451,142 @@ class HomeScreen extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => _openCommunityPlaces(context),
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.location_city_outlined,
                             size: 36,
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'আমাদের কমিউনিটি',
-                                  style: TextStyle(
+                                  strings.community,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'নির্দিষ্ট স্থানে নিয়মিত সম্মিলিত অনুশীলন',
-                                ),
+                                const SizedBox(height: 4),
+                                Text(strings.communitySubtitle),
                               ],
                             ),
                           ),
-                          Icon(Icons.chevron_right),
+                          const Icon(Icons.chevron_right),
                         ],
                       ),
                     ),
                   ),
-                ),                const SizedBox(height: 16),
+                ),
+                const SizedBox(height: 16),
                 Card(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => _openCommunitySessions(context),
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.groups_outlined,
                             size: 36,
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'সম্মিলিত সূর্য নমস্কার',
-                                  style: TextStyle(
+                                  strings.communitySuryaNamaskar,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
                                 Text(
-                                  'নির্দিষ্ট স্থান ও সময়ে একসঙ্গে অনুশীলন করুন',
+                                  strings.communitySuryaNamaskarSubtitle,
                                 ),
                               ],
                             ),
                           ),
-                          Icon(Icons.chevron_right),
+                          const Icon(Icons.chevron_right),
                         ],
                       ),
                     ),
                   ),
-                ),                const SizedBox(height: 16),
+                ),
+                const SizedBox(height: 16),
                 Card(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => _openGrowthInsight(context),
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.auto_graph_outlined,
                             size: 36,
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '৭ দিনের Growth Insight',
-                                  style: TextStyle(
+                                  strings.growthInsight,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'তোমার নিজের data থেকে বুঝে নাও কোথায় এগোচ্ছ',
-                                ),
+                                const SizedBox(height: 4),
+                                Text(strings.growthInsightSubtitle),
                               ],
                             ),
                           ),
-                          Icon(Icons.chevron_right),
+                          const Icon(Icons.chevron_right),
                         ],
                       ),
                     ),
                   ),
-                ),                const SizedBox(height: 16),
+                ),
+                const SizedBox(height: 16),
                 Card(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => _openDailyHistory(context),
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.insights_outlined,
                             size: 36,
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'আমার যাত্রা',
-                                  style: TextStyle(
+                                  strings.myJourney,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'গত ৩০ দিনে আমি কীভাবে এগিয়েছি',
-                                ),
+                                const SizedBox(height: 4),
+                                Text(strings.myJourneySubtitle),
                               ],
                             ),
                           ),
-                          Icon(Icons.chevron_right),
+                          const Icon(Icons.chevron_right),
                         ],
                       ),
                     ),
@@ -566,4 +600,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-

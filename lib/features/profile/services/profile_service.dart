@@ -1,5 +1,6 @@
-﻿import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../core/localization/app_language_controller.dart';
 import '../models/user_profile.dart';
 
 class ProfileService {
@@ -28,12 +29,36 @@ class ProfileService {
     return UserProfile.fromMap(data);
   }
 
+  Future<UserProfile> updateLanguageCode(String languageCode) async {
+    final user = _client.auth.currentUser;
+
+    if (user == null) {
+      throw const AuthException('User is not signed in.');
+    }
+
+    if (!AppLanguageController.supportedLanguageCodes
+        .contains(languageCode)) {
+      throw ArgumentError('Unsupported language code.');
+    }
+
+    final data = await _client
+        .from('user_profiles')
+        .update({
+          'language_code': languageCode,
+        })
+        .eq('id', user.id)
+        .select()
+        .single();
+
+    return UserProfile.fromMap(data);
+  }
   Future<UserProfile> updateProfile({
     String? displayName,
     String? phone,
     String? city,
     String? area,
     String? avatarUrl,
+    String? languageCode,
   }) async {
     final user = _client.auth.currentUser;
 
@@ -49,6 +74,7 @@ class ProfileService {
           'city': city,
           'area': area,
           'avatar_url': avatarUrl,
+          if (languageCode != null) 'language_code': languageCode,
         })
         .eq('id', user.id)
         .select()

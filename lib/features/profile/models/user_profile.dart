@@ -5,6 +5,7 @@
   final String? city;
   final String? area;
   final String? avatarUrl;
+  final String languageCode;
   final bool isActive;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -16,6 +17,7 @@
     this.city,
     this.area,
     this.avatarUrl,
+    this.languageCode = 'bn',
     this.isActive = true,
     this.createdAt,
     this.updatedAt,
@@ -29,6 +31,7 @@
       city: map['city'] as String?,
       area: map['area'] as String?,
       avatarUrl: map['avatar_url'] as String?,
+      languageCode: map['language_code'] as String? ?? 'bn',
       isActive: map['is_active'] as bool? ?? true,
       createdAt: map['created_at'] != null
           ? DateTime.tryParse(map['created_at'] as String)
@@ -47,6 +50,7 @@
       'city': city,
       'area': area,
       'avatar_url': avatarUrl,
+      'language_code': languageCode,
       'is_active': isActive,
     };
   }

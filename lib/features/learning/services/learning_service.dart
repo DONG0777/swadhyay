@@ -75,4 +75,32 @@ class LearningService {
         .map(LearningTranslation.fromMap)
         .toList();
   }
+
+  Future<Map<String, LearningTranslation>> getTranslationsForContents({
+    required List<String> contentIds,
+    required String languageCode,
+  }) async {
+    if (contentIds.isEmpty) {
+      return {};
+    }
+
+    final result = await _client
+        .from('learning_content_translations')
+        .select(
+          'content_id, language_code, title, summary, body, '
+          'reflection_question, action_prompt',
+        )
+        .inFilter('content_id', contentIds)
+        .eq('language_code', languageCode);
+
+    final translations = (result as List)
+        .cast<Map<String, dynamic>>()
+        .map(LearningTranslation.fromMap)
+        .toList();
+
+    return {
+      for (final translation in translations)
+        translation.contentId: translation,
+    };
+  }
 }
