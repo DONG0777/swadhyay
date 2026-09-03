@@ -160,6 +160,23 @@ class AppStrings {
         _ => 'এই Learning content-এর অনুবাদ পাওয়া যায়নি।',
       };
 
+  String get learningMarkComplete => switch (languageCode) {
+        'hi' => 'पूर्ण करें',
+        'en' => 'Mark as complete',
+        _ => 'সম্পন্ন করুন',
+      };
+
+  String get learningCompleted => switch (languageCode) {
+        'hi' => 'पूर्ण हो गया',
+        'en' => 'Completed',
+        _ => 'সম্পন্ন হয়েছে',
+      };
+
+  String get learningCompletionFailed => switch (languageCode) {
+        'hi' => 'सामग्री को पूर्ण के रूप में चिह्नित नहीं किया जा सका।',
+        'en' => 'The learning content could not be marked as complete.',
+        _ => 'Learning content সম্পন্ন হিসেবে চিহ্নিত করা যায়নি।',
+      };
   String get startMySwadhyay => switch (languageCode) {
         'hi' => 'अपना स्वाध्याय शुरू करें',
         'en' => 'Start My Swadhyay',
@@ -429,6 +446,7 @@ class AppStrings {
         _ => 'এখনও কোনো শেখার কনটেন্ট পাওয়া যায়নি।',
       };
 }
+
 
 
 

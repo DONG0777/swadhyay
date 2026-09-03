@@ -4,6 +4,8 @@ import '../../../core/localization/app_language_controller.dart';
 import '../../../core/localization/app_strings.dart';
 
 import '../models/learning_content.dart';
+import '../models/learning_progress.dart';
+import '../services/learning_progress_service.dart';
 import '../services/learning_service.dart';
 
 class LearningDetailScreen extends StatefulWidget {
@@ -21,18 +23,22 @@ class LearningDetailScreen extends StatefulWidget {
 
 class _LearningDetailScreenState extends State<LearningDetailScreen> {
   final LearningService _service = LearningService();
+  final LearningProgressService _progressService =
+      LearningProgressService();
 
   bool _isLoading = true;
+  bool _isCompleting = false;
   String? _error;
   LearningTranslation? _translation;
+  LearningProgress? _progress;
 
   @override
   void initState() {
     super.initState();
-    _loadTranslation();
+    _loadContent();
   }
 
-  Future<void> _loadTranslation() async {
+  Future<void> _loadContent() async {
     setState(() {
       _isLoading = true;
       _error = null;
@@ -42,17 +48,21 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
       final selectedLanguage =
           AppLanguageController.instance.languageCode;
 
-      var translations = await _service.getTranslations(
+      final translations = await _service.getTranslations(
         contentId: widget.content.id,
         languageCode: selectedLanguage,
       );
 
+      final progress = await _progressService.getProgress(
+        learningContentId: widget.content.id,
+      );
 
       if (!mounted) return;
 
       setState(() {
         _translation =
             translations.isEmpty ? null : translations.first;
+        _progress = progress;
         _isLoading = false;
 
         if (_translation == null) {
@@ -66,6 +76,43 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
         _isLoading = false;
         _error = AppStrings.of(context).learningLoadFailed;
       });
+    }
+  }
+
+  Future<void> _completeContent() async {
+    if (_isCompleting || _progress?.isCompleted == true) {
+      return;
+    }
+
+    setState(() {
+      _isCompleting = true;
+    });
+
+    try {
+      final progress = await _progressService.completeContent(
+        learningContentId: widget.content.id,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        _progress = progress;
+        _isCompleting = false;
+      });
+    } catch (error) {
+      if (!mounted) return;
+
+      setState(() {
+        _isCompleting = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            AppStrings.of(context).learningCompletionFailed,
+          ),
+        ),
+      );
     }
   }
 
@@ -121,6 +168,58 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
     );
   }
 
+  Widget _buildCompletionAction() {
+    final strings = AppStrings.of(context);
+
+    if (_progress?.isCompleted == true) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Theme.of(context)
+              .colorScheme
+              .surfaceContainerHighest,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.check_circle,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                strings.learningCompleted,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return SizedBox(
+      width: double.infinity,
+      child: FilledButton.icon(
+        onPressed: _isCompleting ? null : _completeContent,
+        icon: _isCompleting
+            ? const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              )
+            : const Icon(Icons.check),
+        label: Text(strings.learningMarkComplete),
+      ),
+    );
+  }
+
   Widget _buildBody() {
     if (_isLoading) {
       return const Center(
@@ -141,7 +240,7 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
               ),
               const SizedBox(height: 16),
               FilledButton.icon(
-                onPressed: _loadTranslation,
+                onPressed: _loadContent,
                 icon: const Icon(Icons.refresh),
                 label: Text(AppStrings.of(context).retry),
               ),
@@ -169,11 +268,13 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
             runSpacing: 8,
             children: [
               Chip(
-                label: Text(_contentCategoryLabel(widget.content.category)),
+                label: Text(
+                  _contentCategoryLabel(widget.content.category),
+                ),
               ),
               Chip(
                 label: Text(
-                  '${widget.content.estimatedMinutes} min',
+                  '${widget.content.estimatedMinutes} ${strings.minutes}',
                 ),
               ),
             ],
@@ -195,6 +296,8 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
             title: strings.learningActionPrompt,
             text: translation.actionPrompt,
           ),
+          const SizedBox(height: 8),
+          _buildCompletionAction(),
         ],
       ),
     );
@@ -214,5 +317,3 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
     );
   }
 }
-
-
