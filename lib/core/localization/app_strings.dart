@@ -406,10 +406,29 @@ class AppStrings {
         _ => 'কঠিনতার মাত্রা',
       };
 
+  String get learningDifficultyEasy => switch (languageCode) {
+    'hi' => 'आसान',
+    'en' => 'Easy',
+    _ => 'সহজ',
+  };
+
+  String get learningDifficultyMedium => switch (languageCode) {
+    'hi' => 'मध्यम',
+    'en' => 'Medium',
+    _ => 'মাঝারি',
+  };
+
+  String get learningDifficultyHard => switch (languageCode) {
+    'hi' => 'कठिन',
+    'en' => 'Hard',
+    _ => 'কঠিন',
+  };
   String get learningNoContent => switch (languageCode) {
         'hi' => 'अभी कोई सीखने की सामग्री उपलब्ध नहीं है।',
         'en' => 'No learning content available yet.',
         _ => 'এখনও কোনো শেখার কনটেন্ট পাওয়া যায়নি।',
       };
 }
+
+
 

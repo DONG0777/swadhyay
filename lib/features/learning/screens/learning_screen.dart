@@ -64,6 +64,31 @@ class _LearningScreenState extends State<LearningScreen> {
     }
   }
 
+  String _contentCategoryLabel(String category) {
+    final strings = AppStrings.of(context);
+
+    switch (category.toLowerCase()) {
+      case 'knowledge':
+        return strings.learningKindKnowledge;
+      case 'quote':
+        return strings.learningKindQuote;
+      case 'story':
+        return strings.learningKindStory;
+      case 'song':
+        return strings.learningKindSong;
+      case 'reflection':
+        return strings.learningKindReflection;
+      case 'civic_thought':
+        return strings.learningKindCivicThought;
+      case 'seva_idea':
+        return strings.learningKindSevaIdea;
+      case 'quiz':
+        return strings.learningKindQuiz;
+      default:
+        return category;
+    }
+  }
+
   String _contentKindLabel(String kind) {
     final strings = AppStrings.of(context);
 
@@ -89,6 +114,20 @@ class _LearningScreenState extends State<LearningScreen> {
     }
   }
 
+  String _difficultyLabel(String difficulty) {
+    final strings = AppStrings.of(context);
+
+    switch (difficulty.toLowerCase()) {
+      case 'easy':
+        return strings.learningDifficultyEasy;
+      case 'medium':
+        return strings.learningDifficultyMedium;
+      case 'hard':
+        return strings.learningDifficultyHard;
+      default:
+        return difficulty;
+    }
+  }
   Widget _buildContentCard(LearningContent content) {
     final strings = AppStrings.of(context);
     final translation = _translations[content.id];
@@ -129,7 +168,7 @@ class _LearningScreenState extends State<LearningScreen> {
                     ),
                   ),
                   Chip(
-                    label: Text(content.category),
+                    label: Text(_contentCategoryLabel(content.category)),
                   ),
                   Chip(
                     label: Text(
@@ -140,7 +179,7 @@ class _LearningScreenState extends State<LearningScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                '${strings.learningDifficulty}: ${content.difficulty}',
+                '${strings.learningDifficulty}: ${_difficultyLabel(content.difficulty)}',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
@@ -228,3 +267,5 @@ class _LearningScreenState extends State<LearningScreen> {
     );
   }
 }
+
+

@@ -69,6 +69,31 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
     }
   }
 
+  String _contentCategoryLabel(String category) {
+    final strings = AppStrings.of(context);
+
+    switch (category.toLowerCase()) {
+      case 'knowledge':
+        return strings.learningKindKnowledge;
+      case 'quote':
+        return strings.learningKindQuote;
+      case 'story':
+        return strings.learningKindStory;
+      case 'song':
+        return strings.learningKindSong;
+      case 'reflection':
+        return strings.learningKindReflection;
+      case 'civic_thought':
+        return strings.learningKindCivicThought;
+      case 'seva_idea':
+        return strings.learningKindSevaIdea;
+      case 'quiz':
+        return strings.learningKindQuiz;
+      default:
+        return category;
+    }
+  }
+
   Widget _buildSection({
     required String title,
     required String? text,
@@ -144,7 +169,7 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
             runSpacing: 8,
             children: [
               Chip(
-                label: Text(widget.content.category),
+                label: Text(_contentCategoryLabel(widget.content.category)),
               ),
               Chip(
                 label: Text(
@@ -189,4 +214,5 @@ class _LearningDetailScreenState extends State<LearningDetailScreen> {
     );
   }
 }
+
 
