@@ -5,6 +5,7 @@ import '../../../core/localization/app_strings.dart';
 
 import '../models/learning_content.dart';
 import 'learning_detail_screen.dart';
+import 'learning_progress_screen.dart';
 import '../services/learning_service.dart';
 
 class LearningScreen extends StatefulWidget {
@@ -260,6 +261,19 @@ class _LearningScreenState extends State<LearningScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(strings.learning),
+        actions: [
+          IconButton(
+            tooltip: strings.learningProgress,
+            icon: const Icon(Icons.insights_outlined),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const LearningProgressScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: _buildBody(),
@@ -267,5 +281,6 @@ class _LearningScreenState extends State<LearningScreen> {
     );
   }
 }
+
 
 

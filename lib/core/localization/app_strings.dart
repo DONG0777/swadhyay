@@ -177,6 +177,30 @@ class AppStrings {
         'en' => 'The learning content could not be marked as complete.',
         _ => 'Learning content সম্পন্ন হিসেবে চিহ্নিত করা যায়নি।',
       };
+
+  String get learningProgress => switch (languageCode) {
+        'hi' => 'मेरी प्रगति',
+        'en' => 'My Progress',
+        _ => 'আমার অগ্রগতি',
+      };
+
+  String get learningCompletedCount => switch (languageCode) {
+        'hi' => 'पूर्ण',
+        'en' => 'Completed',
+        _ => 'সম্পন্ন',
+      };
+
+  String get learningNoProgress => switch (languageCode) {
+        'hi' => 'अभी तक कोई सीख पूरी नहीं हुई है।',
+        'en' => 'You have not completed any learning yet.',
+        _ => 'এখনও কোনো শেখা সম্পন্ন হয়নি।',
+      };
+
+  String get learningProgressLoadFailed => switch (languageCode) {
+        'hi' => 'प्रगति लोड नहीं की जा सकी।',
+        'en' => 'Progress could not be loaded.',
+        _ => 'অগ্রগতি লোড করা যায়নি।',
+      };
   String get startMySwadhyay => switch (languageCode) {
         'hi' => 'अपना स्वाध्याय शुरू करें',
         'en' => 'Start My Swadhyay',
@@ -446,6 +470,7 @@ class AppStrings {
         _ => 'এখনও কোনো শেখার কনটেন্ট পাওয়া যায়নি।',
       };
 }
+
 
 
 

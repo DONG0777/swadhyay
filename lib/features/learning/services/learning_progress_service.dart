@@ -36,6 +36,32 @@ class LearningProgressService {
     );
   }
 
+  Future<List<LearningProgress>> getCompletedProgress() async {
+    final user = _client.auth.currentUser;
+
+    if (user == null) {
+      throw StateError('User is not signed in.');
+    }
+
+    final result = await _client
+        .from('learning_progress')
+        .select(
+          'id, user_id, learning_content_id, status, '
+          'completed_at, created_at, updated_at',
+        )
+        .eq('user_id', user.id)
+        .eq('status', 'completed')
+        .order('completed_at', ascending: false);
+
+    return result
+        .map(
+          (row) => LearningProgress.fromMap(
+            row,
+          ),
+        )
+        .toList();
+  }
+
   Future<LearningProgress> completeContent({
     required String learningContentId,
   }) async {
@@ -57,5 +83,6 @@ class LearningProgressService {
     );
   }
 }
+
 
 
