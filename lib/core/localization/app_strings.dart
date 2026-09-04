@@ -130,11 +130,6 @@ class AppStrings {
         _ => 'মূল লেখা',
       };
 
-  String get learningReflectionQuestion => switch (languageCode) {
-        'hi' => 'विचार का प्रश्न',
-        'en' => 'Reflection Question',
-        _ => 'ভাবার প্রশ্ন',
-      };
 
   String get learningActionPrompt => switch (languageCode) {
         'hi' => 'आज का अभ्यास',
@@ -363,11 +358,6 @@ class AppStrings {
         _ => 'সংরক্ষণ করুন',
       };
 
-  String get saveChanges => switch (languageCode) {
-        'hi' => 'परिवर्तन सहेजें',
-        'en' => 'Save Changes',
-        _ => 'পরিবর্তন সংরক্ষণ করুন',
-      };
 
   String get timeValidationError => switch (languageCode) {
         'hi' => 'समय 0 से 1440 मिनट के बीच दें।',
@@ -469,9 +459,265 @@ class AppStrings {
         'en' => 'No learning content available yet.',
         _ => 'এখনও কোনো শেখার কনটেন্ট পাওয়া যায়নি।',
       };
+
+  String get dailySwadhyay => switch (languageCode) {
+        'hi' => 'आज का स्वाध्याय',
+        'en' => 'Today''s Swadhyay',
+        _ => 'আজকের স্বাধ্যায়',
+      };
+
+  String get dailyCommitmentPrompt => switch (languageCode) {
+        'hi' => 'आज का एक छोटा संकल्प',
+        'en' => 'One Small Commitment for Today',
+        _ => 'আজকের একটি ছোট সংকল্প',
+      };
+
+  String get dailyCommitmentPromptDescription => switch (languageCode) {
+        'hi' => 'ऐसा एक काम चुनें, जिसे आज वास्तव में किया जा सके।',
+        'en' => 'Choose one action that you can realistically do today.',
+        _ => 'এমন একটি কাজ বেছে নিন, যা আজ বাস্তবে করা সম্ভব।',
+      };
+
+  String get myTodaysCommitment => switch (languageCode) {
+        'hi' => 'मेरा आज का संकल्प',
+        'en' => 'My Commitment for Today',
+        _ => 'আমার আজকের সংকল্প',
+      };
+
+  String get dailyCommitmentHint => switch (languageCode) {
+        'hi' => 'जैसे: गुस्से के समय जवाब देने से पहले 10 सेकंड रुकूँगा।',
+        'en' => 'E.g. I will pause for 10 seconds before responding when I feel angry.',
+        _ => 'যেমন: রাগের মুহূর্তে উত্তর দেওয়ার আগে ১০ সেকেন্ড থামব।',
+      };
+
+  String get dailyCommitmentValidation => switch (languageCode) {
+        'hi' => 'एक छोटा और स्पष्ट संकल्प लिखें।',
+        'en' => 'Please write a small and specific commitment.',
+        _ => 'একটি ছোট ও নির্দিষ্ট সংকল্প লিখুন।',
+      };
+
+  String get saveTodaysCommitment => switch (languageCode) {
+        'hi' => 'आज का संकल्प सहेजें',
+        'en' => 'Save Today''s Commitment',
+        _ => 'আজকের সংকল্প সংরক্ষণ করুন',
+      };
+
+  String get dailyCommitmentSavedSuccessfully => switch (languageCode) {
+        'hi' => 'आज का संकल्प सफलतापूर्वक सहेजा गया।',
+        'en' => 'Today''s commitment has been saved.',
+        _ => 'আজকের সংকল্প সংরক্ষিত হয়েছে।',
+      };
+
+  String dailyCommitmentLoadFailed(Object error) => switch (languageCode) {
+        'hi' => 'आज का संकल्प लोड नहीं हो सका: $error',
+        'en' => 'Today''s commitment could not be loaded: $error',
+        _ => 'আজকের সংকল্প লোড করা যায়নি: $error',
+      };
+
+  String dailyCommitmentSaveFailed(Object error) => switch (languageCode) {
+        'hi' => 'संकल्प सहेजा नहीं जा सका: $error',
+        'en' => 'Commitment could not be saved: $error',
+        _ => 'সংকল্প সংরক্ষণ করা যায়নি: $error',
+      };
+
+  String get dailyCommitmentCompletedSuccessfully => switch (languageCode) {
+        'hi' => 'आज का संकल्प पूरा हो गया।',
+        'en' => 'Today''s commitment has been completed.',
+        _ => 'আজকের সংকল্প সম্পন্ন হয়েছে।',
+      };
+
+  String get dailyCommitmentMissedSuccessfully => switch (languageCode) {
+        'hi' => 'आज का संकल्प पूरा नहीं हो पाया। अब कारण को समझने का समय है।',
+        'en' => 'Today''s commitment was not completed. It is time to understand why.',
+        _ => 'আজকের সংকল্প সম্পন্ন হয়নি। কারণটি বুঝে নেওয়ার সময় এসেছে।',
+      };
+
+  String dailyCommitmentStatusUpdateFailed(Object error) => switch (languageCode) {
+        'hi' => 'संकल्प की स्थिति बदली नहीं जा सकी: $error',
+        'en' => 'The commitment status could not be changed: $error',
+        _ => 'সংকল্পের status পরিবর্তন করা যায়নি: $error',
+      };
+
+  String get dailyCommitmentCompleted => switch (languageCode) {
+        'hi' => 'आज का संकल्प पूरा हो गया है',
+        'en' => 'Today''s commitment is completed',
+        _ => 'আজকের সংকল্প সম্পন্ন হয়েছে',
+      };
+
+  String get goToTodaysReflection => switch (languageCode) {
+        'hi' => 'आज के आत्म-चिंतन पर जाएँ',
+        'en' => 'Go to Today''s Reflection',
+        _ => 'আজকের আত্ম-বিশ্লেষণে যান',
+      };
+
+  String get dailyCommitmentMissed => switch (languageCode) {
+        'hi' => 'आज का संकल्प पूरा नहीं हुआ',
+        'en' => 'Today''s commitment was not completed',
+        _ => 'আজকের সংকল্প সম্পন্ন হয়নি',
+      };
+
+  String get understandTodaysExperience => switch (languageCode) {
+        'hi' => 'आज के अनुभव को समझें',
+        'en' => 'Understand Today''s Experience',
+        _ => 'আজকের অভিজ্ঞতা বুঝে নিই',
+      };
+
+  String get iCompletedIt => switch (languageCode) {
+        'hi' => 'मैंने पूरा किया',
+        'en' => 'I completed it',
+        _ => 'আমি পালন করেছি',
+      };
+
+  String get iCouldNotCompleteIt => switch (languageCode) {
+        'hi' => 'मैं पूरा नहीं कर पाया',
+        'en' => 'I could not complete it',
+        _ => 'আমি পালন করতে পারিনি',
+      };
+
+  String get dailyReflectionAppBar => switch (languageCode) {
+        'hi' => 'रात का आत्म-चिंतन',
+        'en' => 'Evening Reflection',
+        _ => 'রাতের আত্ম-বিশ্লেষণ',
+      };
+
+  String get createTodaysCommitmentFirst => switch (languageCode) {
+        'hi' => 'पहले आज का संकल्प बनाएं',
+        'en' => 'Create Today''s Commitment First',
+        _ => 'আজকের সংকল্প আগে তৈরি করুন',
+      };
+
+  String get commitmentNeededBeforeReflection => switch (languageCode) {
+        'hi' => 'आज का आत्म-चिंतन शुरू करने से पहले आज का एक संकल्प होना आवश्यक है।',
+        'en' => 'You need a commitment for today before starting today''s reflection.',
+        _ => 'আজকের আত্ম-বিশ্লেষণ শুরু করার আগে আজকের একটি সংকল্প থাকা প্রয়োজন।',
+      };
+
+  String get todaysCommitmentLabel => switch (languageCode) {
+        'hi' => 'आज का संकल्प',
+        'en' => 'Today''s Commitment',
+        _ => 'আজকের সংকল্প',
+      };
+
+  String get understandTodaysExperienceTitle => switch (languageCode) {
+        'hi' => 'आज के अनुभव को समझें',
+        'en' => 'Understand Today''s Experience',
+        _ => 'আজকের অভিজ্ঞতাটা বুঝে নিই',
+      };
+
+  String get pauseForTodayTitle => switch (languageCode) {
+        'hi' => 'आज थोड़ा रुकें',
+        'en' => 'Pause for Today',
+        _ => 'আজ একটু থামি',
+      };
+
+  String get reflectionPurposeDescription => switch (languageCode) {
+        'hi' => 'खुद को दोष देने के लिए नहीं, बल्कि अपने पैटर्न को समझने के लिए लिखें।',
+        'en' => 'Write not to blame yourself, but to understand your patterns.',
+        _ => 'নিজেকে দোষ দেওয়ার জন্য নয়, নিজের প্যাটার্নকে বোঝার জন্য লিখুন।',
+      };
+
+  String get egoReflectionQuestion => switch (languageCode) {
+        'hi' => 'आज कहाँ स्वार्थ या अहंकार ने मुझे प्रभावित किया?',
+        'en' => 'Where did self-interest or ego influence me today?',
+        _ => 'আজ কোথায় স্বার্থ বা অহংকার আমাকে পরিচালিত করেছে?',
+      };
+
+  String get reflectionWriteHint => switch (languageCode) {
+        'hi' => 'अपनी भाषा में लिखें...',
+        'en' => 'Write in your own words...',
+        _ => 'নিজের ভাষায় লিখুন...',
+      };
+
+  String get idealGapReflectionQuestion => switch (languageCode) {
+        'hi' => 'आज कौन-सा काम या बात मेरे आदर्श के अनुरूप नहीं था?',
+        'en' => 'What action or word today did not align with my ideals?',
+        _ => 'আজ কোন কাজ বা কথা আমার আদর্শের সঙ্গে মেলেনি?',
+      };
+
+
+  String get commitmentNotCompletedDescription => switch (languageCode) {
+        'hi' => 'आज का संकल्प पूरा नहीं हुआ। पहले कारण को समझना आवश्यक है।',
+        'en' => 'Today''s commitment was not completed. First, it is important to understand why.',
+        _ => 'সংকল্পটি আজ পূরণ হয়নি। আগে কারণটি বুঝে নেওয়া দরকার।',
+      };
+
+  String get obstacleReflectionQuestion => switch (languageCode) {
+        'hi' => 'आज कौन-सी बाधा आपको रोक रही थी?',
+        'en' => 'What obstacle held you back today?',
+        _ => 'কোন বাধাটা তোমাকে আজ আটকে দিয়েছিল?',
+      };
+
+  String get obstacleReflectionHint => switch (languageCode) {
+        'hi' => 'समय, वातावरण, आदत या कोई अन्य वास्तविक कारण...',
+        'en' => 'Time, environment, habit, or another practical reason...',
+        _ => 'সময়, পরিবেশ, অভ্যাস বা অন্য কোনো বাস্তব কারণ...',
+      };
+
+  String get saveReflection => switch (languageCode) {
+        'hi' => 'आत्म-चिंतन सहेजें',
+        'en' => 'Save Reflection',
+        _ => 'আত্ম-বিশ্লেষণ সংরক্ষণ করুন',
+      };
+
+
+  String get reflectionSavedSuccessfully => switch (languageCode) {
+        'hi' => 'आज का आत्म-चिंतन सहेजा गया है।',
+        'en' => 'Today''s reflection has been saved.',
+        _ => 'আজকের আত্ম-বিশ্লেষণ সংরক্ষিত হয়েছে।',
+      };
+
+  String reflectionLoadFailed(Object error) => switch (languageCode) {
+        'hi' => 'आज का स्वाध्याय लोड नहीं हो सका: $error',
+        'en' => 'Today''s Swadhyay could not be loaded: $error',
+        _ => 'আজকের স্বাধ্যায় লোড করা যায়নি: $error',
+      };
+
+
+  String get incompleteCommitmentObstacleRequired => switch (languageCode) {
+        'hi' => 'संकल्प पूरा नहीं हुआ है, इसलिए बाधा का कारण लिखना आवश्यक है।',
+        'en' => 'Please write the reason for the obstacle when the commitment was not completed.',
+        _ => 'সংকল্প পূরণ না হলে বাধার কারণ লেখা বাধ্যতামূলক।',
+      };
+
+  String get missedCommitmentObstacleRequired => switch (languageCode) {
+        'hi' => 'संकल्प पूरा नहीं हुआ। पहले बताएं कि किस बाधा ने आपको रोका।',
+        'en' => 'The commitment was not completed. First, write what obstacle held you back.',
+        _ => 'সংকল্পটি পূরণ হয়নি। আগে কী বাধা দিয়েছিল সেটি লিখুন।',
+      };
+
+  String get goToTomorrowCommitment => switch (languageCode) {
+        'hi' => 'कल का संकल्प लें',
+        'en' => 'Set Tomorrow''s Commitment',
+        _ => 'আগামীকালের সংকল্প নিন',
+      };
+
+  String reflectionSaveFailed(Object error) => switch (languageCode) {
+        'hi' => 'आत्म-चिंतन सहेजा नहीं जा सका: $error',
+        'en' => 'Reflection could not be saved: $error',
+        _ => 'আত্ম-বিশ্লেষণ সংরক্ষণ করা যায়নি: $error',
+      };
+
+  String get learningReflectionQuestion {
+    switch (languageCode) {
+      case 'hi':
+        return 'आज मैंने क्या सीखा और कल कौन-सी गलती दोबारा नहीं करूँगा?';
+      case 'en':
+        return 'What did I learn today, and what mistake will I avoid tomorrow?';
+      default:
+        return 'আজ আমি কী শিখলাম এবং আগামীকাল কোন ভুলটি আর করব না?';
+    }
+  }
+
+  String get saveChanges {
+    switch (languageCode) {
+      case 'hi':
+        return 'परिवर्तन सहेजें';
+      case 'en':
+        return 'Save Changes';
+      default:
+        return 'পরিবর্তন সংরক্ষণ করুন';
+    }
+  }
 }
-
-
-
 
 

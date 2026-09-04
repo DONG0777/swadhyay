@@ -1,5 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 
+import '../../../core/localization/app_strings.dart';
+
 import '../models/daily_commitment.dart';
 import '../models/daily_reflection.dart';
 import '../services/daily_commitment_service.dart';
@@ -77,7 +79,7 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('আজকের স্বাধ্যায় লোড করা যায়নি: $error'),
+          content: Text(AppStrings.of(context).reflectionLoadFailed(error)),
         ),
       );
     }
@@ -94,9 +96,9 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
         commitment.status != 'missed' &&
         _obstacleController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'সংকল্প পূরণ না হলে বাধার কারণ লেখা বাধ্যতামূলক।',
+            AppStrings.of(context).incompleteCommitmentObstacleRequired,
           ),
         ),
       );
@@ -106,9 +108,9 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
     if (commitment.status == 'missed' &&
         _obstacleController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'সংকল্পটি পূরণ হয়নি। আগে কী বাধা দিয়েছিল সেটি লিখুন।',
+            AppStrings.of(context).missedCommitmentObstacleRequired,
           ),
         ),
       );
@@ -141,8 +143,8 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('আজকের আত্ম-বিশ্লেষণ সংরক্ষিত হয়েছে।'),
+        SnackBar(
+          content: Text(AppStrings.of(context).reflectionSavedSuccessfully),
         ),
       );
     } catch (error) {
@@ -156,7 +158,7 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('আত্ম-বিশ্লেষণ সংরক্ষণ করা যায়নি: $error'),
+          content: Text(AppStrings.of(context).reflectionSaveFailed(error)),
         ),
       );
     }
@@ -196,7 +198,7 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('রাতের আত্ম-বিশ্লেষণ'),
+        title: Text(AppStrings.of(context).dailyReflectionAppBar),
       ),
       body: _isLoading
           ? const Center(
@@ -211,14 +213,14 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
                             CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'আজকের সংকল্প আগে তৈরি করুন',
+                            AppStrings.of(context).createTodaysCommitmentFirst,
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall,
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'আজকের আত্ম-বিশ্লেষণ শুরু করার আগে আজকের একটি সংকল্প থাকা প্রয়োজন।',
+                          Text(
+                            AppStrings.of(context).commitmentNeededBeforeReflection,
                           ),
                         ],
                       )
@@ -227,7 +229,7 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
                             CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'আজকের সংকল্প',
+                            AppStrings.of(context).todaysCommitmentLabel,
                             style:
                                 Theme.of(context).textTheme.titleMedium,
                           ),
@@ -246,22 +248,22 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
                           const SizedBox(height: 24),
                           Text(
                             _commitment!.status == 'missed'
-                                ? 'আজকের অভিজ্ঞতাটা বুঝে নিই'
-                                : 'আজ একটু থামি',
+                                ? AppStrings.of(context).understandTodaysExperienceTitle
+                                : AppStrings.of(context).pauseForTodayTitle,
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall,
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'নিজেকে দোষ দেওয়ার জন্য নয়, নিজের প্যাটার্নকে বোঝার জন্য লিখুন।',
+                          Text(
+                            AppStrings.of(context).reflectionPurposeDescription,
                           ),
                           const SizedBox(height: 24),
                           _reflectionField(
                             controller: _egoController,
                             label:
-                                'আজ কোথায় স্বার্থ বা অহংকার আমাকে পরিচালিত করেছে?',
-                            hint: 'নিজের ভাষায় লিখুন...',
+                                AppStrings.of(context).egoReflectionQuestion,
+                            hint: AppStrings.of(context).reflectionWriteHint,
                             maxLength: 2000,
                             maxLines: 5,
                           ),
@@ -269,8 +271,8 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
                           _reflectionField(
                             controller: _idealGapController,
                             label:
-                                'আজ কোন কাজ বা কথা আমার আদর্শের সঙ্গে মেলেনি?',
-                            hint: 'নিজের ভাষায় লিখুন...',
+                                AppStrings.of(context).idealGapReflectionQuestion,
+                            hint: AppStrings.of(context).reflectionWriteHint,
                             maxLength: 2000,
                             maxLines: 5,
                           ),
@@ -278,23 +280,23 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
                           _reflectionField(
                             controller: _learningController,
                             label:
-                                'আজ আমি কী শিখলাম এবং আগামীকাল কোন ভুলটি আর করব না?',
-                            hint: 'নিজের ভাষায় লিখুন...',
+                                AppStrings.of(context).learningReflectionQuestion,
+                            hint: AppStrings.of(context).reflectionWriteHint,
                             maxLength: 2000,
                             maxLines: 5,
                           ),
                           if (!_commitment!.isCompleted) ...[
                             const SizedBox(height: 20),
-                            const Text(
-                              'সংকল্পটি আজ পূরণ হয়নি। আগে কারণটি বুঝে নেওয়া দরকার।',
+                            Text(
+                              AppStrings.of(context).commitmentNotCompletedDescription,
                             ),
                             const SizedBox(height: 12),
                             _reflectionField(
                               controller: _obstacleController,
                               label:
-                                  'কোন বাধাটা তোমাকে আজ আটকে দিয়েছিল?',
+                                  AppStrings.of(context).obstacleReflectionQuestion,
                               hint:
-                                  'সময়, পরিবেশ, অভ্যাস বা অন্য কোনো বাস্তব কারণ...',
+                                  AppStrings.of(context).obstacleReflectionHint,
                               maxLength: 1000,
                               maxLines: 4,
                             ),
@@ -316,15 +318,15 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
                                     )
                                   : Text(
                                       _reflection == null
-                                          ? 'আত্ম-বিশ্লেষণ সংরক্ষণ করুন'
-                                          : 'পরিবর্তন সংরক্ষণ করুন',
+                                          ? AppStrings.of(context).saveReflection
+                                          : AppStrings.of(context).saveChanges,
                                     ),
                             ),
                           ),
                           if (_reflection != null) ...[
                             const SizedBox(height: 12),
-                            const Text(
-                              'আজকের আত্ম-বিশ্লেষণ সংরক্ষিত হয়েছে।',
+                            Text(
+                              AppStrings.of(context).reflectionSavedSuccessfully,
                             ),
                             const SizedBox(height: 20),
                             SizedBox(
@@ -336,8 +338,8 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
                                 icon: const Icon(
                                   Icons.arrow_forward_outlined,
                                 ),
-                                label: const Text(
-                                  'আগামীকালের সংকল্প নিন',
+                                label: Text(
+                                  AppStrings.of(context).goToTomorrowCommitment,
                                 ),
                               ),
                             ),
@@ -349,3 +351,8 @@ class _DailyReflectionScreenState extends State<DailyReflectionScreen> {
     );
   }
 }
+
+
+
+
+

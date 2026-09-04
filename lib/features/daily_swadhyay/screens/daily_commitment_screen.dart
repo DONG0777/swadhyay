@@ -1,7 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+
+import '../../../core/localization/app_strings.dart';
 
 import '../models/daily_commitment.dart';
 import '../services/daily_commitment_service.dart';
+import 'daily_reflection_screen.dart';
 
 class DailyCommitmentScreen extends StatefulWidget {
   const DailyCommitmentScreen({super.key});
@@ -137,6 +140,14 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
     );
   }
 
+  void _openReflection() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const DailyReflectionScreen(),
+      ),
+    );
+  }
+
   Future<void> _updateStatus({
     required Future<DailyCommitment> Function() action,
     required String successMessage,
@@ -183,7 +194,7 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('আজকের স্বাধ্যায়'),
+        title: Text(AppStrings.of(context).dailySwadhyay),
       ),
       body: _isLoading
           ? const Center(
@@ -196,12 +207,12 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'আজকের একটি ছোট সংকল্প',
+                      AppStrings.of(context).dailyCommitmentPrompt,
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'এমন একটি কাজ বেছে নিন, যা আজ বাস্তবে করা সম্ভব।',
+                      AppStrings.of(context).dailyCommitmentPromptDescription,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     const SizedBox(height: 24),
@@ -212,11 +223,11 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                       enabled: _commitment == null &&
                           !_isSaving &&
                           !_isUpdatingStatus,
-                      decoration: const InputDecoration(
-                        labelText: 'আমার আজকের সংকল্প',
+                      decoration: InputDecoration(
+                        labelText: AppStrings.of(context).myTodaysCommitment,
                         hintText:
                             'যেমন: রাগের মুহূর্তে উত্তর দেওয়ার আগে ১০ সেকেন্ড থামব।',
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -233,7 +244,7 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : const Text('আজকের সংকল্প সংরক্ষণ করুন'),
+                              : Text(AppStrings.of(context).saveTodaysCommitment),
                         ),
                       )
                     else
@@ -245,7 +256,7 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                                 CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'আজকের সংকল্প',
+                                AppStrings.of(context).myTodaysCommitment,
                                 style:
                                     Theme.of(context).textTheme.titleMedium,
                               ),
@@ -256,22 +267,50 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                                     Theme.of(context).textTheme.bodyLarge,
                               ),
                               const SizedBox(height: 20),
-                              if (_commitment!.status == 'completed')
+                              if (_commitment!.status == 'completed') ...[
                                 const Row(
                                   children: [
                                     Icon(Icons.check_circle_outline),
                                     SizedBox(width: 8),
                                     Text('আজকের সংকল্প সম্পন্ন হয়েছে'),
                                   ],
-                                )
-                              else if (_commitment!.status == 'missed')
+                                ),
+                                const SizedBox(height: 16),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: OutlinedButton.icon(
+                                    onPressed: _openReflection,
+                                    icon: const Icon(
+                                      Icons.self_improvement_outlined,
+                                    ),
+                                    label: const Text(
+                                      'আজকের আত্ম-বিশ্লেষণে যান',
+                                    ),
+                                  ),
+                                ),
+                              ]
+                              else if (_commitment!.status == 'missed') ...[
                                 const Row(
                                   children: [
                                     Icon(Icons.info_outline),
                                     SizedBox(width: 8),
                                     Text('আজকের সংকল্প সম্পন্ন হয়নি'),
                                   ],
-                                )
+                                ),
+                                const SizedBox(height: 16),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: OutlinedButton.icon(
+                                    onPressed: _openReflection,
+                                    icon: const Icon(
+                                      Icons.self_improvement_outlined,
+                                    ),
+                                    label: const Text(
+                                      'আজকের অভিজ্ঞতা বুঝে নিই',
+                                    ),
+                                  ),
+                                ),
+                              ]
                               else ...[
                                 SizedBox(
                                   width: double.infinity,
@@ -322,3 +361,4 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
     );
   }
 }
+
