@@ -697,6 +697,72 @@ class AppStrings {
         _ => 'আত্ম-বিশ্লেষণ সংরক্ষণ করা যায়নি: $error',
       };
 
+
+  String tomorrowCommitmentLoadFailed(Object error) => switch (languageCode) {
+    'hi' => 'कल का संकल्प लोड नहीं हो सका: $error',
+    'en' => 'Tomorrow''s commitment could not be loaded: $error',
+    _ => 'আগামীকালের সংকল্প লোড করা যায়নি: $error',
+  };
+
+  String get tomorrowCommitmentInstruction => switch (languageCode) {
+    'hi' => 'कल के लिए एक छोटा और स्पष्ट संकल्प लिखें।',
+    'en' => 'Write a small and specific commitment for tomorrow.',
+    _ => 'আগামীকালের জন্য একটি ছোট ও নির্দিষ্ট সংকল্প লিখুন।',
+  };
+
+  String get tomorrowCommitmentSavedSuccessfully => switch (languageCode) {
+    'hi' => 'कल का संकल्प सफलतापूर्वक सहेजा गया।',
+    'en' => 'Tomorrow''s commitment has been saved successfully.',
+    _ => 'আগামীকালের সংকল্প সংরক্ষিত হয়েছে।',
+  };
+
+  String tomorrowCommitmentSaveFailed(Object error) => switch (languageCode) {
+    'hi' => 'कल का संकल्प सहेजा नहीं जा सका: $error',
+    'en' => 'Tomorrow''s commitment could not be saved: $error',
+    _ => 'আগামীকালের সংকল্প সংরক্ষণ করা যায়নি: $error',
+  };
+
+  String get tomorrowCommitmentTitle => switch (languageCode) {
+    'hi' => 'कल का संकल्प',
+    'en' => 'Tomorrow''s Commitment',
+    _ => 'আগামীকালের সংকল্প',
+  };
+
+  String get tomorrowCommitmentQuestion => switch (languageCode) {
+    'hi' => 'कल थोड़ा बेहतर कैसे करूँ?',
+    'en' => 'How can I do a little better tomorrow?',
+    _ => 'আগামীকাল একটু ভালো কীভাবে করব?',
+  };
+
+  String tomorrowCommitmentDate(String tomorrowLabel) => switch (languageCode) {
+    'hi' => 'तारीख: $tomorrowLabel',
+    'en' => 'Date: $tomorrowLabel',
+    _ => 'তারিখ: $tomorrowLabel',
+  };
+
+  String get tomorrowCommitmentDescription => switch (languageCode) {
+    'hi' => 'आज जो सीखा, उसके आधार पर कल के लिए एक छोटा, स्पष्ट और वास्तव में किया जा सकने वाला काम चुनें।',
+    'en' => 'Based on what you learned today, choose a small, specific, and realistic action for tomorrow.',
+    _ => 'আজ যা শিখলে, তার ভিত্তিতে আগামীকালের জন্য একটি ছোট, নির্দিষ্ট এবং বাস্তবে করা সম্ভব এমন কাজ বেছে নিন।',
+  };
+
+  String get tomorrowCommitmentLabel => switch (languageCode) {
+    'hi' => 'मेरा कल का संकल्प',
+    'en' => 'My Commitment for Tomorrow',
+    _ => 'আমার আগামীকালের সংকল্প',
+  };
+
+  String get tomorrowCommitmentExample => switch (languageCode) {
+    'hi' => 'जैसे: सुबह 10 मिनट ध्यानपूर्वक स्वाध्याय करूँगा।',
+    'en' => 'Example: I will spend 10 minutes on focused Swadhyay in the morning.',
+    _ => 'যেমন: সকালে ১০ মিনিট মনোযোগ দিয়ে স্বাধ্যায় করব।',
+  };
+
+  String get tomorrowCommitmentSave => switch (languageCode) {
+    'hi' => 'कल का संकल्प सहेजें',
+    'en' => 'Save Tomorrow''s Commitment',
+    _ => 'আগামীকালের সংকল্প সংরক্ষণ করুন',
+  };
   String get learningReflectionQuestion {
     switch (languageCode) {
       case 'hi':
@@ -833,7 +899,28 @@ class AppStrings {
       'ডিসেম্বর',
     ],
   };
+  String get commitmentCompletedLabel => switch (languageCode) {
+    'hi' => 'मैंने पूरा किया',
+    'en' => 'I completed it',
+    _ => 'আমি পালন করেছি',
+  };
+
+  String get commitmentNotCompletedLabel => switch (languageCode) {
+    'hi' => 'मैं पूरा नहीं कर पाया',
+    'en' => 'I could not complete it',
+    _ => 'আমি পালন করতে পারিনি',
+  };
+
+  String get dailyCommitmentExample => switch (languageCode) {
+    'hi' => 'जैसे: गुस्से के क्षण में जवाब देने से पहले 10 सेकंड रुकूँगा।',
+    'en' => 'Example: I will pause for 10 seconds before responding in a moment of anger.',
+    _ => 'যেমন: রাগের মুহূর্তে উত্তর দেওয়ার আগে ১০ সেকেন্ড থামব।',
+  };
+
 }
+
+
+
 
 
 

@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import '../../../core/localization/app_strings.dart';
 
 import '../models/daily_commitment.dart';
 import '../services/daily_commitment_service.dart';
@@ -62,7 +63,7 @@ class _TomorrowCommitmentScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('আগামীকালের সংকল্প লোড করা যায়নি: $error'),
+          content: Text(AppStrings.of(context).tomorrowCommitmentLoadFailed(error)),
         ),
       );
     }
@@ -73,8 +74,8 @@ class _TomorrowCommitmentScreenState
 
     if (text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('আগামীকালের জন্য একটি ছোট ও নির্দিষ্ট সংকল্প লিখুন।'),
+        SnackBar(
+          content: Text(AppStrings.of(context).tomorrowCommitmentInstruction),
         ),
       );
       return;
@@ -106,8 +107,8 @@ class _TomorrowCommitmentScreenState
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('আগামীকালের সংকল্প সংরক্ষিত হয়েছে।'),
+        SnackBar(
+          content: Text(AppStrings.of(context).tomorrowCommitmentSavedSuccessfully),
         ),
       );
     } catch (error) {
@@ -121,7 +122,7 @@ class _TomorrowCommitmentScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('আগামীকালের সংকল্প সংরক্ষণ করা যায়নি: $error'),
+          content: Text(AppStrings.of(context).tomorrowCommitmentSaveFailed(error)),
         ),
       );
     }
@@ -140,7 +141,7 @@ class _TomorrowCommitmentScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('আগামীকালের সংকল্প'),
+        title: Text(AppStrings.of(context).tomorrowCommitmentTitle),
       ),
       body: _isLoading
           ? const Center(
@@ -153,29 +154,28 @@ class _TomorrowCommitmentScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'আগামীকাল একটু ভালো কীভাবে করব?',
+                      AppStrings.of(context).tomorrowCommitmentQuestion,
                       style:
                           Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'তারিখ: $tomorrowLabel',
+                      AppStrings.of(context).tomorrowCommitmentDate(tomorrowLabel),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 12),
-                    const Text(
-                      'আজ যা শিখলে, তার ভিত্তিতে আগামীকালের জন্য একটি ছোট, '
-                      'নির্দিষ্ট এবং বাস্তবে করা সম্ভব এমন কাজ বেছে নিন।',
+                    Text(AppStrings.of(context).tomorrowCommitmentDescription,
+                      
                     ),
                     const SizedBox(height: 24),
                     TextField(
                       controller: _controller,
                       maxLines: 5,
                       maxLength: 500,
-                      decoration: const InputDecoration(
-                        labelText: 'আমার আগামীকালের সংকল্প',
+                      decoration: InputDecoration(
+                        labelText: AppStrings.of(context).tomorrowCommitmentLabel,
                         hintText:
-                            'যেমন: সকালে ১০ মিনিট মনোযোগ দিয়ে স্বাধ্যায় করব।',
+                            AppStrings.of(context).tomorrowCommitmentExample,
                         border: OutlineInputBorder(),
                       ),
                       enabled: !_isSaving,
@@ -195,8 +195,8 @@ class _TomorrowCommitmentScreenState
                               )
                             : Text(
                                 _commitment == null
-                                    ? 'আগামীকালের সংকল্প সংরক্ষণ করুন'
-                                    : 'পরিবর্তন সংরক্ষণ করুন',
+                                    ? AppStrings.of(context).tomorrowCommitmentSave
+                                    : AppStrings.of(context).saveChanges,
                               ),
                       ),
                     ),
@@ -207,3 +207,7 @@ class _TomorrowCommitmentScreenState
     );
   }
 }
+
+
+
+

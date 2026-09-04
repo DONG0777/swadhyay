@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../../core/localization/app_strings.dart';
 
@@ -58,7 +58,7 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('আজকের সংকল্প লোড করা যায়নি: $error'),
+          content: Text(AppStrings.of(context).dailyCommitmentLoadFailed(error)),
         ),
       );
     }
@@ -69,8 +69,8 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
 
     if (text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('একটি ছোট ও নির্দিষ্ট সংকল্প লিখুন।'),
+        SnackBar(
+          content: Text(AppStrings.of(context).dailyCommitmentValidation),
         ),
       );
       return;
@@ -96,8 +96,8 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('আজকের সংকল্প সংরক্ষিত হয়েছে।'),
+        SnackBar(
+          content: Text(AppStrings.of(context).dailyCommitmentSavedSuccessfully),
         ),
       );
     } catch (error) {
@@ -111,7 +111,7 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('সংকল্প সংরক্ষণ করা যায়নি: $error'),
+          content: Text(AppStrings.of(context).dailyCommitmentSaveFailed(error)),
         ),
       );
     }
@@ -124,7 +124,7 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
 
     await _updateStatus(
       action: _service.completeTodayCommitment,
-      successMessage: 'আজকের সংকল্প সম্পন্ন হয়েছে।',
+      successMessage: AppStrings.of(context).dailyCommitmentCompletedSuccessfully,
     );
   }
 
@@ -136,7 +136,7 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
     await _updateStatus(
       action: _service.markTodayCommitmentMissed,
       successMessage:
-          'আজকের সংকল্প সম্পন্ন হয়নি। কারণটি বুঝে নেওয়ার সময় এসেছে।',
+          AppStrings.of(context).dailyCommitmentMissedSuccessfully,
     );
   }
 
@@ -184,7 +184,7 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('সংকল্পের status পরিবর্তন করা যায়নি: $error'),
+          content: Text(AppStrings.of(context).dailyCommitmentStatusUpdateFailed(error)),
         ),
       );
     }
@@ -226,7 +226,7 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                       decoration: InputDecoration(
                         labelText: AppStrings.of(context).myTodaysCommitment,
                         hintText:
-                            'যেমন: রাগের মুহূর্তে উত্তর দেওয়ার আগে ১০ সেকেন্ড থামব।',
+                            AppStrings.of(context).dailyCommitmentExample,
                         border: const OutlineInputBorder(),
                       ),
                     ),
@@ -268,11 +268,11 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                               ),
                               const SizedBox(height: 20),
                               if (_commitment!.status == 'completed') ...[
-                                const Row(
+                                Row(
                                   children: [
                                     Icon(Icons.check_circle_outline),
                                     SizedBox(width: 8),
-                                    Text('আজকের সংকল্প সম্পন্ন হয়েছে'),
+                                    Text(AppStrings.of(context).dailyCommitmentCompleted),
                                   ],
                                 ),
                                 const SizedBox(height: 16),
@@ -283,18 +283,18 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                                     icon: const Icon(
                                       Icons.self_improvement_outlined,
                                     ),
-                                    label: const Text(
-                                      'আজকের আত্ম-বিশ্লেষণে যান',
+                                    label: Text(
+                                      AppStrings.of(context).goToTodaysReflection,
                                     ),
                                   ),
                                 ),
                               ]
                               else if (_commitment!.status == 'missed') ...[
-                                const Row(
+                                Row(
                                   children: [
                                     Icon(Icons.info_outline),
                                     SizedBox(width: 8),
-                                    Text('আজকের সংকল্প সম্পন্ন হয়নি'),
+                                    Text(AppStrings.of(context).dailyCommitmentMissed),
                                   ],
                                 ),
                                 const SizedBox(height: 16),
@@ -305,8 +305,8 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                                     icon: const Icon(
                                       Icons.self_improvement_outlined,
                                     ),
-                                    label: const Text(
-                                      'আজকের অভিজ্ঞতা বুঝে নিই',
+                                    label: Text(
+                                      AppStrings.of(context).understandTodaysExperienceTitle,
                                     ),
                                   ),
                                 ),
@@ -329,8 +329,8 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                                         : const Icon(
                                             Icons.check_circle_outline,
                                           ),
-                                    label: const Text(
-                                      'আমি পালন করেছি',
+                                    label: Text(
+                                      AppStrings.of(context).commitmentCompletedLabel,
                                     ),
                                   ),
                                 ),
@@ -344,8 +344,8 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                                     icon: const Icon(
                                       Icons.event_busy_outlined,
                                     ),
-                                    label: const Text(
-                                      'আমি পালন করতে পারিনি',
+                                    label: Text(
+                                      AppStrings.of(context).commitmentNotCompletedLabel,
                                     ),
                                   ),
                                 ),
@@ -361,4 +361,9 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
     );
   }
 }
+
+
+
+
+
 

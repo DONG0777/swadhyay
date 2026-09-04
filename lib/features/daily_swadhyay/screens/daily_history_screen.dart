@@ -198,11 +198,11 @@ class _DailyHistoryScreenState extends State<DailyHistoryScreen> {
                     ),
                     const SizedBox(height: 12),
                     if (_history.isEmpty)
-                      const Card(
+                      Card(
                         child: Padding(
                           padding: EdgeInsets.all(20),
                           child: Text(
-                            'এখনও কোনো দৈনিক সংকল্পের ইতিহাস তৈরি হয়নি।',
+                            AppStrings.of(context).noDailyCommitmentHistory,
                           ),
                         ),
                       )
@@ -270,5 +270,10 @@ class _DailyHistoryScreenState extends State<DailyHistoryScreen> {
     );
   }
 }
+
+
+
+
+
 
 
