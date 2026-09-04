@@ -1,5 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 
+import '../../../core/localization/app_strings.dart';
+
 import '../history/daily_history.dart';
 import '../history/daily_history_service.dart';
 
@@ -50,27 +52,14 @@ class _DailyHistoryScreenState extends State<DailyHistoryScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('ইতিহাস লোড করা যায়নি: $error'),
+          content: Text(AppStrings.of(context).dailyHistoryLoadFailed(error)),
         ),
       );
     }
   }
 
-  String _formatDate(DateTime date) {
-    const months = [
-      'জানুয়ারি',
-      'ফেব্রুয়ারি',
-      'মার্চ',
-      'এপ্রিল',
-      'মে',
-      'জুন',
-      'জুলাই',
-      'আগস্ট',
-      'সেপ্টেম্বর',
-      'অক্টোবর',
-      'নভেম্বর',
-      'ডিসেম্বর',
-    ];
+  String _formatDate(BuildContext context, DateTime date) {
+    final months = AppStrings.of(context).monthNames;
 
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
@@ -117,14 +106,14 @@ class _DailyHistoryScreenState extends State<DailyHistoryScreen> {
     return const Icon(Icons.schedule_outlined);
   }
 
-  String _statusText(String status) {
+  String _statusText(BuildContext context, String status) {
     switch (status) {
       case 'completed':
-        return 'সম্পন্ন';
+        return AppStrings.of(context).completed;
       case 'missed':
-        return 'অসম্পন্ন';
+        return AppStrings.of(context).missed;
       default:
-        return 'চলমান';
+        return AppStrings.of(context).dailyCommitmentInProgress;
     }
   }
 
@@ -134,7 +123,7 @@ class _DailyHistoryScreenState extends State<DailyHistoryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('আমার যাত্রা'),
+        title: Text(AppStrings.of(context).myJourney),
       ),
       body: _isLoading
           ? const Center(
@@ -149,12 +138,12 @@ class _DailyHistoryScreenState extends State<DailyHistoryScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'আমার গত ৩০ দিন',
+                      AppStrings.of(context).myLast30Days,
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'নিজের যাত্রাকে দেখুন—তুলনা করার জন্য নয়, বুঝে ওঠার জন্য।',
+                    Text(
+                      AppStrings.of(context).journeyDescription,
                     ),
                     const SizedBox(height: 20),
                     if (summary != null) ...[
@@ -162,13 +151,13 @@ class _DailyHistoryScreenState extends State<DailyHistoryScreen> {
                         children: [
                           _summaryCard(
                             context,
-                            'মোট সংকল্প',
+                            AppStrings.of(context).totalCommitments,
                             summary.totalCommitments.toString(),
                           ),
                           const SizedBox(width: 8),
                           _summaryCard(
                             context,
-                            'সম্পন্ন',
+                            AppStrings.of(context).completed,
                             summary.completedCommitments.toString(),
                           ),
                         ],
@@ -177,13 +166,13 @@ class _DailyHistoryScreenState extends State<DailyHistoryScreen> {
                         children: [
                           _summaryCard(
                             context,
-                            'অসম্পন্ন',
+                            AppStrings.of(context).missed,
                             summary.missedCommitments.toString(),
                           ),
                           const SizedBox(width: 8),
                           _summaryCard(
                             context,
-                            'Reflection',
+                            AppStrings.of(context).reflections,
                             summary.totalReflections.toString(),
                           ),
                         ],
@@ -192,7 +181,7 @@ class _DailyHistoryScreenState extends State<DailyHistoryScreen> {
                       Card(
                         child: ListTile(
                           leading: const Icon(Icons.insights_outlined),
-                          title: const Text('সফলতার হার'),
+                          title: Text(AppStrings.of(context).successRate),
                           trailing: Text(
                             '${summary.completionRate.toStringAsFixed(0)}%',
                             style: Theme.of(context)
@@ -204,7 +193,7 @@ class _DailyHistoryScreenState extends State<DailyHistoryScreen> {
                     ],
                     const SizedBox(height: 28),
                     Text(
-                      'দিনভিত্তিক যাত্রা',
+                      AppStrings.of(context).dayByDayJourney,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 12),
@@ -241,9 +230,7 @@ class _DailyHistoryScreenState extends State<DailyHistoryScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        _formatDate(
-                                          item.commitment.commitmentDate,
-                                        ),
+                                        _formatDate(context, item.commitment.commitmentDate),
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleMedium,
@@ -258,13 +245,14 @@ class _DailyHistoryScreenState extends State<DailyHistoryScreen> {
                                       const SizedBox(height: 8),
                                       Text(
                                         _statusText(
+                                          context,
                                           item.commitment.status,
                                         ),
                                       ),
                                       if (item.hasReflection) ...[
                                         const SizedBox(height: 4),
-                                        const Text(
-                                          'আত্ম-বিশ্লেষণ আছে',
+                                        Text(
+                                          AppStrings.of(context).reflectionAvailable,
                                         ),
                                       ],
                                     ],
@@ -282,3 +270,5 @@ class _DailyHistoryScreenState extends State<DailyHistoryScreen> {
     );
   }
 }
+
+

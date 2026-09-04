@@ -718,6 +718,124 @@ class AppStrings {
         return 'পরিবর্তন সংরক্ষণ করুন';
     }
   }
+  String get dailyCommitmentInProgress => switch (languageCode) {
+    'hi' => 'प्रगति पर है',
+    'en' => 'In Progress',
+    _ => 'চলমান',
+  };
+  String dailyHistoryLoadFailed(Object error) => switch (languageCode) {
+    'hi' => 'इतिहास लोड नहीं हो सका: $error',
+    'en' => 'History could not be loaded: $error',
+    _ => 'ইতিহাস লোড করা যায়নি: $error',
+  };
+
+  String get myLast30Days => switch (languageCode) {
+    'hi' => 'मेरे पिछले 30 दिन',
+    'en' => 'My Last 30 Days',
+    _ => 'আমার গত ৩০ দিন',
+  };
+
+  String get journeyDescription => switch (languageCode) {
+    'hi' => 'अपनी यात्रा को देखें—तुलना करने के लिए नहीं, बल्कि समझने के लिए।',
+    'en' => 'Look at your journey—not to compare, but to understand yourself.',
+    _ => 'নিজের যাত্রাকে দেখুন—তুলনা করার জন্য নয়, বুঝে ওঠার জন্য।',
+  };
+
+  String get totalCommitments => switch (languageCode) {
+    'hi' => 'कुल संकल्प',
+    'en' => 'Total Commitments',
+    _ => 'মোট সংকল্প',
+  };
+
+  String get completed => switch (languageCode) {
+    'hi' => 'पूरा हुआ',
+    'en' => 'Completed',
+    _ => 'সম্পন্ন',
+  };
+
+  String get missed => switch (languageCode) {
+    'hi' => 'अधूरा',
+    'en' => 'Not Completed',
+    _ => 'অসম্পন্ন',
+  };
+
+  String get reflections => switch (languageCode) {
+    'hi' => 'आत्म-चिंतन',
+    'en' => 'Reflections',
+    _ => 'আত্ম-বিশ্লেষণ',
+  };
+
+  String get successRate => switch (languageCode) {
+    'hi' => 'सफलता दर',
+    'en' => 'Success Rate',
+    _ => 'সফলতার হার',
+  };
+
+  String get dayByDayJourney => switch (languageCode) {
+    'hi' => 'दिन-प्रतिदिन की यात्रा',
+    'en' => 'Day-by-Day Journey',
+    _ => 'দিনভিত্তিক যাত্রা',
+  };
+
+  String get noDailyCommitmentHistory => switch (languageCode) {
+    'hi' => 'अभी तक किसी दैनिक संकल्प का इतिहास नहीं बना है।',
+    'en' => 'No daily commitment history has been created yet.',
+    _ => 'এখনও কোনো দৈনিক সংকল্পের ইতিহাস তৈরি হয়নি।',
+  };
+
+  String get reflectionAvailable => switch (languageCode) {
+    'hi' => 'आत्म-चिंतन उपलब्ध है',
+    'en' => 'Reflection available',
+    _ => 'আত্ম-বিশ্লেষণ আছে',
+  };
+
+  List<String> get monthNames => switch (languageCode) {
+    'hi' => [
+      'जनवरी',
+      'फ़रवरी',
+      'मार्च',
+      'अप्रैल',
+      'मई',
+      'जून',
+      'जुलाई',
+      'अगस्त',
+      'सितंबर',
+      'अक्टूबर',
+      'नवंबर',
+      'दिसंबर',
+    ],
+    'en' => [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ],
+    _ => [
+      'জানুয়ারি',
+      'ফেব্রুয়ারি',
+      'মার্চ',
+      'এপ্রিল',
+      'মে',
+      'জুন',
+      'জুলাই',
+      'আগস্ট',
+      'সেপ্টেম্বর',
+      'অক্টোবর',
+      'নভেম্বর',
+      'ডিসেম্বর',
+    ],
+  };
 }
+
+
+
 
 
