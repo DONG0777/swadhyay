@@ -63,7 +63,7 @@ class DailyReflectionService {
 
     if (!commitmentCompleted && trimmedObstacle == null) {
       throw ArgumentError(
-        'সংকল্প পূরণ না হলে বাধার কারণ লেখা বাধ্যতামূলক।',
+        'à¦¸à¦‚à¦•à¦²à§à¦ª à¦ªà§‚à¦°à¦£ à¦¨à¦¾ à¦¹à¦²à§‡ à¦¬à¦¾à¦§à¦¾à¦° à¦•à¦¾à¦°à¦£ à¦²à§‡à¦–à¦¾ à¦¬à¦¾à¦§à§à¦¯à¦¤à¦¾à¦®à§‚à¦²à¦•à¥¤',
       );
     }
 

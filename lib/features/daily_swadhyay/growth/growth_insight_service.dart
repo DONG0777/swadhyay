@@ -1,4 +1,6 @@
-﻿import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../core/localization/app_strings.dart';
 
 import '../history/daily_history_service.dart';
 import 'growth_insight.dart';
@@ -9,8 +11,9 @@ class GrowthInsightService {
   GrowthInsightService({SupabaseClient? client})
       : _historyService = DailyHistoryService(client: client);
 
-  Future<GrowthInsight> getSevenDayInsight() async {
+  Future<GrowthInsight> getSevenDayInsight({String languageCode = 'bn'}) async {
     final history = await _historyService.getRecentHistory(days: 7);
+    final strings = AppStrings.forLanguage(languageCode);
 
     var completed = 0;
     var missed = 0;
@@ -39,6 +42,7 @@ class GrowthInsightService {
         : (reflections / resolvedCommitments) * 100;
 
     final message = _buildMessage(
+      strings: strings,
       total: resolvedCommitments,
       completed: completed,
       missed: missed,
@@ -59,6 +63,7 @@ class GrowthInsightService {
   }
 
   (String, String) _buildMessage({
+    required AppStrings strings,
     required int total,
     required int completed,
     required int missed,
@@ -67,49 +72,49 @@ class GrowthInsightService {
   }) {
     if (total == 0) {
       return (
-        'এখনও যথেষ্ট data নেই',
-        'কয়েকটি দৈনিক সংকল্প সম্পন্ন বা অসম্পন্ন হিসেবে নথিভুক্ত হলে তোমার নিজের যাত্রা থেকে insight তৈরি হবে।',
+        strings.growthInsightNoDataHeadline,
+        strings.growthInsightNoDataDetail,
       );
     }
 
     if (total < 3) {
       return (
-        'যাত্রা শুরু হয়েছে',
-        'এখনও pattern বলার মতো যথেষ্ট data নেই। আরও কয়েকটি দিনের সংকল্প ও আত্ম-বিশ্লেষণ তৈরি হতে দাও।',
+        strings.growthInsightStartedHeadline,
+        strings.growthInsightStartedDetail,
       );
     }
 
     if (completionRate >= 80 && missed == 0) {
       return (
-        'তোমার ধারাবাহিকতা ভালো',
-        'সংকল্পগুলো বাস্তবে করার ক্ষেত্রে তুমি এখন ভালো momentum তৈরি করছ। এবার সংকল্পের মান আরও নির্দিষ্ট করা যায়।',
+        strings.growthInsightConsistencyHeadline,
+        strings.growthInsightConsistencyDetail,
       );
     }
 
     if (completionRate >= 60) {
       return (
-        'ভিত্তি তৈরি হচ্ছে',
-        'তোমার কিছু সংকল্প সফল হচ্ছে। যেগুলো হয়নি, সেগুলোর কারণ দেখলে পরের কয়েক দিনে উন্নতির স্পষ্ট পথ পাওয়া যাবে।',
+        strings.growthInsightFoundationHeadline,
+        strings.growthInsightFoundationDetail,
       );
     }
 
     if (missed > completed) {
       return (
-        'সংকল্পকে আরও ছোট করো',
-        'এই ৭ দিনে অসম্পন্ন সংকল্প বেশি। বড় লক্ষ্য না নিয়ে আরও ছোট এবং নির্দিষ্ট কাজ দিয়ে শুরু করা উপকারী হতে পারে।',
+        strings.growthInsightSmallerHeadline,
+        strings.growthInsightSmallerDetail,
       );
     }
 
     if (reflections == 0) {
       return (
-        'কাজের সঙ্গে আত্ম-বিশ্লেষণও দরকার',
-        'শুধু সংকল্প নয়—দিন শেষে কয়েক মিনিট নিজের অভিজ্ঞতা লিখলে pattern বোঝা সহজ হবে।',
+        strings.growthInsightReflectionHeadline,
+        strings.growthInsightReflectionDetail,
       );
     }
 
     return (
-      'ধীরে, কিন্তু সচেতনভাবে এগোও',
-      'সংকল্প, কাজ এবং আত্ম-বিশ্লেষণ—এই তিনটিকে নিয়মিত রাখাই এখন সবচেয়ে গুরুত্বপূর্ণ।',
+      strings.growthInsightMindfulHeadline,
+      strings.growthInsightMindfulDetail,
     );
   }
 }

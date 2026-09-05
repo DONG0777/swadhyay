@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class AppStrings {
   static AppStrings of(BuildContext context) {
@@ -268,6 +268,203 @@ class AppStrings {
         _ => 'একসঙ্গে সূর্য নমস্কারের অনুশীলন করুন',
       };
 
+  static AppStrings forLanguage(String languageCode) {
+    return AppStrings._(languageCode);
+  }
+  String get growthInsightNoDataHeadline {
+    switch (languageCode) {
+      case 'hi':
+        return 'अभी पर्याप्त जानकारी नहीं है';
+      case 'en':
+        return 'Not Enough Data Yet';
+      default:
+        return 'এখনও যথেষ্ট তথ্য নেই';
+    }
+  }
+
+  String get growthInsightNoDataDetail {
+    switch (languageCode) {
+      case 'hi':
+        return 'कुछ दैनिक संकल्प पूरे या अधूरे के रूप में दर्ज होने के बाद आपकी अपनी यात्रा से समझ विकसित होगी।';
+      case 'en':
+        return 'Once a few daily commitments are recorded as completed or missed, insights will emerge from your own journey.';
+      default:
+        return 'কয়েকটি দৈনিক সংকল্প সম্পন্ন বা অসম্পন্ন হিসেবে নথিভুক্ত হলে তোমার নিজের যাত্রা থেকে একটি স্পষ্ট ধারণা তৈরি হবে।';
+    }
+  }
+
+  String get growthInsightStartedHeadline {
+    switch (languageCode) {
+      case 'hi':
+        return 'यात्रा शुरू हो गई है';
+      case 'en':
+        return 'Your Journey Has Started';
+      default:
+        return 'যাত্রা শুরু হয়েছে';
+    }
+  }
+
+  String get growthInsightStartedDetail {
+    switch (languageCode) {
+      case 'hi':
+        return 'अभी कोई स्पष्ट पैटर्न समझने के लिए पर्याप्त जानकारी नहीं है। कुछ और दिनों के संकल्प और आत्म-चिंतन दर्ज होने दें।';
+      case 'en':
+        return 'There is not enough data to identify a pattern yet. Let a few more days of commitments and reflections build up.';
+      default:
+        return 'এখনও কোনো স্পষ্ট ধারা বোঝার মতো যথেষ্ট তথ্য নেই। আরও কয়েকটি দিনের সংকল্প ও আত্ম-বিশ্লেষণ তৈরি হতে দাও।';
+    }
+  }
+
+  String get growthInsightConsistencyHeadline {
+    switch (languageCode) {
+      case 'hi':
+        return 'आपकी निरंतरता अच्छी है';
+      case 'en':
+        return 'Your Consistency Is Good';
+      default:
+        return 'তোমার ধারাবাহিকতা ভালো';
+    }
+  }
+
+  String get growthInsightConsistencyDetail {
+    switch (languageCode) {
+      case 'hi':
+        return 'संकल्पों को वास्तव में पूरा करने में आप अच्छी निरंतरता बना रहे हैं। अब संकल्पों को और अधिक स्पष्ट बनाया जा सकता है।';
+      case 'en':
+        return 'You are building good momentum in following through on your commitments. Now you can make your commitments more specific.';
+      default:
+        return 'সংকল্পগুলো বাস্তবে করার ক্ষেত্রে তুমি এখন ভালো ধারাবাহিকতা তৈরি করছ। এবার সংকল্পগুলো আরও নির্দিষ্ট করা যায়।';
+    }
+  }
+
+  String get growthInsightFoundationHeadline {
+    switch (languageCode) {
+      case 'hi':
+        return 'बुनियाद बन रही है';
+      case 'en':
+        return 'A Foundation Is Taking Shape';
+      default:
+        return 'ভিত্তি তৈরি হচ্ছে';
+    }
+  }
+
+  String get growthInsightFoundationDetail {
+    switch (languageCode) {
+      case 'hi':
+        return 'आपके कुछ संकल्प सफल हो रहे हैं। जो पूरे नहीं हुए, उनके कारण देखने से अगले कुछ दिनों में सुधार का स्पष्ट रास्ता मिल सकता है।';
+      case 'en':
+        return 'Some of your commitments are succeeding. Looking at why others were not completed can reveal a clear path for improvement over the next few days.';
+      default:
+        return 'তোমার কিছু সংকল্প সফল হচ্ছে। যেগুলো হয়নি, সেগুলোর কারণ দেখলে পরের কয়েক দিনে উন্নতির স্পষ্ট পথ পাওয়া যাবে।';
+    }
+  }
+
+  String get growthInsightSmallerHeadline {
+    switch (languageCode) {
+      case 'hi':
+        return 'संकल्प को और छोटा करें';
+      case 'en':
+        return 'Make Your Commitment Smaller';
+      default:
+        return 'সংকল্পকে আরও ছোট করো';
+    }
+  }
+
+  String get growthInsightSmallerDetail {
+    switch (languageCode) {
+      case 'hi':
+        return 'इन 7 दिनों में अधूरे संकल्प अधिक हैं। बड़े लक्ष्य लेने के बजाय छोटे और स्पष्ट काम से शुरुआत करना उपयोगी हो सकता है।';
+      case 'en':
+        return 'There have been more incomplete commitments in these 7 days. It may help to start with smaller, more specific actions instead of larger goals.';
+      default:
+        return 'এই ৭ দিনে অসম্পন্ন সংকল্প বেশি। বড় লক্ষ্য না নিয়ে আরও ছোট এবং নির্দিষ্ট কাজ দিয়ে শুরু করা উপকারী হতে পারে।';
+    }
+  }
+
+  String get growthInsightReflectionHeadline {
+    switch (languageCode) {
+      case 'hi':
+        return 'काम के साथ आत्म-चिंतन भी ज़रूरी है';
+      case 'en':
+        return 'Action Needs Reflection Too';
+      default:
+        return 'কাজের সঙ্গে আত্ম-বিশ্লেষণও দরকার';
+    }
+  }
+
+  String get growthInsightReflectionDetail {
+    switch (languageCode) {
+      case 'hi':
+        return 'सिर्फ संकल्प ही नहीं—दिन के अंत में कुछ मिनट अपने अनुभव लिखने से अपने व्यवहार की धारा समझना आसान होगा।';
+      case 'en':
+        return 'Commitments are not the whole picture—writing about your experience for a few minutes at the end of the day can make patterns easier to understand.';
+      default:
+        return 'শুধু সংকল্প নয়—দিন শেষে কয়েক মিনিট নিজের অভিজ্ঞতা লিখলে নিজের আচরণের ধারা বোঝা সহজ হবে।';
+    }
+  }
+
+  String get growthInsightMindfulHeadline {
+    switch (languageCode) {
+      case 'hi':
+        return 'धीरे, लेकिन सजग होकर आगे बढ़ें';
+      case 'en':
+        return 'Move Slowly, But Mindfully';
+      default:
+        return 'ধীরে, কিন্তু সচেতনভাবে এগোও';
+    }
+  }
+
+  String get growthInsightMindfulDetail {
+    switch (languageCode) {
+      case 'hi':
+        return 'संकल्प, कार्य और आत्म-चिंतन—इन तीनों को नियमित रखना अभी सबसे महत्वपूर्ण है।';
+      case 'en':
+        return 'For now, the most important thing is to keep commitment, action, and reflection consistent.';
+      default:
+        return 'সংকল্প, কাজ এবং আত্ম-বিশ্লেষণ—এই তিনটিকে নিয়মিত রাখাই এখন সবচেয়ে গুরুত্বপূর্ণ।';
+    }
+  }
+  String growthInsightLoadFailed(Object error) => switch (languageCode) {
+        'hi' => 'Growth Insight लोड नहीं हो सका: $error',
+        'en' => 'Growth Insight could not be loaded: $error',
+        _ => 'Growth Insight লোড করা যায়নি: $error',
+      };
+
+  String get growthInsightNotFound => switch (languageCode) {
+        'hi' => 'Insight उपलब्ध नहीं है।',
+        'en' => 'No insight available.',
+        _ => 'Insight পাওয়া যায়নি।',
+      };
+
+  String get sevenDayGrowthInsightTitle => switch (languageCode) {
+        'hi' => '7 दिनों की प्रगति की झलक',
+        'en' => '7-Day Growth Insight',
+        _ => '৭ দিনের অগ্রগতির বিশ্লেষণ',
+      };
+
+  String get reflectionMetric => switch (languageCode) {
+        'hi' => 'आत्म-चिंतन',
+        'en' => 'Reflection',
+        _ => 'আত্ম-বিশ্লেষণ',
+      };
+
+  String get reflectionCoverage => switch (languageCode) {
+        'hi' => 'आत्म-चिंतन कवरेज',
+        'en' => 'Reflection Coverage',
+        _ => 'আত্ম-বিশ্লেষণের হার',
+      };
+
+  String get reflectionCoverageDescription => switch (languageCode) {
+        'hi' => 'जिन दिनों संकल्प था, उनमें कितने दिनों आत्म-चिंतन हुआ',
+        'en' => 'How many days had a reflection among the days when you had a commitment',
+        _ => 'যে দিন সংকল্প ছিল, তার মধ্যে কত দিনে আত্ম-বিশ্লেষণ হয়েছে',
+      };
+
+  String get insightPersonalDataDescription => switch (languageCode) {
+        'hi' => 'यह insight आपके अपने data से तैयार हुआ है।',
+        'en' => 'This insight is generated from your own data.',
+        _ => 'এই insight তোমার নিজের data থেকে তৈরি।',
+      };
   String get growthInsight => switch (languageCode) {
         'hi' => 'ग्रोथ इनसाइट',
         'en' => 'Growth Insight',
@@ -535,7 +732,7 @@ class AppStrings {
   String dailyCommitmentStatusUpdateFailed(Object error) => switch (languageCode) {
         'hi' => 'संकल्प की स्थिति बदली नहीं जा सकी: $error',
         'en' => 'The commitment status could not be changed: $error',
-        _ => 'সংকল্পের status পরিবর্তন করা যায়নি: $error',
+        _ => 'সংকল্পের অবস্থা পরিবর্তন করা যায়নি: $error',
       };
 
   String get dailyCommitmentCompleted => switch (languageCode) {
@@ -918,11 +1115,3 @@ class AppStrings {
   };
 
 }
-
-
-
-
-
-
-
-

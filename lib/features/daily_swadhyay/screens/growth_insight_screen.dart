@@ -1,4 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+
+import '../../../core/localization/app_strings.dart';
 
 import '../growth/growth_insight.dart';
 import '../growth/growth_insight_service.dart';
@@ -16,16 +18,27 @@ class _GrowthInsightScreenState extends State<GrowthInsightScreen> {
 
   GrowthInsight? _insight;
   bool _isLoading = true;
+  String? _loadedLanguageCode;
 
   @override
-  void initState() {
-    super.initState();
-    _loadInsight();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final languageCode = Localizations.localeOf(context).languageCode;
+
+    if (_loadedLanguageCode != languageCode) {
+      _loadedLanguageCode = languageCode;
+      _loadInsight(languageCode);
+    }
   }
 
-  Future<void> _loadInsight() async {
+  Future<void> _loadInsight([String? languageCode]) async {
+    final resolvedLanguageCode = languageCode ??
+        Localizations.localeOf(context).languageCode;
     try {
-      final insight = await _service.getSevenDayInsight();
+      final insight = await _service.getSevenDayInsight(
+        languageCode: resolvedLanguageCode,
+      );
 
       if (!mounted) {
         return;
@@ -46,7 +59,7 @@ class _GrowthInsightScreenState extends State<GrowthInsightScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Growth Insight লোড করা যায়নি: $error'),
+          content: Text(AppStrings.of(context).growthInsightLoadFailed(error)),
         ),
       );
     }
@@ -85,15 +98,15 @@ class _GrowthInsightScreenState extends State<GrowthInsightScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('৭ দিনের Growth Insight'),
+        title: Text(AppStrings.of(context).sevenDayGrowthInsightTitle),
       ),
       body: _isLoading
-          ? const Center(
+          ? Center(
               child: CircularProgressIndicator(),
             )
           : insight == null
-              ? const Center(
-                  child: Text('Insight পাওয়া যায়নি।'),
+              ? Center(
+                  child: Text(AppStrings.of(context).growthInsightNotFound),
                 )
               : RefreshIndicator(
                   onRefresh: _loadInsight,
@@ -123,13 +136,13 @@ class _GrowthInsightScreenState extends State<GrowthInsightScreen> {
                           children: [
                             _metric(
                               context,
-                              'মোট সংকল্প',
+                              AppStrings.of(context).totalCommitments,
                               insight.totalCommitments.toString(),
                             ),
                             const SizedBox(width: 8),
                             _metric(
                               context,
-                              'সম্পন্ন',
+                              AppStrings.of(context).completed,
                               insight.completedCommitments.toString(),
                             ),
                           ],
@@ -138,13 +151,13 @@ class _GrowthInsightScreenState extends State<GrowthInsightScreen> {
                           children: [
                             _metric(
                               context,
-                              'অসম্পন্ন',
+                              AppStrings.of(context).missed,
                               insight.missedCommitments.toString(),
                             ),
                             const SizedBox(width: 8),
                             _metric(
                               context,
-                              'Reflection',
+                              AppStrings.of(context).reflectionMetric,
                               insight.reflectionCount.toString(),
                             ),
                           ],
@@ -155,7 +168,7 @@ class _GrowthInsightScreenState extends State<GrowthInsightScreen> {
                             leading: const Icon(
                               Icons.insights_outlined,
                             ),
-                            title: const Text('সফলতার হার'),
+                            title: Text(AppStrings.of(context).successRate),
                             trailing: Text(
                               '${insight.completionRate.toStringAsFixed(0)}%',
                               style: Theme.of(context)
@@ -170,12 +183,8 @@ class _GrowthInsightScreenState extends State<GrowthInsightScreen> {
                             leading: const Icon(
                               Icons.self_improvement_outlined,
                             ),
-                            title: const Text(
-                              'Reflection coverage',
-                            ),
-                            subtitle: const Text(
-                              'যে দিন সংকল্প ছিল, তার মধ্যে কত দিনে আত্ম-বিশ্লেষণ হয়েছে',
-                            ),
+                            title: Text(AppStrings.of(context).reflectionCoverage),
+                            subtitle: Text(AppStrings.of(context).reflectionCoverageDescription),
                             trailing: Text(
                               '${insight.reflectionRate.toStringAsFixed(0)}%',
                               style: Theme.of(context)
@@ -185,9 +194,7 @@ class _GrowthInsightScreenState extends State<GrowthInsightScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        const Text(
-                          'এই insight তোমার নিজের data থেকে তৈরি।',
-                        ),
+                        Text(AppStrings.of(context).insightPersonalDataDescription),
                       ],
                     ),
                   ),
