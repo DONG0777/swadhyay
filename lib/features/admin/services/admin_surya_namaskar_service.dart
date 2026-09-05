@@ -17,8 +17,21 @@ class AdminSuryaNamaskarService {
         })
         .eq('id', suryaNamaskarId);
   }
-  Future<void> updateBengaliContent({
+
+  Future<List<Map<String, dynamic>>> getTranslations({
     required String suryaNamaskarId,
+  }) async {
+    final data = await _client
+        .from('surya_namaskar_translations')
+        .select()
+        .eq('surya_namaskar_id', suryaNamaskarId);
+
+    return List<Map<String, dynamic>>.from(data);
+  }
+
+  Future<void> upsertTranslation({
+    required String suryaNamaskarId,
+    required String languageCode,
     required String title,
     String? mantra,
     String? mantraMeaning,
@@ -28,15 +41,18 @@ class AdminSuryaNamaskarService {
   }) async {
     await _client
         .from('surya_namaskar_translations')
-        .update({
-          'title': title,
-          'mantra': mantra,
-          'mantra_meaning': mantraMeaning,
-          'description': description,
-          'instructions': instructions,
-          'benefits': benefits,
-        })
-        .eq('surya_namaskar_id', suryaNamaskarId)
-        .eq('language_code', 'bn');
+        .upsert(
+          {
+            'surya_namaskar_id': suryaNamaskarId,
+            'language_code': languageCode,
+            'title': title,
+            'mantra': mantra,
+            'mantra_meaning': mantraMeaning,
+            'description': description,
+            'instructions': instructions,
+            'benefits': benefits,
+          },
+          onConflict: 'surya_namaskar_id,language_code',
+        );
   }
 }

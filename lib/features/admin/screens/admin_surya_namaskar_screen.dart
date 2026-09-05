@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../surya_namaskar/models/surya_namaskar_content.dart';
 import '../../surya_namaskar/services/surya_namaskar_service.dart';
@@ -16,7 +16,17 @@ class _AdminSuryaNamaskarScreenState
     extends State<AdminSuryaNamaskarScreen> {
   final SuryaNamaskarService _service = SuryaNamaskarService();
 
+  static const List<String> _languageCodes = ['bn', 'hi', 'en'];
+
+  static const Map<String, String> _languageNames = {
+    'bn': 'বাংলা',
+    'hi': 'हिन्दी',
+    'en': 'English',
+  };
+
   late Future<List<SuryaNamaskarContent>> _contentFuture;
+
+  String _selectedLanguageCode = 'bn';
 
   @override
   void initState() {
@@ -25,7 +35,18 @@ class _AdminSuryaNamaskarScreenState
   }
 
   void _loadContent() {
-    _contentFuture = _service.getContent('bn');
+    _contentFuture = _service.getContent(_selectedLanguageCode);
+  }
+
+  Future<void> _selectLanguage(String languageCode) async {
+    if (_selectedLanguageCode == languageCode) {
+      return;
+    }
+
+    setState(() {
+      _selectedLanguageCode = languageCode;
+      _loadContent();
+    });
   }
 
   Future<void> _openEditor(
@@ -35,7 +56,10 @@ class _AdminSuryaNamaskarScreenState
     final saved = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
         builder: (_) =>
-            AdminSuryaNamaskarEditorScreen(step: step),
+            AdminSuryaNamaskarEditorScreen(
+              step: step,
+              languageCode: _selectedLanguageCode,
+            ),
       ),
     );
 
@@ -54,49 +78,78 @@ class _AdminSuryaNamaskarScreenState
       appBar: AppBar(
         title: const Text('Surya Namaskar Manager'),
       ),
-      body: FutureBuilder<List<SuryaNamaskarContent>>(
-        future: _contentFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: SegmentedButton<String>(
+              segments: [
+                for (final code in _languageCodes)
+                  ButtonSegment<String>(
+                    value: code,
+                    label: Text(_languageNames[code]!),
+                  ),
+              ],
+              selected: {_selectedLanguageCode},
+              onSelectionChanged: (selection) {
+                if (selection.isNotEmpty) {
+                  _selectLanguage(selection.first);
+                }
+              },
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder<List<SuryaNamaskarContent>>(
+              future: _contentFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Text(
-                  'Could not load Surya Namaskar content.\n\n${snapshot.error}',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-          }
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Text(
+                        'Could not load Surya Namaskar content.\n\n'
+                        '${snapshot.error}',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                }
 
-          final steps = snapshot.data ?? [];
+                final steps = snapshot.data ?? [];
 
-          if (steps.isEmpty) {
-            return const Center(
-              child: Text('No Surya Namaskar content found.'),
-            );
-          }
+                if (steps.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No Surya Namaskar content found.',
+                    ),
+                  );
+                }
 
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: steps.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 10),
-            itemBuilder: (context, index) {
-              final step = steps[index];
+                return ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: steps.length,
+                  separatorBuilder: (_, __) =>
+                      const SizedBox(height: 10),
+                  itemBuilder: (context, index) {
+                    final step = steps[index];
 
-              return _StepCard(
-                step: step,
-                onTap: () => _openEditor(context, step),
-              );
-            },
-          );
-        },
+                    return _StepCard(
+                      step: step,
+                      onTap: () => _openEditor(context, step),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

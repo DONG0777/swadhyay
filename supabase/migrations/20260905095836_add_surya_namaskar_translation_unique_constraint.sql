@@ -1,0 +1,3 @@
+﻿alter table public.surya_namaskar_translations
+add constraint surya_namaskar_translations_step_language_unique
+unique (surya_namaskar_id, language_code);

@@ -9,10 +9,12 @@ import '../services/admin_surya_namaskar_service.dart';
 
 class AdminSuryaNamaskarEditorScreen extends StatefulWidget {
   final SuryaNamaskarContent step;
+  final String languageCode;
 
   const AdminSuryaNamaskarEditorScreen({
     super.key,
     required this.step,
+    required this.languageCode,
   });
 
   @override
@@ -141,8 +143,9 @@ class _AdminSuryaNamaskarEditorScreenState
     try {
       final imageUrl = await _uploadSelectedImage();
 
-      await _service.updateBengaliContent(
+      await _service.upsertTranslation(
         suryaNamaskarId: widget.step.id,
+        languageCode: widget.languageCode,
         title: title,
         mantra: _nullable(_mantraController.text),
         mantraMeaning: _nullable(_meaningController.text),
