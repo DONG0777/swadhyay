@@ -1,4 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+
+import '../../../core/localization/app_language_controller.dart';
+import '../../../core/localization/app_strings.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../models/surya_namaskar_content.dart';
@@ -19,10 +22,19 @@ class _SuryaNamaskarScreenState extends State<SuryaNamaskarScreen> {
 
   int _currentStep = 0;
 
+  String? _loadedLanguageCode;
+
   @override
-  void initState() {
-    super.initState();
-    _contentFuture = _service.getContent('bn');
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final languageCode =
+        AppLanguageController.instance.languageCode;
+
+    if (_loadedLanguageCode != languageCode) {
+      _loadedLanguageCode = languageCode;
+      _contentFuture = _service.getContent(languageCode);
+    }
   }
 
   @override
@@ -56,7 +68,7 @@ class _SuryaNamaskarScreenState extends State<SuryaNamaskarScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'সূর্য নমস্কার',
+          AppStrings.of(context).suryaNamaskar,
           style: GoogleFonts.notoSansBengali(
             fontWeight: FontWeight.w600,
           ),
@@ -76,8 +88,7 @@ class _SuryaNamaskarScreenState extends State<SuryaNamaskarScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  'সূর্য নমস্কারের তথ্য লোড করা যায়নি।\n\n${snapshot.error}',
-                  textAlign: TextAlign.center,
+                  '${AppStrings.of(context).suryaNamaskarLoadFailed}\n\n${snapshot.error}',
                   style: GoogleFonts.notoSansBengali(),
                 ),
               ),
@@ -89,7 +100,7 @@ class _SuryaNamaskarScreenState extends State<SuryaNamaskarScreen> {
           if (content.isEmpty) {
             return Center(
               child: Text(
-                'কোনো সূর্য নমস্কারের তথ্য পাওয়া যায়নি।',
+                AppStrings.of(context).suryaNamaskarNoContent,
                 style: GoogleFonts.notoSansBengali(),
               ),
             );
@@ -155,14 +166,14 @@ class _StepProgressHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                'সূর্য নমস্কার',
+                AppStrings.of(context).suryaNamaskar,
                 style: GoogleFonts.notoSansBengali(
                   textStyle: theme.textTheme.titleMedium,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               Text(
-                'ধাপ ${currentStep + 1} / $totalSteps',
+                AppStrings.of(context).suryaNamaskarStep(currentStep + 1, totalSteps),
                 style: GoogleFonts.notoSansBengali(
                   textStyle: theme.textTheme.labelLarge,
                   fontWeight: FontWeight.w600,
@@ -248,7 +259,7 @@ class _StepContent extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    'ছবিটি লোড করা যায়নি।',
+                                    AppStrings.of(context).suryaNamaskarImageLoadFailed,
                                     style: GoogleFonts.notoSansBengali(),
                                   ),
                                 ],
@@ -269,7 +280,7 @@ class _StepContent extends StatelessWidget {
                   if (_hasText(step.mantraMeaning)) ...[
                     const SizedBox(height: 24),
                     _ContentSection(
-                      title: 'অর্থ',
+                      title: AppStrings.of(context).suryaNamaskarMeaning,
                       content: step.mantraMeaning!,
                       icon: Icons.lightbulb_outline,
                     ),
@@ -277,7 +288,7 @@ class _StepContent extends StatelessWidget {
                   if (_hasText(step.description)) ...[
                     const SizedBox(height: 24),
                     _ContentSection(
-                      title: 'বিবরণ',
+                      title: AppStrings.of(context).suryaNamaskarDescription,
                       content: step.description!,
                       icon: Icons.info_outline,
                     ),
@@ -285,7 +296,7 @@ class _StepContent extends StatelessWidget {
                   if (_hasText(step.instructions)) ...[
                     const SizedBox(height: 24),
                     _ContentSection(
-                      title: 'কীভাবে করবেন',
+                      title: AppStrings.of(context).suryaNamaskarInstructions,
                       content: step.instructions!,
                       icon: Icons.accessibility_new,
                     ),
@@ -293,7 +304,7 @@ class _StepContent extends StatelessWidget {
                   if (_hasText(step.benefits)) ...[
                     const SizedBox(height: 24),
                     _ContentSection(
-                      title: 'উপকারিতা',
+                      title: AppStrings.of(context).suryaNamaskarBenefits,
                       content: step.benefits!,
                       icon: Icons.favorite_border,
                     ),
@@ -388,7 +399,7 @@ class _MantraSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'মন্ত্র',
+            AppStrings.of(context).suryaNamaskarMantra,
             style: GoogleFonts.notoSansBengali(
               textStyle: theme.textTheme.labelLarge,
               color: theme.colorScheme.primary,
@@ -487,7 +498,7 @@ class _NavigationBar extends StatelessWidget {
                 onPressed: currentStep == 0 ? null : onPrevious,
                 icon: const Icon(Icons.arrow_back),
                 label: Text(
-                  'পূর্ববর্তী',
+                  AppStrings.of(context).suryaNamaskarPrevious,
                   style: GoogleFonts.notoSansBengali(),
                 ),
               ),
@@ -502,7 +513,7 @@ class _NavigationBar extends StatelessWidget {
                       : Icons.arrow_forward,
                 ),
                 label: Text(
-                  currentStep == totalSteps - 1 ? 'সম্পন্ন' : 'পরবর্তী',
+                  currentStep == totalSteps - 1 ? AppStrings.of(context).suryaNamaskarCompleted : AppStrings.of(context).suryaNamaskarNext,
                   style: GoogleFonts.notoSansBengali(),
                 ),
               ),

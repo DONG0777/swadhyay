@@ -106,6 +106,78 @@ class AppStrings {
         _ => 'সূর্য নমস্কারের ১২টি ধাপ শিখুন',
       };
 
+
+  String get suryaNamaskarMantra => switch (languageCode) {
+    'hi' => 'मंत्र',
+    'en' => 'Mantra',
+    _ => 'মন্ত্র',
+  };
+
+  String get suryaNamaskarMeaning => switch (languageCode) {
+    'hi' => 'अर्थ',
+    'en' => 'Meaning',
+    _ => 'অর্থ',
+  };
+
+  String get suryaNamaskarDescription => switch (languageCode) {
+    'hi' => 'विवरण',
+    'en' => 'Description',
+    _ => 'বিবরণ',
+  };
+
+  String get suryaNamaskarInstructions => switch (languageCode) {
+    'hi' => 'कैसे करें',
+    'en' => 'Instructions',
+    _ => 'কীভাবে করবেন',
+  };
+
+  String get suryaNamaskarBenefits => switch (languageCode) {
+    'hi' => 'लाभ',
+    'en' => 'Benefits',
+    _ => 'উপকারিতা',
+  };
+
+  String get suryaNamaskarPrevious => switch (languageCode) {
+    'hi' => 'पिछला',
+    'en' => 'Previous',
+    _ => 'পূর্ববর্তী',
+  };
+
+  String get suryaNamaskarNext => switch (languageCode) {
+    'hi' => 'अगला',
+    'en' => 'Next',
+    _ => 'পরবর্তী',
+  };
+
+  String get suryaNamaskarCompleted => switch (languageCode) {
+    'hi' => 'पूर्ण',
+    'en' => 'Completed',
+    _ => 'সম্পন্ন',
+  };
+
+  String suryaNamaskarStep(int step, int total) => switch (languageCode) {
+    'hi' => 'चरण $step / $total',
+    'en' => 'Step $step / $total',
+    _ => 'ধাপ $step / $total',
+  };
+
+  String get suryaNamaskarLoadFailed => switch (languageCode) {
+    'hi' => 'सूर्य नमस्कार की सामग्री लोड नहीं हो सकी।',
+    'en' => 'Could not load Surya Namaskar content.',
+    _ => 'সূর্য নমস্কারের বিষয়বস্তু লোড করা যায়নি।',
+  };
+
+  String get suryaNamaskarNoContent => switch (languageCode) {
+    'hi' => 'सूर्य नमस्कार की कोई सामग्री नहीं मिली।',
+    'en' => 'No Surya Namaskar content found.',
+    _ => 'কোনো সূর্য নমস্কার বিষয়বস্তু পাওয়া যায়নি।',
+  };
+
+  String get suryaNamaskarImageLoadFailed => switch (languageCode) {
+    'hi' => 'चित्र लोड नहीं हो सका',
+    'en' => 'Image could not be loaded',
+    _ => 'ছবিটি লোড করা যায়নি',
+  };
   String get learning => switch (languageCode) {
         'hi' => 'सीखना',
         'en' => 'Learning',
