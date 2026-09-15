@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../models/community_session.dart';
 import '../models/session_participant.dart';
@@ -7,6 +7,7 @@ import 'community_session_create_screen.dart';
 import 'community_session_agenda_screen.dart';
 import 'community_session_qr_screen.dart';
 import 'community_session_scanner_screen.dart';
+import '../../../core/localization/app_strings.dart';
 
 class CommunitySessionsScreen extends StatefulWidget {
   const CommunitySessionsScreen({super.key});
@@ -96,7 +97,7 @@ class _CommunitySessionsScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('সম্মিলিত সূর্য নমস্কার'),
+        title: Text(AppStrings.of(context).communitySessions),
         actions: [
           IconButton(
             onPressed: _createSession,

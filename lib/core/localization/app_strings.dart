@@ -328,6 +328,12 @@ class AppStrings {
         _ => 'একসঙ্গে অনুশীলন ও বিকাশ',
       };
 
+  String get communitySessions => switch (languageCode) {
+    'hi' => 'कम्युनिटी सत्र',
+    'en' => 'Community Sessions',
+    _ => 'কমিউনিটি সেশন',
+  };
+
   String get communitySuryaNamaskar => switch (languageCode) {
         'hi' => 'सामूहिक सूर्य नमस्कार',
         'en' => 'Community Surya Namaskar',
