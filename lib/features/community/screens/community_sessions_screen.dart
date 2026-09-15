@@ -10,7 +10,12 @@ import 'community_session_scanner_screen.dart';
 import '../../../core/localization/app_strings.dart';
 
 class CommunitySessionsScreen extends StatefulWidget {
-  const CommunitySessionsScreen({super.key});
+  final String? placeId;
+
+  const CommunitySessionsScreen({
+    super.key,
+    this.placeId,
+  });
 
   @override
   State<CommunitySessionsScreen> createState() =>
@@ -32,7 +37,7 @@ class _CommunitySessionsScreenState
 
   Future<void> _loadSessions() async {
     try {
-      final sessions = await _service.getUpcomingSessions();
+      final sessions = await _service.getUpcomingSessions(placeId: widget.placeId);
 
       if (!mounted) {
         return;
@@ -53,7 +58,7 @@ class _CommunitySessionsScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Community sessions লোড করা যায়নি: $error'),
+          content: Text(AppStrings.of(context).communitySessionsLoadFailed(error)),
         ),
       );
     }
@@ -101,7 +106,7 @@ class _CommunitySessionsScreenState
         actions: [
           IconButton(
             onPressed: _createSession,
-            tooltip: 'নতুন session',
+            tooltip: AppStrings.of(context).communityNewSession,
             icon: const Icon(Icons.add),
           ),
         ],
@@ -109,7 +114,7 @@ class _CommunitySessionsScreenState
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _createSession,
         icon: const Icon(Icons.add),
-        label: const Text('নতুন session'),
+          label: Text(AppStrings.of(context).communityNewSession),
       ),
       body: _isLoading
           ? const Center(
@@ -121,23 +126,21 @@ class _CommunitySessionsScreenState
                   ? ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       padding: const EdgeInsets.all(24),
-                      children: const [
-                        SizedBox(height: 80),
+                      children: [
+                        const SizedBox(height: 80),
                         Icon(
                           Icons.groups_outlined,
                           size: 56,
                         ),
                         SizedBox(height: 16),
                         Center(
-                          child: Text(
-                            'এখনও কোনো আসন্ন session নেই।',
+                          child: Text(AppStrings.of(context).communityNoUpcomingSessions,
                             textAlign: TextAlign.center,
                           ),
                         ),
                         SizedBox(height: 8),
                         Center(
-                          child: Text(
-                            'তুমি নিজেই প্রথম session তৈরি করতে পারো।',
+                          child: Text(AppStrings.of(context).communityCreateFirstSession,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -435,7 +438,7 @@ class _CommunitySessionDetailScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Session'),
+        title: Text(AppStrings.of(context).communitySession),
       ),
       body: _isLoading
           ? const Center(
@@ -457,7 +460,7 @@ class _CommunitySessionDetailScreenState
                     leading: const Icon(
                       Icons.location_on_outlined,
                     ),
-                    title: const Text('স্থান'),
+                    title: Text(AppStrings.of(context).communityLocation),
                     subtitle: Text(
                       widget.session.locationName,
                     ),
@@ -475,7 +478,7 @@ class _CommunitySessionDetailScreenState
                     leading: const Icon(
                       Icons.schedule_outlined,
                     ),
-                    title: const Text('সময়'),
+                    title: Text(AppStrings.of(context).communityTime),
                     subtitle: Text(
                       '${_formatDateTime(widget.session.startsAt)}'
                       ' — '
@@ -495,7 +498,7 @@ class _CommunitySessionDetailScreenState
                       leading: const Icon(
                         Icons.groups_outlined,
                       ),
-                      title: const Text('অংশগ্রহণকারী'),
+                      title: Text(AppStrings.of(context).communityParticipants),
                       trailing: Text(
                         _participantCount.toString(),
                         style: Theme.of(context)
@@ -512,8 +515,8 @@ class _CommunitySessionDetailScreenState
                       icon: const Icon(
                         Icons.schedule_outlined,
                       ),
-                      label: const Text(
-                        '১ ঘণ্টার কার্যক্রম দেখুন',
+                      label: Text(
+                        AppStrings.of(context).communityViewAgenda,
                       ),
                     ),
                   ),
@@ -526,8 +529,8 @@ class _CommunitySessionDetailScreenState
                         icon: const Icon(
                           Icons.qr_code_2_outlined,
                         ),
-                        label: const Text(
-                          'Check-in QR দেখান',
+                        label: Text(
+                          AppStrings.of(context).communityShowCheckinQr,
                         ),
                       ),
                     ),
@@ -540,12 +543,13 @@ class _CommunitySessionDetailScreenState
                       icon: const Icon(
                         Icons.qr_code_scanner_outlined,
                       ),
-                      label: const Text(
-                        'QR scan করে উপস্থিতি দিন',
+                      label: Text(
+                        AppStrings.of(context).communityScanQrForAttendance,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),                  if (isJoined)
+                  const SizedBox(height: 20),
+                  if (isJoined)
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
@@ -562,8 +566,8 @@ class _CommunitySessionDetailScreenState
                             : const Icon(
                                 Icons.exit_to_app_outlined,
                               ),
-                        label: const Text(
-                          'Session থেকে বের হোন',
+                        label: Text(
+                          AppStrings.of(context).communityLeaveSession,
                         ),
                       ),
                     )
@@ -584,8 +588,8 @@ class _CommunitySessionDetailScreenState
                             : const Icon(
                                 Icons.group_add_outlined,
                               ),
-                        label: const Text(
-                          'Session-এ যোগ দিন',
+                        label: Text(
+                          AppStrings.of(context).communityJoinSession,
                         ),
                       ),
                     ),

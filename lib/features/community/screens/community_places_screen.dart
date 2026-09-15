@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 
 import '../models/community_place.dart';
 import '../services/community_practice_service.dart';
+import 'community_sessions_screen.dart';
 import 'community_routine_screen.dart';
 import 'nearby_community_screen.dart';
 
@@ -106,15 +107,25 @@ class _CommunityPlacesScreenState
     );
 
     if (setupRoutine == true && mounted) {
-      await _openPlace(createdPlace);
+      await _openRoutineSetup(createdPlace);
     }
+  }
+
+  Future<void> _openRoutineSetup(CommunityPlace place) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => CommunityRoutineScreen(
+          place: place,
+        ),
+      ),
+    );
   }
 
   Future<void> _openPlace(CommunityPlace place) async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => CommunityRoutineScreen(
-          place: place,
+        builder: (_) => CommunitySessionsScreen(
+          placeId: place.id,
         ),
       ),
     );

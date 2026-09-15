@@ -1,10 +1,11 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import '../../../core/localization/app_strings.dart';
 
 import '../models/community_place.dart';
 import '../models/nearby_community_place.dart';
 import '../services/community_practice_service.dart';
-import 'community_routine_screen.dart';
+import 'community_sessions_screen.dart';
 
 class NearbyCommunityScreen extends StatefulWidget {
   const NearbyCommunityScreen({super.key});
@@ -346,8 +347,8 @@ class NearbyCommunityDetailScreen
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Community-এর routine ও upcoming session দেখতে Community কেন্দ্র খুলুন।',
+            Text(
+              AppStrings.of(context).communityUpcomingSessionsHint,
             ),
             const SizedBox(height: 16),
             FilledButton.icon(
@@ -357,9 +358,8 @@ class NearbyCommunityDetailScreen
 
                 Navigator.of(context).push(
                   MaterialPageRoute<void>(
-                    builder: (_) =>
-                        CommunityRoutineScreen(
-                      place: communityPlace,
+                    builder: (_) => CommunitySessionsScreen(
+                      placeId: communityPlace.id,
                     ),
                   ),
                 );
@@ -367,8 +367,8 @@ class NearbyCommunityDetailScreen
               icon: const Icon(
                 Icons.open_in_new_outlined,
               ),
-              label: const Text(
-                'Community কেন্দ্র খুলুন',
+              label: Text(
+                AppStrings.of(context).communityOpenCenter,
               ),
             ),
           ],
@@ -396,7 +396,3 @@ class CommunityPlaceAdapter {
     );
   }
 }
-
-
-
-

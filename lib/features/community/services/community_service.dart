@@ -11,16 +11,23 @@ class CommunityService {
 
   Future<List<CommunitySession>> getUpcomingSessions({
     int limit = 30,
+    String? placeId,
   }) async {
     if (limit <= 0) {
       throw ArgumentError('Limit must be greater than zero.');
     }
 
-    final data = await _client
+    var query = _client
         .from('community_sessions')
         .select()
         .eq('status', 'planned')
-        .gte('starts_at', DateTime.now().toUtc().toIso8601String())
+        .gte('starts_at', DateTime.now().toUtc().toIso8601String());
+
+    if (placeId != null && placeId.isNotEmpty) {
+      query = query.eq('place_id', placeId);
+    }
+
+    final data = await query
         .order('starts_at', ascending: true)
         .limit(limit);
 

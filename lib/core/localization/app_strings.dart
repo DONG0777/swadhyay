@@ -334,6 +334,126 @@ class AppStrings {
     _ => 'কমিউনিটি সেশন',
   };
 
+  String get communityOpenCenter => switch (languageCode) {
+    'hi' => 'कम्युनिटी केंद्र खोलें',
+    'en' => 'Open Community Center',
+    _ => 'Community কেন্দ্র খুলুন',
+  };
+
+  String get communityNewSession => switch (languageCode) {
+    'hi' => 'नया सत्र',
+    'en' => 'New Session',
+    _ => 'নতুন সেশন',
+  };
+
+  String get communityNoUpcomingSessions => switch (languageCode) {
+    'hi' => 'अभी कोई आगामी सत्र नहीं है।',
+    'en' => 'There are no upcoming sessions yet.',
+    _ => 'এখনও কোনো আসন্ন সেশন নেই।',
+  };
+
+  String get communityCreateFirstSession => switch (languageCode) {
+    'hi' => 'आप स्वयं पहला सत्र बना सकते हैं।',
+    'en' => 'You can create the first session yourself.',
+    _ => 'তুমি নিজেই প্রথম সেশন তৈরি করতে পারো।',
+  };
+
+  String communitySessionsLoadFailed(Object error) => switch (languageCode) {
+    'hi' => 'कम्युनिटी सत्र लोड नहीं हो सके: $error',
+    'en' => 'Could not load community sessions: $error',
+    _ => 'Community সেশন লোড করা যায়নি: $error',
+  };
+
+  String communitySessionInfoLoadFailed(Object error) => switch (languageCode) {
+    'hi' => 'सत्र की जानकारी लोड नहीं हो सकी: $error',
+    'en' => 'Could not load session information: $error',
+    _ => 'সেশনের তথ্য লোড করা যায়নি: $error',
+  };
+
+  String get communitySessionJoined => switch (languageCode) {
+    'hi' => 'सत्र में शामिल हो गए।',
+    'en' => 'You joined the session.',
+    _ => 'সেশনে যোগ দেওয়া হয়েছে।',
+  };
+
+  String communitySessionJoinFailed(Object error) => switch (languageCode) {
+    'hi' => 'सत्र में शामिल नहीं हो सके: $error',
+    'en' => 'Could not join the session: $error',
+    _ => 'সেশনে যোগ দেওয়া যায়নি: $error',
+  };
+
+  String get communitySessionLeft => switch (languageCode) {
+    'hi' => 'आप सत्र से बाहर आ गए हैं।',
+    'en' => 'You left the session.',
+    _ => 'সেশন থেকে বেরিয়ে এসেছেন।',
+  };
+
+  String communitySessionLeaveFailed(Object error) => switch (languageCode) {
+    'hi' => 'सत्र से बाहर नहीं आ सके: $error',
+    'en' => 'Could not leave the session: $error',
+    _ => 'সেশন থেকে বের হওয়া যায়নি: $error',
+  };
+
+  String get communitySession => switch (languageCode) {
+    'hi' => 'सत्र',
+    'en' => 'Session',
+    _ => 'সেশন',
+  };
+
+  String get communityLocation => switch (languageCode) {
+    'hi' => 'स्थान',
+    'en' => 'Location',
+    _ => 'স্থান',
+  };
+
+  String get communityTime => switch (languageCode) {
+    'hi' => 'समय',
+    'en' => 'Time',
+    _ => 'সময়',
+  };
+
+  String get communityParticipants => switch (languageCode) {
+    'hi' => 'प्रतिभागी',
+    'en' => 'Participants',
+    _ => 'অংশগ্রহণকারী',
+  };
+
+  String get communityViewAgenda => switch (languageCode) {
+    'hi' => '1 घंटे का कार्यक्रम देखें',
+    'en' => 'View 1-hour agenda',
+    _ => '১ ঘণ্টার কার্যক্রম দেখুন',
+  };
+
+  String get communityShowCheckinQr => switch (languageCode) {
+    'hi' => 'Check-in QR दिखाएँ',
+    'en' => 'Show Check-in QR',
+    _ => 'Check-in QR দেখান',
+  };
+
+  String get communityScanQrForAttendance => switch (languageCode) {
+    'hi' => 'QR स्कैन करके उपस्थिति दर्ज करें',
+    'en' => 'Scan QR to mark attendance',
+    _ => 'QR scan করে উপস্থিতি দিন',
+  };
+
+  String get communityLeaveSession => switch (languageCode) {
+    'hi' => 'सत्र से बाहर निकलें',
+    'en' => 'Leave Session',
+    _ => 'সেশন থেকে বের হোন',
+  };
+
+  String get communityJoinSession => switch (languageCode) {
+    'hi' => 'सत्र में शामिल हों',
+    'en' => 'Join Session',
+    _ => 'সেশনে যোগ দিন',
+  };
+
+  String get communityUpcomingSessionsHint => switch (languageCode) {
+    'hi' => 'इस कम्युनिटी केंद्र के आगामी सत्र देखने के लिए केंद्र खोलें।',
+    'en' => 'Open this community center to see upcoming sessions.',
+    _ => 'এই Community কেন্দ্রের আসন্ন সেশন দেখতে কেন্দ্রটি খুলুন।',
+  };
+
   String get communitySuryaNamaskar => switch (languageCode) {
         'hi' => 'सामूहिक सूर्य नमस्कार',
         'en' => 'Community Surya Namaskar',
