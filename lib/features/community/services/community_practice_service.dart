@@ -359,8 +359,48 @@ class CommunityPracticeService {
         .eq('session_id', sessionId)
         .order('sequence_number', ascending: true);
 
+    if (data.isEmpty) {
+      return [];
+    }
+
+    final itemIds = data
+        .map((row) => row['id'] as String)
+        .toList();
+
+    final translationData = await _client
+        .from('community_session_agenda_item_translations')
+        .select()
+        .inFilter('agenda_item_id', itemIds);
+
+    final translationsByItem =
+        <String, Map<String, CommunityAgendaItemTranslation>>{};
+
+    for (final row in translationData) {
+      final translation =
+          CommunityAgendaItemTranslation.fromMap(row);
+
+      final agendaItemId = row['agenda_item_id'] as String;
+
+      translationsByItem
+          .putIfAbsent(
+            agendaItemId,
+            () => <String, CommunityAgendaItemTranslation>{},
+          )[translation.languageCode] = translation;
+    }
+
     return data
-        .map((row) => CommunityAgendaItem.fromMap(row))
+        .map(
+          (row) {
+            final itemId = row['id'] as String;
+
+            return CommunityAgendaItem.fromMap(
+              row,
+              translations:
+                  translationsByItem[itemId] ??
+                  const <String, CommunityAgendaItemTranslation>{},
+            );
+          },
+        )
         .toList();
   }
 
@@ -425,13 +465,7 @@ class CommunityPracticeService {
       );
     }
 
-    return result
-        .map(
-          (row) => CommunityAgendaItem.fromMap(
-            Map<String, dynamic>.from(row as Map),
-          ),
-        )
-        .toList();
+    return getSessionAgenda(sessionId);
   }
   Future<CommunityAgendaItem> updateAgendaItem({
     required String itemId,

@@ -424,6 +424,24 @@ class AppStrings {
     _ => '১ ঘণ্টার কার্যক্রম দেখুন',
   };
 
+  String get communityAgendaTitle => switch (languageCode) {
+    'hi' => '1 घंटे का कार्यक्रम',
+    'en' => '1-hour Agenda',
+    _ => '১ ঘণ্টার কার্যক্রম',
+  };
+
+  String get communityAgendaEmpty => switch (languageCode) {
+    'hi' => 'इस सत्र की कोई गतिविधि नहीं है।',
+    'en' => 'There are no activities in this session.',
+    _ => 'এই সেশনের কোনো কার্যক্রম নেই।',
+  };
+
+  String communityAgendaLoadFailed(Object error) =>
+      switch (languageCode) {
+    'hi' => '1 घंटे का कार्यक्रम लोड नहीं हो सका: $error',
+    'en' => 'Could not load the 1-hour agenda: $error',
+    _ => '১ ঘণ্টার কার্যক্রম লোড করা যায়নি: $error',
+  };
   String get communityShowCheckinQr => switch (languageCode) {
     'hi' => 'Check-in QR दिखाएँ',
     'en' => 'Show Check-in QR',

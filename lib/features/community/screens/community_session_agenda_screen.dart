@@ -1,4 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+
+import '../../../core/localization/app_language_controller.dart';
+import '../../../core/localization/app_strings.dart';
 
 import '../models/community_agenda_item.dart';
 import '../models/community_session.dart';
@@ -97,89 +100,102 @@ class _CommunitySessionAgendaScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('১ ঘণ্টার কার্যক্রম'),
-      ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : RefreshIndicator(
-              onRefresh: _loadAgenda,
-              child: _items.isEmpty
-                  ? ListView(
-                      physics:
-                          const AlwaysScrollableScrollPhysics(),
-                      children: const [
-                        SizedBox(height: 100),
-                        Center(
-                          child: Text(
-                            'এই session-এর কোনো কার্যক্রম নেই।',
-                          ),
-                        ),
-                      ],
-                    )
-                  : ListView.builder(
-                      physics:
-                          const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.all(20),
-                      itemCount: _items.length,
-                      itemBuilder: (context, index) {
-                        final item = _items[index];
+    return AnimatedBuilder(
+      animation: AppLanguageController.instance,
+      builder: (context, _) {
+        final languageCode =
+            AppLanguageController.instance.languageCode;
+        final strings = AppStrings.of(context);
 
-                        return Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: 12),
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(18),
-                              child: Row(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                children: [
-                                  CircleAvatar(
-                                    child: Text(
-                                      item.sequenceNumber.toString(),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 14),
-                                  Icon(
-                                    _iconFor(item.activityType),
-                                  ),
-                                  const SizedBox(width: 14),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          item.title,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium,
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          '${item.durationMinutes} মিনিট',
-                                        ),
-                                        if (item.description != null) ...[
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            item.description!,
-                                          ),
-                                        ],
-                                      ],
-                                    ),
-                                  ),
-                                ],
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(strings.communityAgendaTitle),
+          ),
+          body: _isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : RefreshIndicator(
+                  onRefresh: _loadAgenda,
+                  child: _items.isEmpty
+                      ? ListView(
+                          physics:
+                              const AlwaysScrollableScrollPhysics(),
+                          children: [
+                            const SizedBox(height: 100),
+                            Center(
+                              child: Text(
+                                strings.communityAgendaEmpty,
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-            ),
+                          ],
+                        )
+                      : ListView.builder(
+                          physics:
+                              const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.all(20),
+                          itemCount: _items.length,
+                          itemBuilder: (context, index) {
+                            final item = _items[index];
+                            final description =
+                                item.descriptionFor(languageCode);
+
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 12),
+                              child: Card(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.all(18),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CircleAvatar(
+                                        child: Text(
+                                          item.sequenceNumber.toString(),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 14),
+                                      Icon(
+                                        _iconFor(item.activityType),
+                                      ),
+                                      const SizedBox(width: 14),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              item.titleFor(
+                                                languageCode,
+                                              ),
+                                              style:
+                                                  Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium,
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              '${item.durationMinutes} ${strings.minutes}',
+                                            ),
+                                            if (description != null) ...[
+                                              const SizedBox(height: 8),
+                                              Text(description),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ),
+        );
+      },
     );
   }
 }
