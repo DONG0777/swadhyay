@@ -316,6 +316,176 @@ class AppStrings {
         _ => 'আপনার আশেপাশের সাধকদের সঙ্গে যুক্ত হন',
       };
 
+  String get communityPlaces => switch (languageCode) {
+    'hi' => 'कम्युनिटी केंद्र',
+    'en' => 'Community Centers',
+    _ => 'কমিউনিটি কেন্দ্র',
+  };
+
+  String get communityNearby => switch (languageCode) {
+    'hi' => 'आस-पास की कम्युनिटी',
+    'en' => 'Nearby Community',
+    _ => 'কাছাকাছি Community',
+  };
+
+  String get communityNewPlace => switch (languageCode) {
+    'hi' => 'नया केंद्र',
+    'en' => 'New Center',
+    _ => 'নতুন কেন্দ্র',
+  };
+
+  String get communityNoPlaces => switch (languageCode) {
+    'hi' => 'अभी कोई कम्युनिटी केंद्र नहीं है।',
+    'en' => 'There are no community centers yet.',
+    _ => 'এখনও কোনো কমিউনিটি কেন্দ্র তৈরি হয়নি।',
+  };
+
+  String get communityNoPlacesSubtitle => switch (languageCode) {
+    'hi' => 'किसी निश्चित स्थान को नियमित स्वाध्याय केंद्र के रूप में शुरू करें।',
+    'en' => 'Start a regular Swadhyay center at a designated place.',
+    _ => 'একটি নির্দিষ্ট স্থানকে নিয়মিত স্বাধ্যায় কেন্দ্র হিসেবে শুরু করুন।',
+  };
+
+  String get communityCreateFirstPlace => switch (languageCode) {
+    'hi' => 'पहला केंद्र बनाएँ',
+    'en' => 'Create First Center',
+    _ => 'প্রথম কেন্দ্র তৈরি করুন',
+  };
+  String communityPlaceLoadFailed(Object error) => switch (languageCode) {
+    'hi' => 'कम्युनिटी केंद्र लोड नहीं हो सके: $error',
+    'en' => 'Could not load community centers: $error',
+    _ => 'কমিউনিটি কেন্দ্র লোড করা যায়নি: $error',
+  };
+
+  String get communityPlaceCreated => switch (languageCode) {
+    'hi' => 'केंद्र बनाया गया',
+    'en' => 'Center Created',
+    _ => 'কেন্দ্র তৈরি হয়েছে',
+  };
+
+  String get communityPlaceSetupRoutine => switch (languageCode) {
+    'hi' => 'क्या अब इस केंद्र के लिए नियमित अभ्यास का दिन और समय तय करना चाहते हैं?',
+    'en' => 'Would you like to set the regular practice day and time for this center now?',
+    _ => 'এখন কি এই কেন্দ্রে নিয়মিত অনুশীলনের দিন ও সময় সেট করবেন?',
+  };
+
+  String get communityLater => switch (languageCode) {
+    'hi' => 'बाद में',
+    'en' => 'Later',
+    _ => 'পরে',
+  };
+
+  String get communitySetupNow => switch (languageCode) {
+    'hi' => 'अभी तय करें',
+    'en' => 'Set Up Now',
+    _ => 'এখনই ঠিক করি',
+  };
+
+  String get communityNewPlaceTitle => switch (languageCode) {
+    'hi' => 'नया कम्युनिटी केंद्र',
+    'en' => 'New Community Center',
+    _ => 'নতুন কমিউনিটি কেন্দ্র',
+  };
+
+  String get communityPlaceName => switch (languageCode) {
+    'hi' => 'केंद्र का नाम',
+    'en' => 'Center Name',
+    _ => 'কেন্দ্রের নাম',
+  };
+
+  String get communityPlaceNameHint => switch (languageCode) {
+    'hi' => 'जैसे: जलपाईगुड़ी स्वाध्याय केंद्र',
+    'en' => 'e.g. Jalpaiguri Swadhyay Center',
+    _ => 'যেমন: জলপাইগুড়ি স্বাধ্যায় কেন্দ্র',
+  };
+
+  String get communityPlaceAbout => switch (languageCode) {
+    'hi' => 'केंद्र के बारे में',
+    'en' => 'About the Center',
+    _ => 'কেন্দ্র সম্পর্কে',
+  };
+
+  String get communityPlaceAboutHint => switch (languageCode) {
+    'hi' => 'इस केंद्र के उद्देश्य के बारे में संक्षेप में लिखें...',
+    'en' => 'Briefly describe the purpose of this center...',
+    _ => 'এই কেন্দ্রের উদ্দেশ্য সম্পর্কে সংক্ষেপে লিখুন...',
+  };
+
+  String get communityAddress => switch (languageCode) {
+    'hi' => 'पता',
+    'en' => 'Address',
+    _ => 'ঠিকানা',
+  };
+
+  String get communityAddressHint => switch (languageCode) {
+    'hi' => 'मैदान / पार्क / निश्चित स्थान',
+    'en' => 'Ground / park / designated place',
+    _ => 'মাঠ / পার্ক / নির্দিষ্ট স্থান',
+  };
+
+  String get communityUseCurrentLocation => switch (languageCode) {
+    'hi' => 'इस स्थान की लोकेशन का उपयोग करें',
+    'en' => 'Use this location',
+    _ => 'এই স্থানের অবস্থান ব্যবহার করুন',
+  };
+
+  String get communityLocationCaptured => switch (languageCode) {
+    'hi' => 'लोकेशन प्राप्त हो गई है',
+    'en' => 'Location captured',
+    _ => 'Location নেওয়া হয়েছে',
+  };
+
+  String get communityLocationForNearby => switch (languageCode) {
+    'hi' => 'Nearby Community खोजने में मदद करेगा',
+    'en' => 'Helps find nearby communities',
+    _ => 'Nearby Community খুঁজতে সাহায্য করবে',
+  };
+
+  String get communityLocationServiceDisabled => switch (languageCode) {
+    'hi' => 'डिवाइस की Location Service चालू करें।',
+    'en' => 'Turn on the device Location Service.',
+    _ => 'ডিভাইসের Location Service চালু করুন।',
+  };
+
+  String get communityLocationPermissionDenied => switch (languageCode) {
+    'hi' => 'Location permission नहीं दी गई।',
+    'en' => 'Location permission was not granted.',
+    _ => 'Location permission দেওয়া হয়নি।',
+  };
+
+  String get communityLocationPermissionSettings => switch (languageCode) {
+    'hi' => 'Settings से Location permission चालू करनी होगी।',
+    'en' => 'Enable Location permission from Settings.',
+    _ => 'Location permission Settings থেকে চালু করতে হবে।',
+  };
+
+  String get communityLocationCapturedSuccess => switch (languageCode) {
+    'hi' => 'इस स्थान की लोकेशन प्राप्त हो गई है।',
+    'en' => 'The location for this place has been captured.',
+    _ => 'এই স্থানের অবস্থান নেওয়া হয়েছে।',
+  };
+  String communityLocationFailed(Object error) => switch (languageCode) {
+    'hi' => 'Location प्राप्त नहीं हो सकी: $error',
+    'en' => 'Could not get the location: $error',
+    _ => 'Location নেওয়া যায়নি: $error',
+  };
+
+  String get communityPlaceNameAddressRequired => switch (languageCode) {
+    'hi' => 'केंद्र का नाम और पता दें।',
+    'en' => 'Enter the center name and address.',
+    _ => 'কেন্দ্রের নাম এবং ঠিকানা দিন।',
+  };
+  String communityPlaceCreateFailed(Object error) => switch (languageCode) {
+    'hi' => 'केंद्र नहीं बनाया जा सका: $error',
+    'en' => 'Could not create the center: $error',
+    _ => 'কেন্দ্র তৈরি করা যায়নি: $error',
+  };
+
+  String get communityCreatePlace => switch (languageCode) {
+    'hi' => 'केंद्र बनाएँ',
+    'en' => 'Create Center',
+    _ => 'কেন্দ্র তৈরি করুন',
+  };
   String get community => switch (languageCode) {
         'hi' => 'समुदाय',
         'en' => 'Community',

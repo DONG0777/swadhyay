@@ -1,5 +1,8 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+
+import '../../../core/localization/app_language_controller.dart';
+import '../../../core/localization/app_strings.dart';
 
 import '../models/community_place.dart';
 import '../services/community_practice_service.dart';
@@ -53,7 +56,7 @@ class _CommunityPlacesScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Community place লোড করা যায়নি: $error',
+            AppStrings.of(context).communityPlaceLoadFailed(error),
           ),
         ),
       );
@@ -82,24 +85,24 @@ class _CommunityPlacesScreenState
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text(
-            'কেন্দ্র তৈরি হয়েছে',
+          title: Text(
+            AppStrings.of(context).communityPlaceCreated,
           ),
-          content: const Text(
-            'এখন কি এই কেন্দ্রে নিয়মিত অনুশীলনের দিন ও সময় সেট করবেন?',
+          content: Text(
+            AppStrings.of(context).communityPlaceSetupRoutine,
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: const Text('পরে'),
+              child: Text(AppStrings.of(context).communityLater),
             ),
             FilledButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: const Text('এখনই সেট করি'),
+              child: Text(AppStrings.of(context).communitySetupNow),
             ),
           ],
         );
@@ -133,9 +136,12 @@ class _CommunityPlacesScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AnimatedBuilder(
+      animation: AppLanguageController.instance,
+      builder: (context, _) {
+        return Scaffold(
       appBar: AppBar(
-        title: const Text('কমিউনিটি কেন্দ্র'),
+        title: Text(AppStrings.of(context).communityPlaces),
         actions: [
           IconButton(
             onPressed: () {
@@ -146,7 +152,7 @@ class _CommunityPlacesScreenState
                 ),
               );
             },
-            tooltip: 'কাছাকাছি Community',
+            tooltip: AppStrings.of(context).communityNearby,
             icon: const Icon(
               Icons.near_me_outlined,
             ),
@@ -158,7 +164,7 @@ class _CommunityPlacesScreenState
         icon: const Icon(
           Icons.add_location_alt_outlined,
         ),
-        label: const Text('নতুন কেন্দ্র'),
+        label: Text(AppStrings.of(context).communityNewPlace),
       ),
       body: _isLoading
           ? const Center(
@@ -178,16 +184,16 @@ class _CommunityPlacesScreenState
                           size: 56,
                         ),
                         const SizedBox(height: 16),
-                        const Center(
+                        Center(
                           child: Text(
-                            'এখনও কোনো কমিউনিটি কেন্দ্র তৈরি হয়নি।',
+                            AppStrings.of(context).communityNoPlaces,
                             textAlign: TextAlign.center,
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Center(
+                        Center(
                           child: Text(
-                            'একটি নির্দিষ্ট স্থানকে নিয়মিত স্বাধ্যায় কেন্দ্র হিসেবে শুরু করুন।',
+                            AppStrings.of(context).communityNoPlacesSubtitle,
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -197,8 +203,8 @@ class _CommunityPlacesScreenState
                           icon: const Icon(
                             Icons.add_location_alt_outlined,
                           ),
-                          label: const Text(
-                            'প্রথম কেন্দ্র তৈরি করুন',
+                          label: Text(
+                            AppStrings.of(context).communityCreateFirstPlace,
                           ),
                         ),
                       ],
@@ -272,6 +278,8 @@ class _CommunityPlacesScreenState
                     ),
             ),
     );
+      },
+    );
   }
 }
 
@@ -329,9 +337,9 @@ class _CommunityPlaceCreateScreenState
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'ডিভাইসের Location Service চালু করুন।',
+              AppStrings.of(context).communityLocationServiceDisabled,
             ),
           ),
         );
@@ -352,9 +360,9 @@ class _CommunityPlaceCreateScreenState
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'Location permission দেওয়া হয়নি।',
+              AppStrings.of(context).communityLocationPermissionDenied,
             ),
           ),
         );
@@ -368,9 +376,9 @@ class _CommunityPlaceCreateScreenState
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'Location permission Settings থেকে চালু করতে হবে।',
+              AppStrings.of(context).communityLocationPermissionSettings,
             ),
           ),
         );
@@ -395,9 +403,9 @@ class _CommunityPlaceCreateScreenState
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'এই স্থানের অবস্থান নেওয়া হয়েছে।',
+            AppStrings.of(context).communityLocationCapturedSuccess,
           ),
         ),
       );
@@ -409,7 +417,7 @@ class _CommunityPlaceCreateScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Location নেওয়া যায়নি: $error',
+            AppStrings.of(context).communityLocationFailed(error),
           ),
         ),
       );
@@ -427,9 +435,9 @@ class _CommunityPlaceCreateScreenState
 
     if (name.isEmpty || address.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'কেন্দ্রের নাম এবং ঠিকানা দিন।',
+            AppStrings.of(context).communityPlaceNameAddressRequired,
           ),
         ),
       );
@@ -467,7 +475,7 @@ class _CommunityPlaceCreateScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'কেন্দ্র তৈরি করা যায়নি: $error',
+            AppStrings.of(context).communityPlaceCreateFailed(error),
           ),
         ),
       );
@@ -478,8 +486,8 @@ class _CommunityPlaceCreateScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'নতুন কমিউনিটি কেন্দ্র',
+        title: Text(
+          AppStrings.of(context).communityNewPlaceTitle,
         ),
       ),
       body: SingleChildScrollView(
@@ -489,10 +497,10 @@ class _CommunityPlaceCreateScreenState
             TextField(
               controller: _nameController,
               maxLength: 200,
-              decoration: const InputDecoration(
-                labelText: 'কেন্দ্রের নাম',
+              decoration: InputDecoration(
+                labelText: AppStrings.of(context).communityPlaceName,
                 hintText:
-                    'যেমন: জলপাইগুড়ি স্বাধ্যায় কেন্দ্র',
+                    AppStrings.of(context).communityPlaceNameHint,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -501,10 +509,10 @@ class _CommunityPlaceCreateScreenState
               controller: _descriptionController,
               maxLines: 4,
               maxLength: 2000,
-              decoration: const InputDecoration(
-                labelText: 'কেন্দ্র সম্পর্কে',
+              decoration: InputDecoration(
+                labelText: AppStrings.of(context).communityPlaceAbout,
                 hintText:
-                    'এই কেন্দ্রের উদ্দেশ্য সম্পর্কে সংক্ষেপে লিখুন...',
+                    AppStrings.of(context).communityPlaceAboutHint,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -513,10 +521,10 @@ class _CommunityPlaceCreateScreenState
               controller: _addressController,
               maxLines: 3,
               maxLength: 500,
-              decoration: const InputDecoration(
-                labelText: 'ঠিকানা',
+              decoration: InputDecoration(
+                labelText: AppStrings.of(context).communityAddress,
                 hintText:
-                    'মাঠ / পার্ক / নির্দিষ্ট স্থান',
+                    AppStrings.of(context).communityAddressHint,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -526,13 +534,13 @@ class _CommunityPlaceCreateScreenState
                 leading: const Icon(
                   Icons.my_location_outlined,
                 ),
-                title: const Text(
-                  'এই স্থানের অবস্থান ব্যবহার করুন',
+                title: Text(
+                  AppStrings.of(context).communityUseCurrentLocation,
                 ),
                 subtitle: Text(
                   _latitude != null && _longitude != null
-                      ? 'Location নেওয়া হয়েছে'
-                      : 'Nearby Community খুঁজতে সাহায্য করবে',
+                      ? AppStrings.of(context).communityLocationCaptured
+                      : AppStrings.of(context).communityLocationForNearby,
                 ),
                 trailing: _isLocating
                     ? const SizedBox(
@@ -570,8 +578,8 @@ class _CommunityPlaceCreateScreenState
                     : const Icon(
                         Icons.add_location_alt_outlined,
                       ),
-                label: const Text(
-                  'কেন্দ্র তৈরি করুন',
+                label: Text(
+                  AppStrings.of(context).communityCreatePlace,
                 ),
               ),
             ),
