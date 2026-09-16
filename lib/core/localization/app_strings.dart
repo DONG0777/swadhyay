@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class AppStrings {
   static AppStrings of(BuildContext context) {
@@ -839,6 +839,107 @@ String get myCommunitySubtitle => switch (languageCode) {
     _ => 'Session তৈরি করা যায়নি: $error',
   };
 
+  String get communityPlace => switch (languageCode) {
+    'hi' => 'कम्युनिटी केंद्र',
+    'en' => 'Community Center',
+    _ => 'কমিউনিটি কেন্দ্র',
+  };
+
+  String get communityPlaceRequired => switch (languageCode) {
+    'hi' => 'पहले एक Community Center चुनें।',
+    'en' => 'Select a Community Center first.',
+    _ => 'প্রথমে একটি Community Center নির্বাচন করুন।',
+  };
+
+  String get communityPlaceSetupRequired => switch (languageCode) {
+    'hi' => 'Session बनाने से पहले एक Community Center बनाएं।',
+    'en' => 'Create a Community Center before creating a session.',
+    _ => 'Session তৈরি করার আগে একটি Community Center তৈরি করুন।',
+  };
+
+    String get communitySpecificPlaceRequired => switch (languageCode) {
+    'hi' => 'पहले एक विशिष्ट Community Center बनाएं।',
+    'en' => 'Create a specific Community Center first.',
+    _ => 'আগে একটি নির্দিষ্ট Community Place তৈরি করুন।',
+  };
+
+String get communityBack => switch (languageCode) {
+    'hi' => 'वापस जाएँ',
+    'en' => 'Go Back',
+    _ => 'ফিরে যান',
+  };
+
+  String get communitySessionName => switch (languageCode) {
+    'hi' => 'Session का नाम',
+    'en' => 'Session Name',
+    _ => 'Session-এর নাম',
+  };
+
+  String get communitySessionNameHint => switch (languageCode) {
+    'hi' => 'जैसे: सामूहिक सूर्य नमस्कार',
+    'en' => 'E.g. Community Surya Namaskar',
+    _ => 'যেমন: সম্মিলিত সূর্য নমস্কার',
+  };
+
+  String get communitySessionNameLocationRequired => switch (languageCode) {
+    'hi' => 'Session का नाम और स्थान दें।',
+    'en' => 'Enter the session name and location.',
+    _ => 'Session-এর নাম এবং স্থান দিন।',
+  };
+
+  String get communitySessionDescriptionHint => switch (languageCode) {
+    'hi' => 'इस session के बारे में संक्षेप में लिखें...',
+    'en' => 'Briefly describe this session...',
+    _ => 'Session সম্পর্কে সংক্ষেপে লিখুন...',
+  };
+
+  String get communitySessionLocation => switch (languageCode) {
+    'hi' => 'Session का स्थान',
+    'en' => 'Session Location',
+    _ => 'Session-এর স্থান',
+  };
+
+  String get communityLocationDetails => switch (languageCode) {
+    'hi' => 'स्थान का विवरण',
+    'en' => 'Location Details',
+    _ => 'স্থানের বিস্তারিত',
+  };
+
+  String get communityEndTime => switch (languageCode) {
+    'hi' => 'समाप्ति का समय',
+    'en' => 'End Time',
+    _ => 'শেষ সময়',
+  };
+
+  String get communityCapacityOptional => switch (languageCode) {
+    'hi' => 'अधिकतम प्रतिभागी (वैकल्पिक)',
+    'en' => 'Maximum Participants (Optional)',
+    _ => 'সর্বোচ্চ অংশগ্রহণকারী (ঐচ্ছিক)',
+  };
+
+  String get communityCapacityHint => switch (languageCode) {
+    'hi' => 'जैसे: 50',
+    'en' => 'E.g. 50',
+    _ => 'যেমন: 50',
+  };
+
+  String get communityCapacityInvalid => switch (languageCode) {
+    'hi' => 'Capacity के लिए एक संख्या दर्ज करें।',
+    'en' => 'Enter a number for capacity.',
+    _ => 'Capacity-এর জন্য একটি সংখ্যা দিন।',
+  };
+
+  String get communitySessionAndAgendaCreated => switch (languageCode) {
+    'hi' => 'Community Session और 1 घंटे की गतिविधियाँ बनाई गई हैं।',
+    'en' => 'The Community Session and 1-hour activities have been created.',
+    _ => 'Community Session এবং ১ ঘণ্টার কার্যক্রম তৈরি হয়েছে।',
+  };
+
+  String get communityCreateSession => switch (languageCode) {
+    'hi' => 'Community Session बनाएं',
+    'en' => 'Create Community Session',
+    _ => 'Community Session তৈরি করুন',
+  };
   String get communityFirstSessionTitle => switch (languageCode) {
     'hi' => 'पहला Community Session',
     'en' => 'First Community Session',

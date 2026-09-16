@@ -1,5 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 
+import '../../../core/localization/app_strings.dart';
+
 import '../models/community_place.dart';
 import '../services/community_practice_service.dart';
 import '../services/community_service.dart';
@@ -50,6 +52,8 @@ class _CommunitySessionCreateScreenState
   }
 
   Future<void> _loadPlaces() async {
+    final strings = AppStrings.of(context);
+
     try {
       final places =
           await _practiceService.getCommunityPlaces();
@@ -74,9 +78,7 @@ class _CommunitySessionCreateScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Community place লোড করা যায়নি: $error',
-          ),
+          content: Text(strings.communityPlaceLoadFailed(error)),
         ),
       );
     }
@@ -161,14 +163,13 @@ class _CommunitySessionCreateScreenState
   }
 
   Future<void> _saveSession() async {
+    final strings = AppStrings.of(context);
     final place = _selectedPlace;
 
     if (place == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'প্রথমে একটি Community Place নির্বাচন করুন।',
-          ),
+        SnackBar(
+          content: Text(strings.communityPlaceRequired),
         ),
       );
       return;
@@ -179,8 +180,8 @@ class _CommunitySessionCreateScreenState
 
     if (title.isEmpty || location.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('নাম এবং স্থান দিন।'),
+        SnackBar(
+          content: Text(strings.communitySessionNameLocationRequired),
         ),
       );
       return;
@@ -193,10 +194,8 @@ class _CommunitySessionCreateScreenState
 
     if (capacityText.isNotEmpty && capacity == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Capacity-এর জন্য একটি সংখ্যা দিন।',
-          ),
+        SnackBar(
+          content: Text(strings.communityCapacityInvalid),
         ),
       );
       return;
@@ -204,10 +203,8 @@ class _CommunitySessionCreateScreenState
 
     if (!_endsAt.isAfter(_startsAt)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'শেষ সময় অবশ্যই শুরুর পর হতে হবে।',
-          ),
+        SnackBar(
+          content: Text(strings.communitySessionEndAfterStart),
         ),
       );
       return;
@@ -239,10 +236,8 @@ class _CommunitySessionCreateScreenState
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Community session এবং ১ ঘণ্টার কার্যক্রম তৈরি হয়েছে।',
-          ),
+        SnackBar(
+          content: Text(strings.communitySessionAndAgendaCreated),
         ),
       );
 
@@ -277,10 +272,12 @@ class _CommunitySessionCreateScreenState
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+
     if (_isLoadingPlaces) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('নতুন Community Session'),
+          title: Text(strings.communityNewSession),
         ),
         body: const Center(
           child: CircularProgressIndicator(),
@@ -291,7 +288,7 @@ class _CommunitySessionCreateScreenState
     if (_places.isEmpty) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('নতুন Community Session'),
+          title: Text(strings.communityNewSession),
         ),
         body: Center(
           child: Padding(
@@ -304,13 +301,13 @@ class _CommunitySessionCreateScreenState
                   size: 56,
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Session তৈরি করার আগে একটি Community Place দরকার।',
+                Text(
+                  strings.communityPlaceSetupRequired,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'আগে একটি নির্দিষ্ট Community Place তৈরি করুন।',
+                Text(
+                  strings.communitySpecificPlaceRequired,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
@@ -321,9 +318,7 @@ class _CommunitySessionCreateScreenState
                   icon: const Icon(
                     Icons.location_city_outlined,
                   ),
-                  label: const Text(
-                    'ফিরে যান',
-                  ),
+                  label: Text(strings.communityBack),
                 ),
               ],
             ),
@@ -334,7 +329,7 @@ class _CommunitySessionCreateScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('নতুন Community Session'),
+        title: Text(strings.communityNewSession),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -345,8 +340,8 @@ class _CommunitySessionCreateScreenState
             DropdownButtonFormField<CommunityPlace>(
               value: _selectedPlace,
               isExpanded: true,
-              decoration: const InputDecoration(
-                labelText: 'Community Place',
+              decoration: InputDecoration(
+                labelText: strings.communityPlace,
                 border: OutlineInputBorder(),
               ),
               items: _places
@@ -376,11 +371,10 @@ class _CommunitySessionCreateScreenState
             TextField(
               controller: _titleController,
               maxLength: 200,
-              decoration: const InputDecoration(
-                labelText: 'Session-এর নাম',
-                hintText:
-                    'যেমন: সম্মিলিত সূর্য নমস্কার',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: strings.communitySessionName,
+                hintText: strings.communitySessionNameHint,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
@@ -388,20 +382,19 @@ class _CommunitySessionCreateScreenState
               controller: _descriptionController,
               maxLines: 4,
               maxLength: 2000,
-              decoration: const InputDecoration(
-                labelText: 'বিবরণ',
-                hintText:
-                    'Session সম্পর্কে সংক্ষেপে লিখুন...',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: strings.communitySessionDescription,
+                hintText: strings.communitySessionDescriptionHint,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _locationController,
               maxLength: 300,
-              decoration: const InputDecoration(
-                labelText: 'Session-এর স্থান',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: strings.communitySessionLocation,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
@@ -409,9 +402,9 @@ class _CommunitySessionCreateScreenState
               controller: _locationDetailsController,
               maxLines: 3,
               maxLength: 1000,
-              decoration: const InputDecoration(
-                labelText: 'স্থানের বিস্তারিত',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: strings.communityLocationDetails,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
@@ -419,7 +412,7 @@ class _CommunitySessionCreateScreenState
               child: ListTile(
                 leading:
                     const Icon(Icons.schedule_outlined),
-                title: const Text('শুরু'),
+                title: Text(strings.communityStartTime),
                 subtitle: Text(
                   _formatDateTime(_startsAt),
                 ),
@@ -436,7 +429,7 @@ class _CommunitySessionCreateScreenState
               child: ListTile(
                 leading:
                     const Icon(Icons.schedule_outlined),
-                title: const Text('শেষ'),
+                title: Text(strings.communityEndTime),
                 subtitle: Text(
                   _formatDateTime(_endsAt),
                 ),
@@ -453,26 +446,24 @@ class _CommunitySessionCreateScreenState
               controller: _capacityController,
               keyboardType:
                   TextInputType.number,
-              decoration: const InputDecoration(
-                labelText:
-                    'সর্বোচ্চ অংশগ্রহণকারী (ঐচ্ছিক)',
-                hintText: 'যেমন: 50',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: strings.communityCapacityOptional,
+                hintText: strings.communityCapacityHint,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 20),
-            const Card(
+            Card(
               child: Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Row(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.timer_outlined),
-                    SizedBox(width: 12),
+                    const Icon(Icons.timer_outlined),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'এই session তৈরি হলে standard 60-minute community practice agenda স্বয়ংক্রিয়ভাবে যুক্ত হবে।',
+                        strings.communitySessionAgendaAutoCreated,
                       ),
                     ),
                   ],
@@ -497,9 +488,7 @@ class _CommunitySessionCreateScreenState
                     : const Icon(
                         Icons.add_circle_outline,
                       ),
-                label: const Text(
-                  'Community Session তৈরি করুন',
-                ),
+                label: Text(strings.communityCreateSession),
               ),
             ),
           ],
