@@ -648,6 +648,204 @@ class AppStrings {
         _ => 'সম্মিলিত সূর্য নমস্কার',
       };
 
+  String get communityRoutine => switch (languageCode) {
+    'hi' => 'साप्ताहिक Routine',
+    'en' => 'Weekly Routine',
+    _ => 'সাপ্তাহিক Routine',
+  };
+
+  String get communityRegularPractice => switch (languageCode) {
+    'hi' => 'नियमित अभ्यास',
+    'en' => 'Regular Practice',
+    _ => 'নিয়মিত অনুশীলন',
+  };
+
+  String get communityWeeklyRoutineHint => switch (languageCode) {
+    'hi' => 'इस केंद्र का साप्ताहिक नियमित समय-सारणी।',
+    'en' => 'This community center’s regular weekly schedule.',
+    _ => 'এই কেন্দ্রের নিয়মিত সাপ্তাহিক সময়সূচি।',
+  };
+
+  String get communityAddRoutine => switch (languageCode) {
+    'hi' => 'Routine जोड़ें',
+    'en' => 'Add Routine',
+    _ => 'Routine যোগ করুন',
+  };
+
+  String get communityNoRoutines => switch (languageCode) {
+    'hi' => 'अभी कोई weekly routine नहीं है।',
+    'en' => 'There are no weekly routines yet.',
+    _ => 'এখনও কোনো weekly routine নেই।',
+  };
+
+  String communityRoutineLoadFailed(Object error) => switch (languageCode) {
+    'hi' => 'Weekly routine लोड नहीं हो सकी: $error',
+    'en' => 'Could not load weekly routine: $error',
+    _ => 'Weekly routine লোড করা যায়নি: $error',
+  };
+
+  String get communityCreateFirstSessionButton => switch (languageCode) {
+    'hi' => 'पहला Session बनाएँ',
+    'en' => 'Create First Session',
+    _ => 'প্রথম Community Session তৈরি করুন',
+  };
+
+  String get communityFirstSessionCreated => switch (languageCode) {
+    'hi' => 'पहला Community Session बनाया गया है।',
+    'en' => 'The first Community Session has been created.',
+    _ => 'প্রথম Community Session তৈরি হয়েছে।',
+  };
+
+  String get communityRoutineName => switch (languageCode) {
+    'hi' => 'Routine का नाम',
+    'en' => 'Routine Name',
+    _ => 'Routine-এর নাম',
+  };
+
+  String get communityRoutineNameHint => switch (languageCode) {
+    'hi' => 'जैसे: रविवार का सामूहिक स्वाध्याय',
+    'en' => 'E.g. Sunday Community Swadhyay',
+    _ => 'যেমন: রবিবারের সম্মিলিত স্বাধ্যায়',
+  };
+
+  String get communityRoutineNameRequired => switch (languageCode) {
+    'hi' => 'Routine का नाम दें।',
+    'en' => 'Enter a routine name.',
+    _ => 'Routine-এর নাম দিন।',
+  };
+
+  String get communityStartTime => switch (languageCode) {
+    'hi' => 'शुरू होने का समय',
+    'en' => 'Start Time',
+    _ => 'শুরু সময়',
+  };
+
+  String get communityDuration => switch (languageCode) {
+    'hi' => 'अवधि',
+    'en' => 'Duration',
+    _ => 'সময়কাল',
+  };
+
+  String get communityStandardPracticeDuration => switch (languageCode) {
+    'hi' => '60 मिनट — standard community practice',
+    'en' => '60 minutes — standard community practice',
+    _ => '৬০ মিনিট — standard community practice',
+  };
+
+  String get communitySaveRoutine => switch (languageCode) {
+    'hi' => 'Weekly Routine सहेजें',
+    'en' => 'Save Weekly Routine',
+    _ => 'Weekly Routine সংরক্ষণ করুন',
+  };
+
+  String get communityRoutineCreated => switch (languageCode) {
+    'hi' => 'Weekly routine बनाया गया है।',
+    'en' => 'Weekly routine has been created.',
+    _ => 'Weekly routine তৈরি হয়েছে।',
+  };
+
+  String communityRoutineCreateFailed(Object error) => switch (languageCode) {
+    'hi' => 'Routine बनाया नहीं जा सका: $error',
+    'en' => 'Could not create routine: $error',
+    _ => 'Routine তৈরি করা যায়নি: $error',
+  };
+
+  String get communityFirstSession => switch (languageCode) {
+    'hi' => 'पहला Session',
+    'en' => 'First Session',
+    _ => 'প্রথম Session',
+  };
+
+  String get communitySessionDescription => switch (languageCode) {
+    'hi' => 'विवरण',
+    'en' => 'Description',
+    _ => 'বিবরণ',
+  };
+
+  String get communityFirstSessionDescriptionHint => switch (languageCode) {
+    'hi' => 'इस पहले session के बारे में संक्षेप में लिखें...',
+    'en' => 'Briefly describe this first session...',
+    _ => 'এই প্রথম session সম্পর্কে সংক্ষেপে লিখুন...',
+  };
+
+  String get communitySessionAgendaAutoCreated => switch (languageCode) {
+    'hi' => 'Session के साथ standard 60-minute community practice agenda अपने आप जोड़ा जाएगा।',
+    'en' => 'A standard 60-minute community practice agenda will be added automatically to the session.',
+    _ => 'Session-এর সঙ্গে standard 60-minute community practice agenda স্বয়ংক্রিয়ভাবে যুক্ত হবে।',
+  };
+
+  String get communityFirstSessionAndAgendaCreated => switch (languageCode) {
+    'hi' => 'पहला Session और 1 घंटे की गतिविधियाँ बनाई गई हैं।',
+    'en' => 'The first session and 1-hour activities have been created.',
+    _ => 'প্রথম Session এবং ১ ঘণ্টার কার্যক্রম তৈরি হয়েছে।',
+  };
+
+  String get communitySessionEndAfterStart => switch (languageCode) {
+    'hi' => 'Session का समाप्ति समय शुरू होने के बाद होना चाहिए।',
+    'en' => 'The session end time must be after the start time.',
+    _ => 'Session-এর শেষ সময় অবশ্যই শুরুর পরে হতে হবে।',
+  };
+
+  String communitySessionCreateFailed(Object error) => switch (languageCode) {
+    'hi' => 'Session बनाया नहीं जा सका: $error',
+    'en' => 'Could not create session: $error',
+    _ => 'Session তৈরি করা যায়নি: $error',
+  };
+
+  String get communityFirstSessionTitle => switch (languageCode) {
+    'hi' => 'पहला Community Session',
+    'en' => 'First Community Session',
+    _ => 'প্রথম Community Session',
+  };
+
+  String get communityRoutineLabel => switch (languageCode) {
+    'hi' => 'Routine',
+    'en' => 'Routine',
+    _ => 'Routine',
+  };
+
+  String get communityDayLabel => switch (languageCode) {
+    'hi' => 'दिन',
+    'en' => 'Day',
+    _ => 'বার',
+  };
+
+  String get communitySaveFirstSession => switch (languageCode) {
+    'hi' => 'पहला Session बनाएँ',
+    'en' => 'Create First Session',
+    _ => 'প্রথম Session তৈরি করুন',
+  };
+
+  List<String> get weekdays => switch (languageCode) {
+    'hi' => [
+      'सोमवार',
+      'मंगलवार',
+      'बुधवार',
+      'गुरुवार',
+      'शुक्रवार',
+      'शनिवार',
+      'रविवार',
+    ],
+    'en' => [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ],
+    _ => [
+      'সোমবার',
+      'মঙ্গলবার',
+      'বুধবার',
+      'বৃহস্পতিবার',
+      'শুক্রবার',
+      'শনিবার',
+      'রবিবার',
+    ],
+  };
+
   String get communitySuryaNamaskarSubtitle => switch (languageCode) {
         'hi' => 'साथ मिलकर सूर्य नमस्कार का अभ्यास करें',
         'en' => 'Practice Surya Namaskar together',

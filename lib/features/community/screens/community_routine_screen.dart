@@ -1,19 +1,12 @@
 ﻿import 'package:flutter/material.dart';
 
+import '../../../core/localization/app_strings.dart';
+
 import '../models/community_place.dart';
 import '../models/community_routine.dart';
 import '../services/community_practice_service.dart';
 import '../services/community_service.dart';
 
-const _weekdayNames = [
-  'সোমবার',
-  'মঙ্গলবার',
-  'বুধবার',
-  'বৃহস্পতিবার',
-  'শুক্রবার',
-  'শনিবার',
-  'রবিবার',
-];
 class CommunityRoutineScreen extends StatefulWidget {
   final CommunityPlace place;
 
@@ -66,7 +59,7 @@ class _CommunityRoutineScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Weekly routine লোড করা যায়নি: $error',
+            AppStrings.of(context).communityRoutineLoadFailed(error),
           ),
         ),
       );
@@ -101,9 +94,9 @@ class _CommunityRoutineScreenState
 
     if (created == true && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'প্রথম Community Session তৈরি হয়েছে।',
+            AppStrings.of(context).communityFirstSessionCreated,
           ),
         ),
       );
@@ -115,7 +108,7 @@ class _CommunityRoutineScreenState
       return '';
     }
 
-    return _weekdayNames[weekday - 1];
+    return AppStrings.of(context).weekdays[weekday - 1];
   }
 
   String _displayTime(String value) {
@@ -135,7 +128,7 @@ class _CommunityRoutineScreenState
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _createRoutine,
         icon: const Icon(Icons.schedule_outlined),
-        label: const Text('Routine যোগ করুন'),
+        label: Text(AppStrings.of(context).communityAddRoutine),
       ),
       body: _isLoading
           ? const Center(
@@ -160,7 +153,7 @@ class _CommunityRoutineScreenState
                             CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'নিয়মিত অনুশীলন',
+                            AppStrings.of(context).communityRegularPractice,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge,
@@ -168,8 +161,8 @@ class _CommunityRoutineScreenState
                           const SizedBox(height: 8),
                           Text(widget.place.address),
                           const SizedBox(height: 8),
-                          const Text(
-                            'এই কেন্দ্রের সাপ্তাহিক নিয়মিত সময়সূচি।',
+                          Text(
+                            AppStrings.of(context).communityWeeklyRoutineHint,
                           ),
                         ],
                       ),
@@ -177,11 +170,11 @@ class _CommunityRoutineScreenState
                   ),
                   const SizedBox(height: 16),
                   if (_routines.isEmpty)
-                    const Card(
+                    Card(
                       child: Padding(
                         padding: EdgeInsets.all(20),
                         child: Text(
-                          'এখনও কোনো weekly routine নেই।',
+                          AppStrings.of(context).communityNoRoutines,
                         ),
                       ),
                     )
@@ -217,7 +210,7 @@ class _CommunityRoutineScreenState
                                         Text(
                                           '${_weekdayName(routine.weekday)}'
                                           ' • ${_displayTime(routine.startTime)}'
-                                          ' • ${routine.durationMinutes} মিনিট',
+                                          ' • ${routine.durationMinutes} ${AppStrings.of(context).minutes}',
                                         ),
                                       ],
                                     ),
@@ -243,8 +236,8 @@ class _CommunityRoutineScreenState
                                     icon: const Icon(
                                       Icons.event_available_outlined,
                                     ),
-                                    label: const Text(
-                                      'প্রথম Session তৈরি করুন',
+                                    label: Text(
+                                      AppStrings.of(context).communityCreateFirstSessionButton,
                                     ),
                                   ),
                                 ),
@@ -314,8 +307,8 @@ class _CommunityRoutineCreateScreenState
 
     if (title.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Routine-এর নাম দিন।'),
+        SnackBar(
+          content: Text(AppStrings.of(context).communityRoutineNameRequired),
         ),
       );
       return;
@@ -343,9 +336,9 @@ class _CommunityRoutineCreateScreenState
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Weekly routine তৈরি হয়েছে।',
+            AppStrings.of(context).communityRoutineCreated,
           ),
         ),
       );
@@ -363,7 +356,7 @@ class _CommunityRoutineCreateScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Routine তৈরি করা যায়নি: $error',
+            AppStrings.of(context).communityRoutineCreateFailed(error),
           ),
         ),
       );
@@ -374,7 +367,7 @@ class _CommunityRoutineCreateScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Weekly Routine'),
+        title: Text(AppStrings.of(context).communityRoutine),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -382,8 +375,8 @@ class _CommunityRoutineCreateScreenState
           children: [
             DropdownButtonFormField<int>(
               value: _weekday,
-              decoration: const InputDecoration(
-                labelText: 'বার',
+              decoration: InputDecoration(
+                labelText: AppStrings.of(context).communityDayLabel,
                 border: OutlineInputBorder(),
               ),
               items: List.generate(
@@ -391,7 +384,7 @@ class _CommunityRoutineCreateScreenState
                 (index) => DropdownMenuItem<int>(
                   value: index + 1,
                   child: Text(
-                    _weekdayNames[index],
+                    AppStrings.of(context).weekdays[index],
                   ),
                 ),
               ),
@@ -409,11 +402,12 @@ class _CommunityRoutineCreateScreenState
             TextField(
               controller: _titleController,
               maxLength: 200,
-              decoration: const InputDecoration(
-                labelText: 'Routine-এর নাম',
+              decoration: InputDecoration(
+                labelText:
+                    AppStrings.of(context).communityRoutineName,
                 hintText:
-                    'যেমন: রবিবারের সম্মিলিত স্বাধ্যায়',
-                border: OutlineInputBorder(),
+                    AppStrings.of(context).communityRoutineNameHint,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 8),
@@ -421,7 +415,7 @@ class _CommunityRoutineCreateScreenState
               child: ListTile(
                 leading:
                     const Icon(Icons.schedule_outlined),
-                title: const Text('শুরু সময়'),
+                title: Text(AppStrings.of(context).communityStartTime),
                 subtitle:
                     Text(_time.format(context)),
                 trailing:
@@ -431,14 +425,14 @@ class _CommunityRoutineCreateScreenState
               ),
             ),
             const SizedBox(height: 8),
-            const Card(
+            Card(
               child: ListTile(
                 leading: Icon(
                   Icons.timer_outlined,
                 ),
-                title: Text('সময়কাল'),
+                title: Text(AppStrings.of(context).communityDuration),
                 subtitle: Text(
-                  '৬০ মিনিট — standard community practice',
+                  AppStrings.of(context).communityStandardPracticeDuration,
                 ),
               ),
             ),
@@ -460,8 +454,8 @@ class _CommunityRoutineCreateScreenState
                     : const Icon(
                         Icons.schedule_outlined,
                       ),
-                label: const Text(
-                  'Weekly Routine সংরক্ষণ করুন',
+                label: Text(
+                  AppStrings.of(context).communitySaveRoutine,
                 ),
               ),
             ),
@@ -621,9 +615,9 @@ class _CommunityRoutineFirstSessionScreenState
   Future<void> _saveSession() async {
     if (!_endsAt.isAfter(_startsAt)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Session-এর শেষ সময় অবশ্যই শুরুর পরে হতে হবে।',
+            AppStrings.of(context).communitySessionEndAfterStart,
           ),
         ),
       );
@@ -658,9 +652,9 @@ class _CommunityRoutineFirstSessionScreenState
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'প্রথম Session এবং ১ ঘণ্টার কার্যক্রম তৈরি হয়েছে।',
+            AppStrings.of(context).communityFirstSessionAndAgendaCreated,
           ),
         ),
       );
@@ -678,7 +672,7 @@ class _CommunityRoutineFirstSessionScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Session তৈরি করা যায়নি: $error',
+            AppStrings.of(context).communitySessionCreateFailed(error),
           ),
         ),
       );
@@ -690,7 +684,9 @@ class _CommunityRoutineFirstSessionScreenState
     return Scaffold(
       appBar: AppBar(
         title:
-            const Text('প্রথম Community Session'),
+            Text(
+              AppStrings.of(context).communityFirstSessionTitle,
+            ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -716,17 +712,17 @@ class _CommunityRoutineFirstSessionScreenState
             ),
             const SizedBox(height: 8),
             Text(
-              'Routine: ${widget.routine.weekday}'
+              '${AppStrings.of(context).communityRoutineLabel}: ${AppStrings.of(context).weekdays[widget.routine.weekday - 1]}'
               ' • ${widget.routine.startTime.substring(0, 5)}'
-              ' • ${widget.routine.durationMinutes} মিনিট',
+              ' • ${widget.routine.durationMinutes} ${AppStrings.of(context).minutes}',
             ),
             const SizedBox(height: 20),
             Card(
               child: ListTile(
                 leading:
                     const Icon(Icons.event_outlined),
-                title: const Text(
-                  'প্রথম Session',
+                title: Text(
+                  AppStrings.of(context).communityFirstSession,
                 ),
                 subtitle:
                     Text(_formatDateTime(_startsAt)),
@@ -743,28 +739,29 @@ class _CommunityRoutineFirstSessionScreenState
                   _descriptionController,
               maxLines: 4,
               maxLength: 2000,
-              decoration: const InputDecoration(
-                labelText: 'বিবরণ',
+              decoration: InputDecoration(
+                labelText:
+                    AppStrings.of(context).communitySessionDescription,
                 hintText:
-                    'এই প্রথম session সম্পর্কে সংক্ষেপে লিখুন...',
-                border: OutlineInputBorder(),
+                    AppStrings.of(context).communityFirstSessionDescriptionHint,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
-            const Card(
+            Card(
               child: Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Row(
                   crossAxisAlignment:
                       CrossAxisAlignment.start,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.schedule_outlined,
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Session-এর সঙ্গে standard 60-minute community practice agenda স্বয়ংক্রিয়ভাবে যুক্ত হবে।',
+                        AppStrings.of(context).communitySessionAgendaAutoCreated,
                       ),
                     ),
                   ],
@@ -789,8 +786,8 @@ class _CommunityRoutineFirstSessionScreenState
                     : const Icon(
                         Icons.event_available_outlined,
                       ),
-                label: const Text(
-                  'প্রথম Session তৈরি করুন',
+                label: Text(
+                  AppStrings.of(context).communityCreateFirstSessionButton,
                 ),
               ),
             ),
@@ -800,5 +797,3 @@ class _CommunityRoutineFirstSessionScreenState
     );
   }
 }
-
-
