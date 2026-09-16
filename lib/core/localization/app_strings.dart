@@ -310,7 +310,54 @@ class AppStrings {
         _ => 'আমার কমিউনিটি',
       };
 
-  String get myCommunitySubtitle => switch (languageCode) {
+  String get communityLeaveConfirmTitle => switch (languageCode) {
+    'hi' => 'क्या आप Community छोड़ना चाहते हैं?',
+    'en' => 'Leave Community?',
+    _ => 'Community ছাড়বেন?',
+  };
+
+  String communityLeaveConfirmMessage(String communityName) =>
+      switch (languageCode) {
+    'hi' => '$communityName से आपकी membership समाप्त हो जाएगी।',
+    'en' => 'Your membership in $communityName will end.',
+    _ => '$communityName থেকে আপনার membership বন্ধ হবে।',
+  };
+
+  String get communityLeave => switch (languageCode) {
+    'hi' => 'छोड़ें',
+    'en' => 'Leave',
+    _ => 'ছেড়ে দিন',
+  };
+
+  String communityLeaveFailed(Object error) => switch (languageCode) {
+    'hi' => 'Community नहीं छोड़ा जा सका: $error',
+    'en' => 'Could not leave Community: $error',
+    _ => 'Community ছাড়া যায়নি: $error',
+  };
+  String get myCommunityEmpty => switch (languageCode) {
+    'hi' => 'आप अभी तक किसी Community से नहीं जुड़े हैं।',
+    'en' => 'You have not joined any Community yet.',
+    _ => 'আপনি এখনও কোনো Community-তে যুক্ত হননি।',
+  };
+
+  String get myCommunityEmptySubtitle => switch (languageCode) {
+    'hi' => 'पास की Community खोजें और Join करें।',
+    'en' => 'Find a nearby Community and join it.',
+    _ => 'কাছাকাছি Community খুঁজে Join করুন।',
+  };
+
+  String get myCommunityLoadFailed => switch (languageCode) {
+    'hi' => 'Community लोड नहीं हो सकी।',
+    'en' => 'Could not load Community.',
+    _ => 'Community লোড করা যায়নি।',
+  };
+
+  String get cancel => switch (languageCode) {
+    'hi' => 'रद्द करें',
+    'en' => 'Cancel',
+    _ => 'না',
+  };
+String get myCommunitySubtitle => switch (languageCode) {
         'hi' => 'अपने आसपास के साधकों से जुड़ें',
         'en' => 'Connect with practitioners around you',
         _ => 'আপনার আশেপাশের সাধকদের সঙ্গে যুক্ত হন',

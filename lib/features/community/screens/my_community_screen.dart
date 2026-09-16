@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../../../core/localization/app_strings.dart';
 
 import '../models/my_community_place.dart';
 import '../services/community_practice_service.dart';
@@ -76,22 +77,24 @@ class _MyCommunityScreenState
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text(
-            'Community ছাড়বেন?',
+          title: Text(
+            AppStrings.of(context).communityLeaveConfirmTitle,
           ),
           content: Text(
-            '${community.place.name} থেকে আপনার membership বন্ধ হবে।',
+            AppStrings.of(context).communityLeaveConfirmMessage(
+              community.place.name,
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () =>
                   Navigator.of(context).pop(false),
-              child: const Text('না'),
+              child: Text(AppStrings.of(context).cancel),
             ),
             FilledButton(
               onPressed: () =>
                   Navigator.of(context).pop(true),
-              child: const Text('ছেড়ে দিন'),
+              child: Text(AppStrings.of(context).communityLeave),
             ),
           ],
         );
@@ -116,7 +119,7 @@ class _MyCommunityScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Community ছাড়া যায়নি: $error',
+            AppStrings.of(context).communityLeaveFailed(error),
           ),
         ),
       );
@@ -127,8 +130,8 @@ class _MyCommunityScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'আমার Community',
+        title: Text(
+          AppStrings.of(context).myCommunity,
         ),
       ),
       body: _isLoading
@@ -212,15 +215,14 @@ class _MyCommunityScreenState
                                           icon: const Icon(
                                             Icons.open_in_new_outlined,
                                           ),
-                                          label: const Text(
-                                            'Community খুলুন',
-                                          ),
+                                          label: Text(
+                                             AppStrings.of(context).communityOpenCenter,
+                                           ),
                                         ),
                                       ),
                                       const SizedBox(width: 8),
                                       IconButton(
-                                        tooltip:
-                                            'Community ছাড়ুন',
+                                        tooltip: AppStrings.of(context).communityLeave,
                                         onPressed: () =>
                                             _leaveCommunity(
                                           community,
@@ -247,7 +249,7 @@ class _MyCommunityScreenState
       physics:
           const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(24),
-      children: const [
+      children: [
         SizedBox(height: 80),
         Icon(
           Icons.groups_outlined,
@@ -255,14 +257,14 @@ class _MyCommunityScreenState
         ),
         SizedBox(height: 16),
         Text(
-          'আপনি এখনও কোনো Community-তে যুক্ত হননি।',
-          textAlign: TextAlign.center,
-        ),
+           AppStrings.of(context).myCommunityEmpty,
+           textAlign: TextAlign.center,
+         ),
         SizedBox(height: 8),
         Text(
-          'কাছাকাছি Community খুঁজে Join করুন।',
-          textAlign: TextAlign.center,
-        ),
+           AppStrings.of(context).myCommunityEmptySubtitle,
+           textAlign: TextAlign.center,
+         ),
       ],
     );
   }
@@ -281,7 +283,7 @@ class _MyCommunityScreenState
         const SizedBox(height: 16),
         Text(
           _errorMessage ??
-              'Community লোড করা যায়নি।',
+              AppStrings.of(context).myCommunityLoadFailed,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 24),
@@ -290,9 +292,9 @@ class _MyCommunityScreenState
           icon: const Icon(
             Icons.refresh_outlined,
           ),
-          label: const Text(
-            'আবার চেষ্টা করুন',
-          ),
+          label: Text(
+             AppStrings.of(context).retry,
+           ),
         ),
       ],
     );
