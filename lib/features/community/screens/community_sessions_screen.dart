@@ -297,7 +297,7 @@ class _CommunitySessionDetailScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Session information লোড করা যায়নি: $error',
+            AppStrings.of(context).communitySessionInfoLoadFailed(error),
           ),
         ),
       );
@@ -327,8 +327,8 @@ class _CommunitySessionDetailScreenState
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Session-এ যোগ দেওয়া হয়েছে।'),
+        SnackBar(
+          content: Text(AppStrings.of(context).communitySessionJoined),
         ),
       );
     } catch (error) {
@@ -342,7 +342,7 @@ class _CommunitySessionDetailScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Session-এ যোগ দেওয়া যায়নি: $error'),
+          content: Text(AppStrings.of(context).communitySessionJoinFailed(error)),
         ),
       );
     }
@@ -371,8 +371,8 @@ class _CommunitySessionDetailScreenState
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Session থেকে বেরিয়ে এসেছেন।'),
+        SnackBar(
+          content: Text(AppStrings.of(context).communitySessionLeft),
         ),
       );
     } catch (error) {
@@ -386,7 +386,7 @@ class _CommunitySessionDetailScreenState
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Session থেকে বের হওয়া যায়নি: $error'),
+          content: Text(AppStrings.of(context).communitySessionLeaveFailed(error)),
         ),
       );
     }
