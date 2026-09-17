@@ -1,6 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../../../core/localization/app_strings.dart';
 import '../models/community_session.dart';
 import '../services/community_service.dart';
 
@@ -27,13 +28,12 @@ class _CommunitySessionQrScreenState
   @override
   void initState() {
     super.initState();
-    _generateToken();
+    _createToken();
   }
 
-  Future<void> _generateToken() async {
+  Future<void> _createToken() async {
     try {
-      final token =
-          await _service.createCheckinToken(widget.session.id);
+      final token = await _service.createCheckinToken(widget.session.id);
 
       if (!mounted) {
         return;
@@ -55,7 +55,9 @@ class _CommunitySessionQrScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Check-in QR তৈরি করা যায়নি: $error',
+            AppStrings.of(context).communitySessionCheckinQrCreateFailed(
+              error,
+            ),
           ),
         ),
       );
@@ -66,15 +68,20 @@ class _CommunitySessionQrScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Check-in QR'),
+        title: Text(
+          AppStrings.of(context).communitySessionCheckinQrTitle,
+        ),
       ),
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(),
             )
           : _token == null
-              ? const Center(
-                  child: Text('QR তৈরি করা যায়নি।'),
+              ? Center(
+                  child: Text(
+                    AppStrings.of(context)
+                        .communitySessionCheckinQrUnavailable,
+                  ),
                 )
               : SingleChildScrollView(
                   padding: const EdgeInsets.all(24),
@@ -88,8 +95,9 @@ class _CommunitySessionQrScreenState
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 12),
-                      const Text(
-                        'অংশগ্রহণকারীরা এই QR scan করে attendance check-in করবে।',
+                      Text(
+                        AppStrings.of(context)
+                            .communitySessionCheckinQrInstruction,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 28),
@@ -104,8 +112,9 @@ class _CommunitySessionQrScreenState
                         ),
                       ),
                       const SizedBox(height: 20),
-                      const Text(
-                        'Check-in session-এর নির্ধারিত সময়ের ১৫ মিনিট আগে থেকে ১৫ মিনিট পরে পর্যন্ত চালু থাকবে।',
+                      Text(
+                        AppStrings.of(context)
+                            .communitySessionCheckinQrTimeWindow,
                         textAlign: TextAlign.center,
                       ),
                     ],

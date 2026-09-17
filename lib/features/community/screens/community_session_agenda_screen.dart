@@ -66,7 +66,7 @@ class _CommunitySessionAgendaScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            '১ ঘণ্টার কার্যক্রম লোড করা যায়নি: $error',
+            AppStrings.of(context).communityAgendaLoadFailed(error),
           ),
         ),
       );

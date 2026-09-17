@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../../core/localization/app_strings.dart';
 
@@ -208,7 +208,7 @@ class _CommunityRoutineScreenState
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          '${_weekdayName(routine.weekday)}'
+                                          '${routine.weekdays.map(_weekdayName).join(', ')}'
                                           ' • ${_displayTime(routine.startTime)}'
                                           ' • ${routine.durationMinutes} ${AppStrings.of(context).minutes}',
                                         ),
@@ -275,7 +275,7 @@ class _CommunityRoutineCreateScreenState
   final TextEditingController _titleController =
       TextEditingController();
 
-  int _weekday = DateTime.sunday;
+  final Set<int> _selectedWeekdays = <int>{DateTime.sunday};
   TimeOfDay _time =
       const TimeOfDay(hour: 6, minute: 30);
 
@@ -325,7 +325,7 @@ class _CommunityRoutineCreateScreenState
     try {
       await _service.createRoutine(
         placeId: widget.place.id,
-        weekday: _weekday,
+        weekdays: _selectedWeekdays.toList()..sort(),
         startTime: startTime,
         title: title,
         durationMinutes: 60,
@@ -373,30 +373,43 @@ class _CommunityRoutineCreateScreenState
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            DropdownButtonFormField<int>(
-              value: _weekday,
+            InputDecorator(
               decoration: InputDecoration(
                 labelText: AppStrings.of(context).communityDayLabel,
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
-              items: List.generate(
-                7,
-                (index) => DropdownMenuItem<int>(
-                  value: index + 1,
-                  child: Text(
-                    AppStrings.of(context).weekdays[index],
-                  ),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: List.generate(
+                  7,
+                  (index) {
+                    final weekday = index + 1;
+                    final selected = _selectedWeekdays.contains(weekday);
+
+                    return FilterChip(
+                      label: Text(AppStrings.of(context).weekdays[index]),
+                      selected: selected,
+                      onSelected: _isSaving
+                          ? null
+                          : (value) {
+                              if (!value &&
+                                  _selectedWeekdays.length == 1) {
+                                return;
+                              }
+
+                              setState(() {
+                                if (value) {
+                                  _selectedWeekdays.add(weekday);
+                                } else {
+                                  _selectedWeekdays.remove(weekday);
+                                }
+                              });
+                            },
+                    );
+                  },
                 ),
               ),
-              onChanged: _isSaving
-                  ? null
-                  : (value) {
-                      if (value != null) {
-                        setState(() {
-                          _weekday = value;
-                        });
-                      }
-                    },
             ),
             const SizedBox(height: 16),
             TextField(
@@ -540,16 +553,12 @@ class _CommunityRoutineFirstSessionScreenState
       minute,
     );
 
-    var daysUntil =
-        (routine.weekday - candidate.weekday + 7) % 7;
+    final daysUntil = routine.weekdays
+        .map((weekday) => (weekday - candidate.weekday + 7) % 7)
+        .map((days) => days == 0 && !candidate.isAfter(now) ? 7 : days)
+        .reduce((a, b) => a < b ? a : b);
 
-    if (daysUntil == 0 &&
-        !candidate.isAfter(now)) {
-      daysUntil = 7;
-    }
-
-    candidate =
-        candidate.add(Duration(days: daysUntil));
+    candidate = candidate.add(Duration(days: daysUntil));
 
     return candidate;
   }
@@ -712,7 +721,7 @@ class _CommunityRoutineFirstSessionScreenState
             ),
             const SizedBox(height: 8),
             Text(
-              '${AppStrings.of(context).communityRoutineLabel}: ${AppStrings.of(context).weekdays[widget.routine.weekday - 1]}'
+              '${AppStrings.of(context).communityRoutineLabel}: ${widget.routine.weekdays.map((day) => AppStrings.of(context).weekdays[day - 1]).join(', ')}'
               ' • ${widget.routine.startTime.substring(0, 5)}'
               ' • ${widget.routine.durationMinutes} ${AppStrings.of(context).minutes}',
             ),

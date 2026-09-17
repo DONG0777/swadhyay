@@ -43,3 +43,4 @@ app.*.map.json
 /android/app/release
 devtools_options.yaml
 supabase/.temp/
+node_modules/

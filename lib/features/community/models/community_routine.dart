@@ -3,6 +3,7 @@
   final String placeId;
   final String createdBy;
   final int weekday;
+  final List<int> weekdays;
   final String startTime;
   final int durationMinutes;
   final String title;
@@ -15,6 +16,7 @@
     required this.placeId,
     required this.createdBy,
     required this.weekday,
+    required this.weekdays,
     required this.startTime,
     required this.durationMinutes,
     required this.title,
@@ -29,6 +31,12 @@
       placeId: map['place_id'] as String,
       createdBy: map['created_by'] as String,
       weekday: map['weekday'] as int,
+      weekdays: ((map['weekdays'] as List<dynamic>?) ?? <dynamic>[
+        map['weekday'],
+      ])
+          .map((value) => value as int)
+          .toList()
+        ..sort(),
       startTime: map['start_time'] as String,
       durationMinutes: map['duration_minutes'] as int,
       title: map['title'] as String,

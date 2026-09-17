@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../../core/localization/app_strings.dart';
 
@@ -52,7 +52,6 @@ class _CommunitySessionCreateScreenState
   }
 
   Future<void> _loadPlaces() async {
-    final strings = AppStrings.of(context);
 
     try {
       final places =
@@ -68,6 +67,7 @@ class _CommunitySessionCreateScreenState
         _isLoadingPlaces = false;
       });
     } catch (error) {
+      final strings = AppStrings.of(context);
       if (!mounted) {
         return;
       }

@@ -293,17 +293,51 @@ class CommunityPracticeService {
     }
 
     final data = await query
-        .order('weekday', ascending: true)
         .order('start_time', ascending: true);
 
-    return data
-        .map((row) => CommunityRoutine.fromMap(row))
+    if (data.isEmpty) {
+      return [];
+    }
+
+    final routineIds = data
+        .map((row) => row['id'] as String)
         .toList();
+
+    final dayData = await _client
+        .from('community_routine_days')
+        .select('routine_id, weekday')
+        .inFilter('routine_id', routineIds)
+        .order('weekday', ascending: true);
+
+    final weekdaysByRoutine = <String, List<int>>{};
+
+    for (final row in dayData) {
+      final routineId = row['routine_id'] as String;
+      final weekday = row['weekday'] as int;
+
+      weekdaysByRoutine
+          .putIfAbsent(routineId, () => <int>[])
+          .add(weekday);
+    }
+
+    return data.map((row) {
+      final routineId = row['id'] as String;
+      final legacyWeekday = row['weekday'] as int;
+
+      final weekdays = weekdaysByRoutine[routineId];
+
+      return CommunityRoutine.fromMap({
+        ...row,
+        'weekdays': weekdays == null || weekdays.isEmpty
+            ? <int>[legacyWeekday]
+            : weekdays,
+      });
+    }).toList();
   }
 
   Future<CommunityRoutine> createRoutine({
     required String placeId,
-    required int weekday,
+    required List<int> weekdays,
     required String startTime,
     required String title,
     int durationMinutes = 60,
@@ -314,8 +348,18 @@ class CommunityPracticeService {
       throw const AuthException('User is not signed in.');
     }
 
-    if (weekday < 1 || weekday > 7) {
-      throw ArgumentError('Weekday must be between 1 and 7.');
+    final normalizedWeekdays = weekdays.toSet().toList()..sort();
+
+    if (normalizedWeekdays.isEmpty) {
+      throw ArgumentError('Select at least one weekday.');
+    }
+
+    if (normalizedWeekdays.any(
+      (weekday) => weekday < 1 || weekday > 7,
+    )) {
+      throw ArgumentError(
+        'Weekday must be between 1 and 7.',
+      );
     }
 
     if (durationMinutes < 30 || durationMinutes > 120) {
@@ -331,10 +375,10 @@ class CommunityPracticeService {
     }
 
     final result = await _client.rpc(
-      'create_community_routine',
+      'create_community_routine_multi_day',
       params: {
         'p_place_id': placeId,
-        'p_weekday': weekday,
+        'p_weekdays': normalizedWeekdays,
         'p_start_time': startTime,
         'p_title': trimmedTitle,
         'p_duration_minutes': durationMinutes,
@@ -347,7 +391,10 @@ class CommunityPracticeService {
       );
     }
 
-    return CommunityRoutine.fromMap(result);
+    return CommunityRoutine.fromMap({
+      ...result,
+      'weekdays': normalizedWeekdays,
+    });
   }
 
   Future<List<CommunityAgendaItem>> getSessionAgenda(

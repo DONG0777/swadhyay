@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class AppStrings {
   static AppStrings of(BuildContext context) {
@@ -665,6 +665,40 @@ String get myCommunitySubtitle => switch (languageCode) {
     _ => 'Check-in QR দেখান',
   };
 
+  String get communitySessionCheckinQrTitle =>
+      switch (languageCode) {
+    'hi' => 'Check-in QR',
+    'en' => 'Check-in QR',
+    _ => 'Check-in QR',
+  };
+
+  String get communitySessionCheckinQrUnavailable =>
+      switch (languageCode) {
+    'hi' => 'QR बनाया नहीं जा सका।',
+    'en' => 'QR could not be created.',
+    _ => 'QR তৈরি করা যায়নি।',
+  };
+
+  String get communitySessionCheckinQrInstruction =>
+      switch (languageCode) {
+    'hi' => 'प्रतिभागी इस QR को स्कैन करके अपनी उपस्थिति दर्ज करेंगे।',
+    'en' => 'Participants can scan this QR to mark their attendance.',
+    _ => 'অংশগ্রহণকারীরা এই QR scan করে উপস্থিতি দিতে পারবেন।',
+  };
+
+  String get communitySessionCheckinQrTimeWindow =>
+      switch (languageCode) {
+    'hi' => 'Check-in सत्र के निर्धारित समय से 15 मिनट पहले से 15 मिनट बाद तक उपलब्ध रहेगा।',
+    'en' => 'Check-in is available from 15 minutes before until 15 minutes after the scheduled session time.',
+    _ => 'সেশনের নির্ধারিত সময়ের ১৫ মিনিট আগে থেকে ১৫ মিনিট পরে পর্যন্ত Check-in চালু থাকবে।',
+  };
+
+  String communitySessionCheckinQrCreateFailed(Object error) =>
+      switch (languageCode) {
+    'hi' => 'Check-in QR बनाया नहीं जा सका: $error',
+    'en' => 'Could not create the check-in QR: $error',
+    _ => 'Check-in QR তৈরি করা যায়নি: $error',
+  };
   String get communityScanQrForAttendance => switch (languageCode) {
     'hi' => 'QR स्कैन करके उपस्थिति दर्ज करें',
     'en' => 'Scan QR to mark attendance',
@@ -803,6 +837,33 @@ String get myCommunitySubtitle => switch (languageCode) {
     _ => 'প্রথম Session',
   };
 
+  String get communitySessionTypeRoutine =>
+      switch (languageCode) {
+    'hi' => 'नियमित सत्र',
+    'en' => 'Routine Session',
+    _ => 'নিয়মিত সেশন',
+  };
+
+  String get communitySessionTypeSpecial =>
+      switch (languageCode) {
+    'hi' => 'विशेष सत्र',
+    'en' => 'Special Session',
+    _ => 'বিশেষ সেশন',
+  };
+
+  String get communitySessionRoutineInfo =>
+      switch (languageCode) {
+    'hi' => 'यह सत्र एक नियमित समुदायिक रूटीन से बनाया गया है।',
+    'en' => 'This session was created from a regular community routine.',
+    _ => 'এই সেশনটি একটি নিয়মিত কমিউনিটি রুটিন থেকে তৈরি হয়েছে।',
+  };
+
+  String get communitySessionSpecialInfo =>
+      switch (languageCode) {
+    'hi' => 'यह एक विशेष सत्र है, जो किसी नियमित रूटीन से जुड़ा नहीं है।',
+    'en' => 'This is a special session and is not linked to a regular routine.',
+    _ => 'এটি একটি বিশেষ সেশন, কোনো নিয়মিত রুটিনের সঙ্গে যুক্ত নয়।',
+  };
   String get communitySessionDescription => switch (languageCode) {
     'hi' => 'विवरण',
     'en' => 'Description',

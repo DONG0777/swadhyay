@@ -6,8 +6,8 @@ import '../../../core/localization/app_strings.dart';
 
 import '../models/community_place.dart';
 import '../services/community_practice_service.dart';
-import 'community_sessions_screen.dart';
 import 'community_routine_screen.dart';
+import 'community_center_home_screen.dart';
 import 'nearby_community_screen.dart';
 
 class CommunityPlacesScreen extends StatefulWidget {
@@ -127,8 +127,8 @@ class _CommunityPlacesScreenState
   Future<void> _openPlace(CommunityPlace place) async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => CommunitySessionsScreen(
-          placeId: place.id,
+        builder: (_) => CommunityCenterHomeScreen(
+          place: place,
         ),
       ),
     );

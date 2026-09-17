@@ -2,6 +2,7 @@
   final String id;
   final String createdBy;
   final String? placeId;
+  final String? routineId;
   final String title;
   final String? description;
   final String locationName;
@@ -17,6 +18,7 @@
     required this.id,
     required this.createdBy,
     this.placeId,
+    this.routineId,
     required this.title,
     this.description,
     required this.locationName,
@@ -38,6 +40,7 @@
       id: map['id'] as String,
       createdBy: map['created_by'] as String,
       placeId: map['place_id'] as String?,
+      routineId: map['routine_id'] as String?,
       title: map['title'] as String,
       description: map['description'] as String?,
       locationName: map['location_name'] as String,
