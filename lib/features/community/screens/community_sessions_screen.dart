@@ -176,6 +176,32 @@ class _CommunitySessionsScreenState
                                         .textTheme
                                         .titleLarge,
                                   ),
+                                  const SizedBox(height: 6),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .outlineVariant,
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      session.routineId != null
+                                          ? AppStrings.of(context)
+                                              .communitySessionTypeRoutine
+                                          : AppStrings.of(context)
+                                              .communitySessionTypeSpecial,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelMedium,
+                                    ),
+                                  ),
                                   const SizedBox(height: 10),
                                   Row(
                                     crossAxisAlignment:
@@ -204,7 +230,7 @@ class _CommunitySessionsScreenState
                                       Expanded(
                                         child: Text(
                                           '${_formatDateTime(session.startsAt)}'
-                                          ' — '
+                                          ' â€” '
                                           '${_formatDateTime(session.endsAt)}',
                                         ),
                                       ),
@@ -454,6 +480,31 @@ class _CommunitySessionDetailScreenState
                     style:
                         Theme.of(context).textTheme.headlineSmall,
                   ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .outlineVariant,
+                      ),
+                      borderRadius:
+                          BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      widget.session.routineId != null
+                          ? AppStrings.of(context)
+                              .communitySessionTypeRoutine
+                          : AppStrings.of(context)
+                              .communitySessionTypeSpecial,
+                      style:
+                          Theme.of(context).textTheme.labelMedium,
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -481,7 +532,7 @@ class _CommunitySessionDetailScreenState
                     title: Text(AppStrings.of(context).communityTime),
                     subtitle: Text(
                       '${_formatDateTime(widget.session.startsAt)}'
-                      ' — '
+                        ' - '
                       '${_formatDateTime(widget.session.endsAt)}',
                     ),
                   ),
