@@ -11,6 +11,7 @@ import '../../daily_swadhyay/screens/daily_commitment_screen.dart';
 import '../../daily_swadhyay/screens/daily_history_screen.dart';
 import '../../daily_swadhyay/screens/daily_reflection_screen.dart';
 import '../../daily_swadhyay/screens/growth_insight_screen.dart';
+import '../../daily_swadhyay/screens/swadhyay_hub_screen.dart';
 import '../../learning/screens/learning_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../profile/services/profile_service.dart';
@@ -129,6 +130,13 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  void _openSwadhyayHub(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const SwadhyayHubScreen(),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final strings = AppStrings.of(context);
@@ -395,6 +403,41 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Card(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => _openSwadhyayHub(context),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.auto_stories_outlined,
+                            size: 36,
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  strings.swadhyayHubTitle,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(strings.swadhyayHubSubtitle),
+                              ],
+                            ),
+                          ),
+                          const Icon(Icons.chevron_right),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),                Card(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () => _openCommunity(context),

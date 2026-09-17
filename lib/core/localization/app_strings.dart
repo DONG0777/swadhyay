@@ -178,6 +178,23 @@ class AppStrings {
     'en' => 'Image could not be loaded',
     _ => 'ছবিটি লোড করা যায়নি',
   };
+  String get swadhyayHubTitle => switch (languageCode) {
+    'hi' => 'स्वाध्याय',
+    'en' => 'Swadhyay',
+    _ => 'স্বাধ্যায়',
+  };
+
+  String get swadhyayHubSubtitle => switch (languageCode) {
+    'hi' => 'सीखने, संकल्प, आत्म-चिंतन और अपनी प्रगति के लिए एक जगह।',
+    'en' => 'One place for learning, commitment, reflection, and your progress.',
+    _ => 'শেখা, সংকল্প, আত্মবিশ্লেষণ ও নিজের অগ্রগতির জন্য এক জায়গা।',
+  };
+
+  String get swadhyayProgress => switch (languageCode) {
+    'hi' => 'मेरी प्रगति',
+    'en' => 'My Progress',
+    _ => 'আমার অগ্রগতি',
+  };
   String get learning => switch (languageCode) {
         'hi' => 'सीखना',
         'en' => 'Learning',
