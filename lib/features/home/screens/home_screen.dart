@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../../core/localization/app_language_controller.dart';
 import '../../../core/localization/app_strings.dart';
@@ -6,9 +6,7 @@ import '../../../core/localization/app_strings.dart';
 import '../../admin/screens/admin_dashboard_screen.dart';
 import '../../admin/services/admin_service.dart';
 import '../../auth/services/auth_service.dart';
-import '../../community/screens/community_places_screen.dart';
-import '../../community/screens/community_sessions_screen.dart';
-import '../../community/screens/my_community_screen.dart';
+import '../../community/screens/community_home_screen.dart';
 import '../../daily_swadhyay/screens/daily_commitment_screen.dart';
 import '../../daily_swadhyay/screens/daily_history_screen.dart';
 import '../../daily_swadhyay/screens/daily_reflection_screen.dart';
@@ -114,29 +112,14 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  void _openCommunityPlaces(BuildContext context) {
+  void _openCommunity(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => const CommunityPlacesScreen(),
+        builder: (_) => const CommunityHomeScreen(),
       ),
     );
   }
 
-  void _openMyCommunity(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const MyCommunityScreen(),
-      ),
-    );
-  }
-
-  void _openCommunitySessions(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const CommunitySessionsScreen(),
-      ),
-    );
-  }
 
   void _openGrowthInsight(BuildContext context) {
     Navigator.of(context).push(
@@ -414,49 +397,13 @@ class HomeScreen extends StatelessWidget {
                 Card(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
-                    onTap: () => _openMyCommunity(context),
+                    onTap: () => _openCommunity(context),
                     child: Padding(
                       padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
                           const Icon(
                             Icons.groups_outlined,
-                            size: 36,
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  strings.myCommunity,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(strings.myCommunitySubtitle),
-                              ],
-                            ),
-                          ),
-                          const Icon(Icons.chevron_right),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Card(
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () => _openCommunityPlaces(context),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.location_city_outlined,
                             size: 36,
                           ),
                           const SizedBox(width: 16),
@@ -473,44 +420,6 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(strings.communitySubtitle),
-                              ],
-                            ),
-                          ),
-                          const Icon(Icons.chevron_right),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Card(
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () => _openCommunitySessions(context),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.groups_outlined,
-                            size: 36,
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  strings.communitySuryaNamaskar,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  strings.communitySuryaNamaskarSubtitle,
-                                ),
                               ],
                             ),
                           ),
