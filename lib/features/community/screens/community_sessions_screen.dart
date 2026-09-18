@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../models/community_session.dart';
+import '../models/community_routine.dart';
 import '../models/session_participant.dart';
 import '../services/community_service.dart';
+import '../services/community_practice_service.dart';
 import 'community_session_create_screen.dart';
 import 'community_session_agenda_screen.dart';
 import 'community_session_qr_screen.dart';
@@ -97,6 +99,8 @@ class _CommunitySessionsScreenState
 
     return '$day/$month/${local.year}  $hour:$minute';
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -279,6 +283,10 @@ class CommunitySessionDetailScreen extends StatefulWidget {
 class _CommunitySessionDetailScreenState
     extends State<CommunitySessionDetailScreen> {
   final CommunityService _service = CommunityService();
+  final CommunityPracticeService _practiceService =
+      CommunityPracticeService();
+
+  CommunityRoutine? _routine;
 
   SessionParticipant? _myParticipation;
   int _participantCount = 0;
@@ -302,6 +310,13 @@ class _CommunitySessionDetailScreenState
         widget.session.id,
       );
 
+      CommunityRoutine? routine;
+      if (widget.session.routineId != null) {
+        routine = await _practiceService.getRoutine(
+          widget.session.routineId!,
+        );
+      }
+
       if (!mounted) {
         return;
       }
@@ -309,6 +324,7 @@ class _CommunitySessionDetailScreenState
       setState(() {
         _myParticipation = myParticipation;
         _participantCount = participants.length;
+        _routine = routine;
         _isLoading = false;
       });
     } catch (error) {
@@ -428,6 +444,32 @@ class _CommunitySessionDetailScreenState
     return '$day/$month/${local.year}  $hour:$minute';
   }
 
+  String _formatRoutineSchedule(
+    BuildContext context,
+    CommunityRoutine routine,
+  ) {
+    final strings = AppStrings.of(context);
+    final weekdays = routine.weekdays.toSet().toList()..sort();
+
+    final dayText = weekdays.length == 7
+        ? strings.communityEveryDay
+        : weekdays
+            .where(
+              (day) => day >= 1 && day <= strings.weekdays.length,
+            )
+            .map((day) => strings.weekdays[day - 1])
+            .join(' · ');
+
+    final timeParts = routine.startTime.split(':');
+    final hour =
+        timeParts.isNotEmpty ? timeParts[0].padLeft(2, '0') : '00';
+    final minute =
+        timeParts.length > 1 ? timeParts[1].padLeft(2, '0') : '00';
+
+    return '$dayText · $hour:$minute · ${routine.durationMinutes} min';
+  }
+
+
   Future<void> _openAgenda() async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -536,6 +578,29 @@ class _CommunitySessionDetailScreenState
                       '${_formatDateTime(widget.session.endsAt)}',
                     ),
                   ),
+                  if (_routine != null) ...[
+                    const SizedBox(height: 8),
+                    Card(
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 4,
+                        ),
+                        leading: const Icon(
+                          Icons.repeat_outlined,
+                        ),
+                        title: Text(
+                          AppStrings.of(context).communityRecurringSchedule,
+                        ),
+                        subtitle: Text(
+                          _formatRoutineSchedule(
+                            context,
+                            _routine!,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                   if (widget.session.description != null) ...[
                     const SizedBox(height: 16),
                     Text(

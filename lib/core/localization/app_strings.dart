@@ -1030,6 +1030,18 @@ String get communityBack => switch (languageCode) {
     _ => 'Routine',
   };
 
+  String get communityRecurringSchedule => switch (languageCode) {
+    'hi' => 'नियमित समय-सारणी',
+    'en' => 'Recurring Schedule',
+    _ => 'নিয়মিত সময়সূচি',
+  };
+
+  String get communityEveryDay => switch (languageCode) {
+    'hi' => 'हर दिन',
+    'en' => 'Every day',
+    _ => 'প্রতিদিন',
+  };
+
   String get communityDayLabel => switch (languageCode) {
     'hi' => 'दिन',
     'en' => 'Day',

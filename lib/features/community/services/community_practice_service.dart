@@ -1,4 +1,4 @@
-﻿import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/community_agenda_item.dart';
 import '../models/community_place.dart';
@@ -335,6 +335,34 @@ class CommunityPracticeService {
     }).toList();
   }
 
+  Future<CommunityRoutine?> getRoutine(String routineId) async {
+    final data = await _client
+        .from('community_routines')
+        .select()
+        .eq('id', routineId)
+        .maybeSingle();
+
+    if (data == null) {
+      return null;
+    }
+
+    final dayData = await _client
+        .from('community_routine_days')
+        .select('routine_id, weekday')
+        .eq('routine_id', routineId)
+        .order('weekday', ascending: true);
+
+    final weekdays = dayData
+        .map((row) => row['weekday'] as int)
+        .toList();
+
+    final legacyWeekday = data['weekday'] as int;
+
+    return CommunityRoutine.fromMap({
+      ...data,
+      'weekdays': weekdays.isEmpty ? <int>[legacyWeekday] : weekdays,
+    });
+  }
   Future<CommunityRoutine> createRoutine({
     required String placeId,
     required List<int> weekdays,
