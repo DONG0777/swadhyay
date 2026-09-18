@@ -230,7 +230,7 @@ class _CommunitySessionsScreenState
                                       Expanded(
                                         child: Text(
                                           '${_formatDateTime(session.startsAt)}'
-                                          ' â€” '
+                                          ' - '
                                           '${_formatDateTime(session.endsAt)}',
                                         ),
                                       ),
