@@ -599,9 +599,9 @@ String get myCommunitySubtitle => switch (languageCode) {
   };
 
   String get communityNewSession => switch (languageCode) {
-    'hi' => 'नया सत्र',
-    'en' => 'New Session',
-    _ => 'নতুন সেশন',
+    'hi' => 'नया विशेष सत्र',
+    'en' => 'New Special Session',
+    _ => 'নতুন বিশেষ সেশন',
   };
 
   String get communityNoUpcomingSessions => switch (languageCode) {
