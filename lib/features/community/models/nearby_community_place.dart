@@ -1,4 +1,4 @@
-﻿class NearbyCommunityPlace {
+class NearbyCommunityPlace {
   final String id;
   final String name;
   final String? description;
@@ -29,11 +29,4 @@
     );
   }
 
-  String get distanceLabel {
-    if (distanceMeters < 1000) {
-      return '${distanceMeters.round()} মিটার';
-    }
-
-    return '${(distanceMeters / 1000).toStringAsFixed(1)} কিমি';
-  }
 }

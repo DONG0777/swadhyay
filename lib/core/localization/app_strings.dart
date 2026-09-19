@@ -721,6 +721,42 @@ String get myCommunitySubtitle => switch (languageCode) {
     'en' => 'Search again',
     _ => 'আবার খুঁজুন',
   };
+  String get nearbyCommunityTitle => switch (languageCode) {
+    'hi' => 'आस-पास के Community',
+    'en' => 'Nearby Community',
+    _ => 'কাছাকাছি Community',
+  };
+
+  String get nearbyCommunityNotFound => switch (languageCode) {
+    'hi' => 'आस-पास कोई Community नहीं मिल सकी।',
+    'en' => 'Nearby Community could not be found.',
+    _ => 'কাছাকাছি Community খুঁজে পাওয়া যাচ্ছে না।',
+  };
+
+  String get nearbyCommunityEmpty => switch (languageCode) {
+    'hi' => '5 किमी के भीतर कोई Community नहीं मिली।',
+    'en' => 'No Community was found within 5 km.',
+    _ => '৫ কিমির মধ্যে কোনো Community পাওয়া যায়নি।',
+  };
+
+  String get nearbyCommunityEmptySubtitle => switch (languageCode) {
+    'hi' => 'आप चाहें तो इस क्षेत्र में एक नया Community केंद्र शुरू कर सकते हैं।',
+    'en' => 'You can start a new Community center in this area if you wish.',
+    _ => 'আপনি চাইলে এই এলাকায় একটি নতুন Community কেন্দ্র শুরু করতে পারেন।',
+  };
+
+  String nearbyCommunityDistance(double distanceMeters) =>
+      switch (languageCode) {
+    'hi' => distanceMeters < 1000
+        ? '${distanceMeters.round()} मीटर'
+        : '${(distanceMeters / 1000).toStringAsFixed(1)} किमी',
+    'en' => distanceMeters < 1000
+        ? '${distanceMeters.round()} m'
+        : '${(distanceMeters / 1000).toStringAsFixed(1)} km',
+    _ => distanceMeters < 1000
+        ? '${distanceMeters.round()} মিটার'
+        : '${(distanceMeters / 1000).toStringAsFixed(1)} কিমি',
+  };
   String get communitySessionCheckinSuccess => switch (languageCode) {
     'hi' => 'उपस्थिति सफलतापूर्वक दर्ज हो गई।',
     'en' => 'Attendance recorded successfully.',

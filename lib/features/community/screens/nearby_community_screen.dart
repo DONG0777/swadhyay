@@ -45,7 +45,7 @@ class _NearbyCommunityScreenState
 
       if (!serviceEnabled) {
         throw StateError(
-          'ডিভাইসের Location Service চালু নেই।',
+          AppStrings.of(context).communityLocationServiceDisabled,
         );
       }
 
@@ -61,14 +61,14 @@ class _NearbyCommunityScreenState
       if (permission ==
           LocationPermission.denied) {
         throw StateError(
-          'Location permission দেওয়া হয়নি।',
+          AppStrings.of(context).communityLocationPermissionDenied,
         );
       }
 
       if (permission ==
           LocationPermission.deniedForever) {
         throw StateError(
-          'Location permission Settings থেকে চালু করতে হবে।',
+          AppStrings.of(context).communityLocationPermissionSettings,
         );
       }
 
@@ -124,8 +124,8 @@ class _NearbyCommunityScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'কাছাকাছি Community',
+        title: Text(
+          AppStrings.of(context).nearbyCommunityTitle,
         ),
         actions: [
           IconButton(
@@ -195,7 +195,7 @@ class _NearbyCommunityScreenState
                                           ),
                                           const SizedBox(height: 6),
                                           Text(
-                                            place.distanceLabel,
+                                            AppStrings.of(context).nearbyCommunityDistance(place.distanceMeters),
                                             style:
                                                 Theme.of(context)
                                                     .textTheme
@@ -247,8 +247,8 @@ class _NearbyCommunityScreenState
           size: 56,
         ),
         const SizedBox(height: 16),
-        const Text(
-          'কাছাকাছি Community খুঁজে পাওয়া যাচ্ছে না।',
+        Text(
+          AppStrings.of(context).nearbyCommunityNotFound,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
@@ -263,8 +263,8 @@ class _NearbyCommunityScreenState
           icon: const Icon(
             Icons.my_location_outlined,
           ),
-          label: const Text(
-            'আবার চেষ্টা করুন',
+          label: Text(
+            AppStrings.of(context).retry,
           ),
         ),
       ],
@@ -276,7 +276,7 @@ class _NearbyCommunityScreenState
       physics:
           const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(24),
-      children: const [
+      children:  [
         SizedBox(height: 80),
         Icon(
           Icons.explore_outlined,
@@ -284,12 +284,12 @@ class _NearbyCommunityScreenState
         ),
         SizedBox(height: 16),
         Text(
-          '৫ কিমির মধ্যে কোনো Community পাওয়া যায়নি।',
+          AppStrings.of(context).nearbyCommunityEmpty,
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 8),
         Text(
-          'আপনি চাইলে এই এলাকায় একটি নতুন Community কেন্দ্র শুরু করতে পারেন।',
+          AppStrings.of(context).nearbyCommunityEmptySubtitle,
           textAlign: TextAlign.center,
         ),
       ],
@@ -326,7 +326,7 @@ class NearbyCommunityDetailScreen
                   Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 8),
-            Text(place.distanceLabel),
+            Text(AppStrings.of(context).nearbyCommunityDistance(place.distanceMeters)),
             const SizedBox(height: 16),
             Card(
               child: Padding(
