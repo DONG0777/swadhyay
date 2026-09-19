@@ -130,7 +130,7 @@ class _NearbyCommunityScreenState
         actions: [
           IconButton(
             onPressed: _loadNearbyPlaces,
-            tooltip: 'আবার খুঁজুন',
+            tooltip: AppStrings.of(context).nearbyCommunitySearchAgain,
             icon: const Icon(
               Icons.refresh_outlined,
             ),
