@@ -132,7 +132,7 @@ class CommunityCenterHomeScreen extends StatelessWidget {
                 context: context,
                 icon: Icons.event_available_outlined,
                 title: strings.communitySessions,
-                subtitle: strings.communitySuryaNamaskarSubtitle,
+                subtitle: strings.communitySessionsSubtitle,
                 onTap: () => _openSessions(context),
               ),
             ],
