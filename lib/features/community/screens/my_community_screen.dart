@@ -3,7 +3,7 @@ import '../../../core/localization/app_strings.dart';
 
 import '../models/my_community_place.dart';
 import '../services/community_practice_service.dart';
-import 'community_sessions_screen.dart';
+import 'community_center_home_screen.dart';
 
 class MyCommunityScreen extends StatefulWidget {
   const MyCommunityScreen({super.key});
@@ -63,8 +63,8 @@ class _MyCommunityScreenState
   ) async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => CommunitySessionsScreen(
-          placeId: community.place.id,
+        builder: (_) => CommunityCenterHomeScreen(
+          place: community.place,
         ),
       ),
     );
