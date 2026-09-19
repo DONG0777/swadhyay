@@ -69,7 +69,7 @@ class _CommunitySessionsScreenState
   Future<void> _createSession() async {
     final created = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
-        builder: (_) => const CommunitySessionCreateScreen(),
+        builder: (_) => CommunitySessionCreateScreen(placeId: widget.placeId),
       ),
     );
 

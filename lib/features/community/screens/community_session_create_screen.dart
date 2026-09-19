@@ -7,7 +7,12 @@ import '../services/community_practice_service.dart';
 import '../services/community_service.dart';
 
 class CommunitySessionCreateScreen extends StatefulWidget {
-  const CommunitySessionCreateScreen({super.key});
+  final String? placeId;
+
+  const CommunitySessionCreateScreen({
+    super.key,
+    this.placeId,
+  });
 
   @override
   State<CommunitySessionCreateScreen> createState() =>
@@ -63,7 +68,16 @@ class _CommunitySessionCreateScreenState
 
       setState(() {
         _places = places;
-        _selectedPlace = places.isNotEmpty ? places.first : null;
+        if (widget.placeId != null) {
+          for (final place in places) {
+            if (place.id == widget.placeId) {
+              _selectedPlace = place;
+              break;
+            }
+          }
+        } else {
+          _selectedPlace = places.isNotEmpty ? places.first : null;
+        }
         _isLoadingPlaces = false;
       });
     } catch (error) {
