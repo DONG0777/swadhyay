@@ -254,7 +254,7 @@ class _CommunitySessionCreateScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Session তৈরি করা যায়নি: $error',
+            strings.communitySessionCreateFailed(error),
           ),
         ),
       );
