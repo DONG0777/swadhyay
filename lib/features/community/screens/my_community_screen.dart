@@ -43,7 +43,7 @@ class _MyCommunityScreenState
       }
 
       setState(() {
-        _communities = communities;
+        _communities = communities.take(1).toList();
         _isLoading = false;
       });
     } catch (error) {
