@@ -321,6 +321,18 @@ class AppStrings {
         _ => 'দিনের শেষে নিজের দিকে ফিরে দেখুন',
       };
 
+  String get myCommunities => switch (languageCode) {
+    'hi' => 'मेरे समुदाय',
+    'en' => 'My Communities',
+    _ => 'আমার কমিউনিটিগুলো',
+  };
+
+  String get myCommunitiesSubtitle => switch (languageCode) {
+    'hi' => 'जिन समुदायों से आप जुड़े हैं',
+    'en' => 'Communities you are connected to',
+    _ => 'যেসব কমিউনিটিতে আপনি যুক্ত আছেন',
+  };
+
   String get myCommunity => switch (languageCode) {
         'hi' => 'मेरा समुदाय',
         'en' => 'My Community',
@@ -379,6 +391,18 @@ String get myCommunitySubtitle => switch (languageCode) {
         'en' => 'Connect with practitioners around you',
         _ => 'আপনার আশেপাশের সাধকদের সঙ্গে যুক্ত হন',
       };
+
+  String get discoverCommunities => switch (languageCode) {
+    'hi' => 'समुदाय खोजें',
+    'en' => 'Discover Communities',
+    _ => 'কমিউনিটি খুঁজুন',
+  };
+
+  String get discoverCommunitiesSubtitle => switch (languageCode) {
+    'hi' => 'अपने आसपास के समुदाय खोजें',
+    'en' => 'Explore communities around you',
+    _ => 'আপনার কাছাকাছি কমিউনিটি খুঁজে দেখুন',
+  };
 
   String get communityPlaces => switch (languageCode) {
     'hi' => 'कम्युनिटी केंद्र',
@@ -1135,6 +1159,12 @@ String get communityBack => switch (languageCode) {
       'শনিবার',
       'রবিবার',
     ],
+  };
+
+  String get communitySessionsSubtitle => switch (languageCode) {
+    'hi' => 'विभिन्न समुदायों के अभ्यास सत्रों में भाग लें',
+    'en' => 'Join practice sessions across communities',
+    _ => 'বিভিন্ন কমিউনিটির অনুশীলন সেশনে অংশ নিন',
   };
 
   String get communitySuryaNamaskarSubtitle => switch (languageCode) {
