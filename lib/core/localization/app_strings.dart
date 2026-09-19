@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class AppStrings {
   static AppStrings of(BuildContext context) {
@@ -715,6 +715,18 @@ String get myCommunitySubtitle => switch (languageCode) {
     'hi' => 'Check-in QR बनाया नहीं जा सका: $error',
     'en' => 'Could not create the check-in QR: $error',
     _ => 'Check-in QR তৈরি করা যায়নি: $error',
+  };
+  String get communitySessionCheckinSuccess => switch (languageCode) {
+    'hi' => 'उपस्थिति सफलतापूर्वक दर्ज हो गई।',
+    'en' => 'Attendance recorded successfully.',
+    _ => 'উপস্থিতি সফলভাবে নথিভুক্ত হয়েছে।',
+  };
+
+  String communitySessionCheckinFailed(Object error) =>
+      switch (languageCode) {
+    'hi' => 'Check-in नहीं हो सका: $error',
+    'en' => 'Could not check in: $error',
+    _ => 'Check-in করা যায়নি: $error',
   };
   String get communityScanQrForAttendance => switch (languageCode) {
     'hi' => 'QR स्कैन करके उपस्थिति दर्ज करें',

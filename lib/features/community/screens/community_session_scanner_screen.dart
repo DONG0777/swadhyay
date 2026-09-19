@@ -1,5 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+
+import '../../../core/localization/app_strings.dart';
 
 import '../services/community_service.dart';
 
@@ -55,8 +57,10 @@ class _CommunitySessionScannerScreenState
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('উপস্থিতি সফলভাবে নথিভুক্ত হয়েছে।'),
+        SnackBar(
+          content: Text(
+            AppStrings.of(context).communitySessionCheckinSuccess,
+          ),
         ),
       );
     } catch (error) {
@@ -71,7 +75,7 @@ class _CommunitySessionScannerScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Check-in করা যায়নি: $error',
+            AppStrings.of(context).communitySessionCheckinFailed(error),
           ),
         ),
       );
@@ -82,7 +86,9 @@ class _CommunitySessionScannerScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('QR Scan করে উপস্থিতি'),
+        title: Text(
+          AppStrings.of(context).communityScanQrForAttendance,
+        ),
       ),
       body: Stack(
         children: [
@@ -126,7 +132,7 @@ class _CommunitySessionScannerScreenState
               ),
             ),
           if (_checkInComplete)
-            const Align(
+            Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: EdgeInsets.all(24),
@@ -134,7 +140,7 @@ class _CommunitySessionScannerScreenState
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child: Text(
-                      'উপস্থিতি সফলভাবে নথিভুক্ত হয়েছে।',
+                      AppStrings.of(context).communitySessionCheckinSuccess,
                       textAlign: TextAlign.center,
                     ),
                   ),
