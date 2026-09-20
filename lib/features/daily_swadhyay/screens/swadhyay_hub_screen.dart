@@ -140,8 +140,8 @@ class _SwadhyayHubScreenState extends State<SwadhyayHubScreen> {
         icon = Icons.edit_note_rounded;
         break;
       case _NextActionState.completed:
-        title = strings.myJourney;
-        subtitle = strings.myJourneySubtitle;
+        title = strings.todaySwadhyayCompleted;
+        subtitle = strings.todaySwadhyayCompletedSubtitle;
         icon = Icons.check_circle_outline_rounded;
         break;
       case _NextActionState.loading:
@@ -324,22 +324,7 @@ class _SwadhyayHubScreenState extends State<SwadhyayHubScreen> {
                 onTap: () => _openUserContext(context),
               ),
               const SizedBox(height: 16),
-              _buildActionCard(
-                context: context,
-                icon: Icons.flag_outlined,
-                title: strings.todaysCommitment,
-                subtitle: strings.todaysCommitmentSubtitle,
-                onTap: () => _openDailyCommitment(context),
-              ),
-              const SizedBox(height: 16),
-              _buildActionCard(
-                context: context,
-                icon: Icons.self_improvement_outlined,
-                title: strings.nightReflection,
-                subtitle: strings.nightReflectionSubtitle,
-                onTap: () => _openDailyReflection(context),
-              ),
-              const SizedBox(height: 16),
+
               _buildActionCard(
                 context: context,
                 icon: Icons.auto_graph_outlined,
@@ -348,13 +333,7 @@ class _SwadhyayHubScreenState extends State<SwadhyayHubScreen> {
                 onTap: () => _openGrowthInsight(context),
               ),
               const SizedBox(height: 16),
-              _buildActionCard(
-                context: context,
-                icon: Icons.insights_outlined,
-                title: strings.myJourney,
-                subtitle: strings.myJourneySubtitle,
-                onTap: () => _openDailyHistory(context),
-              ),
+
             ],
           ),
         );

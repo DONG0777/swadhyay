@@ -196,10 +196,22 @@ class AppStrings {
   };
 
   String get todaySwadhyayEntrySubtitle => switch (languageCode) {
-    'hi' => 'आपके अभ्यास, आत्म-चिंतन और प्रगति के लिए',
-    'en' => 'For your practice, reflection, and progress',
-    _ => 'আপনার অনুশীলন, আত্মবিশ্লেষণ ও অগ্রগতির জন্য',
-  };
+  'hi' => 'आपके अभ्यास, आत्म-चिंतन और प्रगति के लिए',
+  'en' => 'For your practice, reflection, and progress',
+  _ => 'আপনার অনুশীলন, আত্মবিশ্লেষণ ও অগ্রগতির জন্য',
+};
+
+String get todaySwadhyayCompleted => switch (languageCode) {
+  'hi' => 'आज का स्वाध्याय पूरा हुआ',
+  'en' => 'Today’s Swadhyay is complete',
+  _ => 'আজকের স্বাধ্যায় সম্পন্ন',
+};
+
+String get todaySwadhyayCompletedSubtitle => switch (languageCode) {
+  'hi' => 'आज का अभ्यास और आत्म-चिंतन पूरा हो गया है',
+  'en' => 'Today’s practice and reflection are complete',
+  _ => 'আজকের অনুশীলন ও আত্মবিশ্লেষণ সম্পন্ন হয়েছে',
+};
 
   String get swadhyayProgress => switch (languageCode) {
     'hi' => 'मेरी प्रगति',
