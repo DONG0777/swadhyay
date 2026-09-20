@@ -49,7 +49,7 @@ class _SwadhyayHubScreenState extends State<SwadhyayHubScreen> {
         return;
       }
 
-      if (!commitment.isCompleted) {
+      if (commitment.status == 'pending') {
         setState(() {
           _nextActionState = _NextActionState.continueCommitment;
         });
@@ -57,6 +57,17 @@ class _SwadhyayHubScreenState extends State<SwadhyayHubScreen> {
       }
 
       final reflection = await _reflectionService.getTodayReflection();
+
+      if (commitment.status == 'missed') {
+        if (!mounted) {
+          return;
+        }
+
+        setState(() {
+          _nextActionState = _NextActionState.writeReflection;
+        });
+        return;
+      }
 
       if (!mounted) {
         return;
