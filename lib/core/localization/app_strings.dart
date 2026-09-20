@@ -642,7 +642,7 @@ String get myCommunitySubtitle => switch (languageCode) {
   String communitySessionsLoadFailed(Object error) => switch (languageCode) {
     'hi' => 'कम्युनिटी सत्र लोड नहीं हो सके: $error',
     'en' => 'Could not load community sessions: $error',
-    _ => 'Community সেশন লোড করা যায়নি: $error',
+    _ => 'কমিউনিটি সেশন লোড করা যায়নি: $error',
   };
 
   String communitySessionInfoLoadFailed(Object error) => switch (languageCode) {
