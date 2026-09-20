@@ -604,9 +604,9 @@ String get myCommunitySubtitle => switch (languageCode) {
       };
 
   String get communitySubtitle => switch (languageCode) {
-        'hi' => 'साथ मिलकर अभ्यास और विकास',
-        'en' => 'Practice and grow together',
-        _ => 'একসঙ্গে অনুশীলন ও বিকাশ',
+        'hi' => 'नियमित अभ्यास का समय और दिनचर्या देखें',
+        'en' => 'View your regular practice schedule and routine',
+        _ => 'নিয়মিত অনুশীলনের সময়সূচি ও অভ্যাস দেখুন',
       };
 
   String get communitySessions => switch (languageCode) {
