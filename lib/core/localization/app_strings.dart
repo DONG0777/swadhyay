@@ -1627,6 +1627,11 @@ String get communityBack => switch (languageCode) {
         _ => 'আজকের সংকল্প সংরক্ষণ করুন',
       };
 
+  String get dailyCommitmentRealLifeMessage => switch (languageCode) {
+    'hi' => 'आज का संकल्प तैयार है। अब इसे वास्तविक जीवन में करने का समय है।',
+    'en' => 'Today’s commitment is ready. Now it’s time to put it into practice in real life.',
+    _ => 'আজকের সংকল্প তৈরি হয়েছে। এখন এটিকে বাস্তবে করার সময়।',
+  };
   String get dailyCommitmentSavedSuccessfully => switch (languageCode) {
         'hi' => 'आज का संकल्प सफलतापूर्वक सहेजा गया।',
         'en' => 'Today''s commitment has been saved.',

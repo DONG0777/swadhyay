@@ -266,6 +266,12 @@ class _DailyCommitmentScreenState extends State<DailyCommitmentScreen> {
                                 style:
                                     Theme.of(context).textTheme.bodyLarge,
                               ),
+
+                              Text(
+                                AppStrings.of(context).dailyCommitmentRealLifeMessage,
+                                style:
+                                    Theme.of(context).textTheme.bodyMedium,
+                              ),
                               const SizedBox(height: 20),
                               if (_commitment!.status == 'completed') ...[
                                 Row(
