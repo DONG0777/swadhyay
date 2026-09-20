@@ -189,6 +189,17 @@ class AppStrings {
     'en' => 'One place for learning, commitment, reflection, and your progress.',
     _ => 'শেখা, সংকল্প, আত্মবিশ্লেষণ ও নিজের অগ্রগতির জন্য এক জায়গা।',
   };
+  String get todaySwadhyayEntryTitle => switch (languageCode) {
+    'hi' => 'आज का स्वाध्याय',
+    'en' => 'Today’s Swadhyay',
+    _ => 'আজকের স্বাধ্যায়',
+  };
+
+  String get todaySwadhyayEntrySubtitle => switch (languageCode) {
+    'hi' => 'आपके अभ्यास, आत्म-चिंतन और प्रगति के लिए',
+    'en' => 'For your practice, reflection, and progress',
+    _ => 'আপনার অনুশীলন, আত্মবিশ্লেষণ ও অগ্রগতির জন্য',
+  };
 
   String get swadhyayProgress => switch (languageCode) {
     'hi' => 'मेरी प्रगति',

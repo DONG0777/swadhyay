@@ -232,14 +232,14 @@ class HomeScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  strings.swadhyayHubTitle,
+                                  strings.todaySwadhyayEntryTitle,
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                Text(strings.swadhyayHubSubtitle),
+                                Text(strings.todaySwadhyayEntrySubtitle),
                               ],
                             ),
                           ),
